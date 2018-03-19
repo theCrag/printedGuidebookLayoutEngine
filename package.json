@@ -76,7 +76,7 @@
     "nps-utils": "^1.5.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.10",
-    "request": "^2.83.0",
+    "request": "^2.85.0",
     "routing-controllers": "^0.7.6",
     "serve-favicon": "^2.4.5",
     "supertest": "^3.0.0",

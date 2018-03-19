@@ -38,6 +38,9 @@ export const env = {
             mutations: [path.join(__dirname, 'api/**/*Mutation{.js,.ts}')],
         },
     },
+    api: {
+        key: getOsEnv('API_KEY'),
+    },
     log: {
         level: getOsEnv('LOG_LEVEL'),
         json: toBool(getOsEnv('LOG_JSON')),
