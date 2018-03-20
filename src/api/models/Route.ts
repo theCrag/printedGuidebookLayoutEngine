@@ -16,6 +16,6 @@ export class Route {
 
     @Expose({ name: 'beta' })
     @Type(() => Description)
-    public description?: Description[];
+    public descriptions?: Description[];
 
 }

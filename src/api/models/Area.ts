@@ -18,7 +18,7 @@ export class Area {
 
     @Expose({ name: 'beta' })
     @Type(() => Description)
-    public description: Description[];
+    public descriptions: Description[];
 
     @Expose()
     public subAreaCount?: number;
