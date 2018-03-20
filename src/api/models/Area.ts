@@ -1,9 +1,9 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 
 import { AreaChild } from './AreaChild';
-import { AreaDescription } from './AreaDescription';
+import { Description } from './Description';
 import { Geometry } from './Geometry';
-import { Route } from './Route';
+import { Topo } from './Topo';
 
 @Exclude()
 export class Area {
@@ -21,8 +21,8 @@ export class Area {
     public subAreaCount: number;
 
     @Expose({ name: 'beta' })
-    @Type(() => AreaDescription)
-    public areaDescription: AreaDescription[];
+    @Type(() => Description)
+    public description: Description[];
 
     @Expose()
     @Type(() => Geometry)
@@ -37,9 +37,7 @@ export class Area {
     public subAreas?: Area[];
 
     @Expose()
-    @Type(() => Route)
-    public routes?: Route[];
-
-    // TODO: add topos
+    @Type(() => Topo)
+    public topos?: Topo[];
 
 }
