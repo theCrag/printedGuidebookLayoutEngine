@@ -40,6 +40,7 @@ export const env = {
     },
     api: {
         key: getOsEnv('API_KEY'),
+        url: getOsEnv('API_URL'),
     },
     log: {
         level: getOsEnv('LOG_LEVEL'),

@@ -18,57 +18,18 @@ export class CragJsonApiService {
         this.httpRequest = r;
     }
 
-    public async loadNode(nodePath: string): Promise<any> {
+    public async loadNode(nodePath: string): Promise<Area> {
         this.log.info(`Load node ${nodePath}`);
         const node = await this.requestNode(nodePath);
         const area = plainToClass(Area, node.data as {});
-        const { subAreas } = await this.requestAreaChildren(area);
-        area.subAreas = subAreas;
-        // area.routes = routes;
         return area;
-    }
-
-    private async requestAreaChildren(area: Area): Promise<any> {
-        if (!area.children) {
-            return {};
-        }
-
-        const queue = [];
-        for (const child of area.children) {
-            if (child.type === 'area') {
-                this.log.info(`Request child ${child.name} - ${child.type}`);
-                queue.push(this.requestNode(child.url));
-            }
-        }
-        const childNodes = await Promise.all(queue);
-
-        // const routes = area.children
-        //     .filter(childNode => childNode.type === 'route')
-        //     .map(childNode => plainToClass(Route, childNode as {}));
-
-        let subAreas = childNodes
-            .filter(childNode => childNode.data.type === 'area')
-            .map(childNode => plainToClass(Area, childNode.data as {}));
-
-        subAreas = await this.requestSubAreas(subAreas);
-
-        return { subAreas };
-    }
-
-    private async requestSubAreas(areas: Area[]): Promise<any> {
-        for (const area of areas) {
-            const { subAreas } = await this.requestAreaChildren(area);
-            area.subAreas = subAreas;
-            // area.routes = routes;
-        }
-        return areas;
     }
 
     private requestNode(nodePath: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.httpRequest({
                 method: 'GET',
-                url: `https://www.thecrag.com/climbing/${nodePath}/json?key=${env.api.key}`,
+                url: `${env.api.url}/${nodePath}/guide/json?key=${env.api.key}`,
             }, (error: any, response: request.RequestResponse, body: any) => {
                 // Verify if the requests was successful and append user
                 // information to our extended express request object
