@@ -21,6 +21,29 @@ export class HtmlService {
         return this.buildHtmlSceleton(area, body);
     }
 
+    public async getFirstPageOfArea(area: Area): Promise<string> {
+        this.log.info(`generateHtmlFromArea ${area.name}`);
+        const body = await this.buildAreaDesc(area);
+        return this.buildHtmlSceleton(area, body);
+    }
+
+    private buildAreaDesc(area: Area, level: number = 0): string {
+        level++;
+        if (area.type === 'area') {
+            return `<div id="${area.id}" class="area">
+                    <div class="area-title"><h${level}>${area.name}</h${level}></div>
+                    <div class="area-description">
+                    ${(area.descriptions && area.descriptions.length > 0)
+                    ? area.descriptions.map(this.buildAreaDescription.bind(this)).join('')
+                    : ''}
+                    </div>
+                    <div class="empty">empty</div>
+            </div>
+            </div>`;
+        }
+        return '';
+    }
+
     private buildArea(area: Area, level: number = 0): string {
         level++;
         if (area.type === 'area') {
