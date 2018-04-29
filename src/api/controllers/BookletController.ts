@@ -3,17 +3,15 @@ import * as _ from 'lodash';
 import { ContentType, Get, Header, JsonController, Req, Res } from 'routing-controllers';
 
 import { CragJsonApiService } from '../services/CragJsonApiService';
-import { HtmlService } from '../services/HtmlService';
+import { LayoutService } from '../services/layout/LayoutService';
 import { PdfService } from '../services/PdfService';
-import { PhantomService } from '../services/PhantomService';
 
 @JsonController('/booklet')
 export class BookletController {
 
     constructor(
         private cragJsonApiService: CragJsonApiService,
-        private htmlService: HtmlService,
-        private phantomService: PhantomService,
+        private layoutService: LayoutService,
         private pdfService: PdfService
     ) { }
 
@@ -22,8 +20,7 @@ export class BookletController {
     public async getHtml(@Req() req: express.Request): Promise<any> {
         const nodePath = req.path.replace('/api/booklet/html/', '');
         const area = await this.cragJsonApiService.loadNode(nodePath);
-        // const html = await this.htmlService.generateHtmlFromArea(area);
-        return await this.htmlService.getFirstPageOfArea(area);
+        return await this.layoutService.generate(area);
     }
 
     @Get('/pdf/*')
@@ -32,25 +29,7 @@ export class BookletController {
     public async getPdf(@Req() req: express.Request, @Res() res: express.Response): Promise<any> {
         const nodePath = req.path.replace('/api/booklet/pdf/', '');
         const area = await this.cragJsonApiService.loadNode(nodePath);
-
-        // TODO: START
-        // const html = await this.htmlService.generateHtmlFromArea(area);
-        let html = await this.htmlService.getFirstPageOfArea(area);
-
-        // const height = await this.phantomService.getHeight(html, '.empty');
-        // console.log('height', height);
-
-        const { height, pageAmount } = await this.phantomService.getFreeSpaceInHeight(html);
-        console.log('height', height);
-        console.log('pageAmount', pageAmount);
-
-        html = html.replace(
-            '<div class="empty">empty</div>',
-            `<div style="background: cyan; width: 100%; height: ${height}px">Fill-Element</div>`
-        );
-
-        // TODO: END
-
+        const html = await this.layoutService.generate(area);
         const pdfData = await this.pdfService.createPDF(html);
         res.setHeader('Content-Disposition', `attachment; filename=${_.kebabCase(area.name)}.pdf`);
         return pdfData;
