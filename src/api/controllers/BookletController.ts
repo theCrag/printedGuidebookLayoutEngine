@@ -1,9 +1,10 @@
 import * as express from 'express';
-import * as pdf from 'html-pdf';
+import * as _ from 'lodash';
 import { ContentType, Get, Header, JsonController, Req, Res } from 'routing-controllers';
 
 import { CragJsonApiService } from '../services/CragJsonApiService';
 import { HtmlService } from '../services/HtmlService';
+import { PdfService } from '../services/PdfService';
 import { PhantomService } from '../services/PhantomService';
 
 @JsonController('/booklet')
@@ -12,7 +13,8 @@ export class BookletController {
     constructor(
         private cragJsonApiService: CragJsonApiService,
         private htmlService: HtmlService,
-        private phantomService: PhantomService
+        private phantomService: PhantomService,
+        private pdfService: PdfService
     ) { }
 
     @Get('/html/*')
@@ -27,38 +29,31 @@ export class BookletController {
     @Get('/pdf/*')
     @ContentType('application/octet-stream')
     @Header('Content-Transfer-Encoding', 'binary')
-    @Header('Content-Disposition', 'attachment; filename=panda.pdf')
     public async getPdf(@Req() req: express.Request, @Res() res: express.Response): Promise<any> {
         const nodePath = req.path.replace('/api/booklet/pdf/', '');
         const area = await this.cragJsonApiService.loadNode(nodePath);
+
+        // TODO: START
         // const html = await this.htmlService.generateHtmlFromArea(area);
         let html = await this.htmlService.getFirstPageOfArea(area);
 
         // const height = await this.phantomService.getHeight(html, '.empty');
         // console.log('height', height);
 
-        const height = await this.phantomService.getFreeSpaceInHeight(html);
+        const { height, pageAmount } = await this.phantomService.getFreeSpaceInHeight(html);
         console.log('height', height);
+        console.log('pageAmount', pageAmount);
 
         html = html.replace(
             '<div class="empty">empty</div>',
-            `<div style="background: red; width: 100%; height: ${height}px">gugus</div>`
+            `<div style="background: cyan; width: 100%; height: ${height}px">Fill-Element</div>`
         );
 
-        const createPDF = () => {
-            return new Promise((resolve, reject) => {
-                pdf.create(html).toBuffer((err, buffer) => {
-                    console.log('This is a buffer:', Buffer.isBuffer(buffer));
-                    resolve(buffer);
-                });
-            });
-        };
+        // TODO: END
 
-        const pdfData = await createPDF();
-        // res.setHeader('Content-Disposition', 'attachment; filename=panda.pdf');
-        // res.setHeader('Content-Transfer-Encoding', 'binary');
-        // res.setHeader('Content-Type', 'application/octet-stream');
-        res.send(pdfData);
+        const pdfData = await this.pdfService.createPDF(html);
+        res.setHeader('Content-Disposition', `attachment; filename=${_.kebabCase(area.name)}.pdf`);
+        return pdfData;
     }
 
 }

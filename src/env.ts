@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 import * as pkg from '../package.json';
-import { getOsEnv, normalizePort, toBool } from './lib/env';
+import { getOsEnv, normalizePort, toBool, toNumber } from './lib/env';
 
 /**
  * Load .env file or for tests the .env.test file.
@@ -37,6 +37,11 @@ export const env = {
             queries: [path.join(__dirname, 'api/**/*Query{.js,.ts}')],
             mutations: [path.join(__dirname, 'api/**/*Mutation{.js,.ts}')],
         },
+    },
+    page: {
+        height: toNumber(getOsEnv('PAGE_HEIGHT')),
+        width: toNumber(getOsEnv('PAGE_WIDTH')),
+        format: getOsEnv('PAGE_FORMAT'),
     },
     api: {
         key: getOsEnv('API_KEY'),

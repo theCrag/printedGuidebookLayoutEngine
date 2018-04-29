@@ -8,7 +8,16 @@ export class PhantomService {
 
     public static WIDTH = 595;
     public static HEIGHT = 842;
-    public static MARGIN = 8;
+    public static MARGIN = 0;
+    public static FOOTER = 0;
+
+    public static ViewportHeight(): number {
+        return PhantomService.HEIGHT - (2 * PhantomService.MARGIN) - PhantomService.FOOTER;
+    }
+
+    public static ViewportWidth(): number {
+        return PhantomService.WIDTH - (2 * PhantomService.MARGIN);
+    }
 
     private instance: phantom.PhantomJS;
     private page: phantom.WebPage;
@@ -32,18 +41,29 @@ export class PhantomService {
     public async getFreeSpaceInHeight(html: string): Promise<any> {
         this.page.setContent(html, '');
         /* tslint:disable */
-        const height = await this.page.evaluate(function (s) {
+        let distanceToTop = await this.page.evaluate(function (s) {
             return (document.querySelector(s) as any).offsetTop;
         }, '.empty');
         /* tslint:enable */
-        return PhantomService.HEIGHT - PhantomService.MARGIN - height;
+        let pageAmount = 1;
+        while (distanceToTop > PhantomService.ViewportHeight()) {
+            distanceToTop = distanceToTop - PhantomService.ViewportHeight();
+            pageAmount++;
+        }
+        return {
+            height: PhantomService.ViewportHeight() - distanceToTop,
+            pageAmount,
+        };
     }
 
-    private async init(): Promise<void>  {
+    private async init(): Promise<void> {
         this.instance = await phantom.create();
         this.page = await this.instance.createPage();
         this.page.setting('dpi', '72');
-        this.page.property('viewportSize', { width: PhantomService.WIDTH, height: PhantomService.HEIGHT });
+        this.page.property('viewportSize', {
+            width: PhantomService.ViewportWidth(),
+            height: PhantomService.ViewportHeight(),
+        });
     }
 
 }

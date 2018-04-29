@@ -37,6 +37,16 @@ export class HtmlService {
                     ? area.descriptions.map(this.buildAreaDescription.bind(this)).join('')
                     : ''}
                     </div>
+                    <div class="area-description">
+                    ${(area.descriptions && area.descriptions.length > 0)
+                    ? area.descriptions.map(this.buildAreaDescription.bind(this)).join('')
+                    : ''}
+                    </div>
+                    <div class="area-description">
+                    ${(area.descriptions && area.descriptions.length > 0)
+                    ? area.descriptions.map(this.buildAreaDescription.bind(this)).join('')
+                    : ''}
+                    </div>
                     <div class="empty">empty</div>
             </div>
             </div>`;
@@ -116,6 +126,13 @@ export class HtmlService {
     <title>${area.name}</title>
 
     <style>
+        body {
+            margin: 0;
+        }
+        * {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
         .area-map {
             background: green;
             width: 200px;
