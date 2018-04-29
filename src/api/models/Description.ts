@@ -9,4 +9,10 @@ export class Description {
     @Expose()
     public markdown: number;
 
+    public get html(): string {
+        return `<div class="area-description">
+            <p><b>${this.name}</b><br>${this.markdown}</p>
+        </div>`;
+    }
+
 }

@@ -20,7 +20,8 @@ export class BookletController {
     public async getHtml(@Req() req: express.Request): Promise<any> {
         const nodePath = req.path.replace('/api/booklet/html/', '');
         const area = await this.cragJsonApiService.loadNode(nodePath);
-        return await this.layoutService.generate(area);
+        const html = await this.layoutService.generate(area);
+        return html;
     }
 
     @Get('/pdf/*')

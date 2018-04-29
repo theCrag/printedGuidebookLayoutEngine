@@ -35,4 +35,8 @@ export class Area {
     @Type(() => Geometry)
     public geometry?: Geometry;
 
+    public get html(): string {
+        return `<div class="area-title"><h1>${this.name}</h1></div>`;
+    }
+
 }

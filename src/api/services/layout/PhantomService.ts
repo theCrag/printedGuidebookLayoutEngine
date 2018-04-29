@@ -1,7 +1,10 @@
 import * as phantom from 'phantom';
 import { Service } from 'typedi';
 
-import { Logger, LoggerInterface } from '../../decorators/Logger';
+import { Area } from '../../models/Area';
+import { HtmlService } from './HtmlService';
+
+// import { Logger, LoggerInterface } from '../../../decorators/Logger';
 
 @Service()
 export class PhantomService {
@@ -23,37 +26,49 @@ export class PhantomService {
     private page: phantom.WebPage;
 
     constructor(
-        @Logger(__filename) private log: LoggerInterface
+        private htmlService: HtmlService
+        // @Logger(__filename) private log: LoggerInterface
     ) {
         this.init();
     }
 
-    public async getHeight(html: string, selector: string): Promise<any> {
-        this.log.info('getHeight of ', selector);
-        this.page.setContent(html, '');
-        /* tslint:disable */
-        return await this.page.evaluate(function (s) {
-            return (document.querySelector(s) as any).clientHeight;
-        }, selector);
-        /* tslint:enable */
-    }
+    // public async getHeight(html: string, selector: string): Promise<any> {
+    //     this.log.info('getHeight of ', selector);
+    //     this.page.setContent(html, '');
+    //     /* tslint:disable */
+    //     return await this.page.evaluate(function (s) {
+    //         return (document.querySelector(s) as any).clientHeight;
+    //     }, selector);
+    //     /* tslint:enable */
+    // }
 
-    public async getFreeSpaceInHeight(html: string): Promise<any> {
-        this.page.setContent(html, '');
+    // public async getFreeSpaceInHeight(html: string): Promise<any> {
+    //     this.page.setContent(html, '');
+    //     /* tslint:disable */
+    //     let distanceToTop = await this.page.evaluate(function (s) {
+    //         return (document.querySelector(s) as any).offsetTop;
+    //     }, '.empty');
+    //     /* tslint:enable */
+    //     let pageAmount = 1;
+    //     while (distanceToTop > PhantomService.ViewportHeight()) {
+    //         distanceToTop = distanceToTop - PhantomService.ViewportHeight();
+    //         pageAmount++;
+    //     }
+    //     return {
+    //         height: PhantomService.ViewportHeight() - distanceToTop,
+    //         pageAmount,
+    //     };
+    // }
+
+    public async getFreeSpaceInHeight(content: string): Promise<number> {
+        const htmlContent = this.htmlService.buildHtmlSkeleton(new Area(), content);
+        this.page.setContent(htmlContent, '');
         /* tslint:disable */
-        let distanceToTop = await this.page.evaluate(function (s) {
+        const distanceToTop = await this.page.evaluate(function (s) {
             return (document.querySelector(s) as any).offsetTop;
-        }, '.empty');
+        }, '.last-element');
         /* tslint:enable */
-        let pageAmount = 1;
-        while (distanceToTop > PhantomService.ViewportHeight()) {
-            distanceToTop = distanceToTop - PhantomService.ViewportHeight();
-            pageAmount++;
-        }
-        return {
-            height: PhantomService.ViewportHeight() - distanceToTop,
-            pageAmount,
-        };
+        return PhantomService.ViewportHeight() - distanceToTop;
     }
 
     private async init(): Promise<void> {

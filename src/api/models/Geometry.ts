@@ -21,4 +21,8 @@ export class Geometry {
     @Expose()
     public areasize: number;
 
+    public get html(): string {
+        return `<div class="area-map">Map</div>`;
+    }
+
 }
