@@ -21,7 +21,7 @@ export class HtmlService {
             font-size: 22px;
         }
         p {
-            line-height: 24px;
+            line-height: 25px;
         }
         * {
             margin: 0 !important;
@@ -34,9 +34,10 @@ export class HtmlService {
             height: 200px;
         }
         section.page {
-            height: ${env.page.height}px;
+            height: ${env.page.height - 1}px;
             width: ${env.page.width}px;
             background: papayawhip;
+            border-bottom: 1px solid blue;
         }
     </style>
 </head>
