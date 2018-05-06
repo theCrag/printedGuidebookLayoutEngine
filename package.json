@@ -85,6 +85,7 @@
     "serve-favicon": "^2.4.5",
     "supertest": "^3.0.0",
     "swagger-ui-express": "^2.0.10",
+    "tmp": "^0.0.33",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "typedi": "^0.5.2",
