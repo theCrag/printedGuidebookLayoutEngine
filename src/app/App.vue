@@ -1,15 +1,15 @@
 <template>
-  <Main />
+  <Document />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import Main from '@/app/components/Main/Main';
+import Document from '@/app/components/Document/Document';
 
 @Component({
   components: {
-    Main,
+    Document,
   },
 })
 export default class App extends Vue { }
