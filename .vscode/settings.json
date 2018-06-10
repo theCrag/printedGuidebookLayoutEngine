@@ -1,11 +1,22 @@
 {
-    "typescript.tsdk": "./node_modules/typescript/lib",
-    "cSpell.enabled": true,
-    "files.exclude": {
-        "tsconfig.build.json": true,
-        "ormconfig.json": true
+  "importSorter.generalConfiguration.exclude": [
+    "index.ts",
+    "plugins/*"
+  ],
+  "importSorter.sortConfiguration.customOrderingRules.rules": [
+    {
+      "regex": "^vue",
+      "orderLevel": 0,
+      "numberOfEmptyLinesAfterGroup": 1,
+      "type": "path"
     },
-    "importSorter.generalConfiguration.sortOnBeforeSave": true,
-    "files.trimTrailingWhitespace": true,
-    "editor.formatOnSave": false
+    {
+      "regex": "^.(?!\.\/)",
+      "orderLevel": 10
+    },
+    {
+      "regex": "^@|^\.\/",
+      "orderLevel": 20
+    }
+  ],
 }

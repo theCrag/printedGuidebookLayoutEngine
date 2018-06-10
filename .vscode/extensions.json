@@ -1,12 +1,10 @@
 {
-    "recommendations": [
-        "streetsidesoftware.code-spell-checker",
-        "eg2.tslint",
-        "steoates.autoimport",
-        "EditorConfig.EditorConfig",
-        "christian-kohler.path-intellisense",
-        "mike-co.import-sorter",
-        "mikestead.dotenv",
-        "Orta.vscode-jest"
-    ]
+  // See http://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    "ecmel.vscode-html-css",
+    "shinnn.stylelint",
+    "mike-co.import-sorter",
+  ]
 }
