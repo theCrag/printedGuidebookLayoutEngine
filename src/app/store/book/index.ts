@@ -17,6 +17,7 @@ export const BookNamespace = 'book';
 
 export const BookActions = {
   FetchArea: `${BookNamespace}/${actionTypes.FETCH_AREA}`,
+  AddContent: `${BookNamespace}/${actionTypes.ADD_CONTENT}`,
 };
 
 export const BookGetters = {

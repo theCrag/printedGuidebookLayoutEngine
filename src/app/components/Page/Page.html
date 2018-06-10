@@ -1,9 +1,13 @@
-<section class="sheet padding-10mm">
-
-  <!-- Write HTML just like a web page -->
+<section :id="'sheet-' + sheet.id" class="sheet padding-10mm">
   <article>
-    <h1>Document</h1>
-    This is an A5 document.
-  </article>
 
+    <div v-if="sheet && sheet.content" v-for="context in sheet.content" track-by="$index">
+
+      <Title v-if="context.type === 'Title'" :context="context" />
+
+      <Description v-if="context.type === 'Description'" :context="context" />
+
+    </div>
+
+  </article>
 </section>

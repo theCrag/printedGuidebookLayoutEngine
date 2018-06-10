@@ -1,4 +1,3 @@
 <main>
-  <Page />
-  <Page />
+  <Page v-for="sheet in sheets" :key="sheet.id" :sheet="sheet" />
 </main>

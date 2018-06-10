@@ -1,5 +1,5 @@
 import { BookState } from './book.state';
-import { Page } from '@/app/models/Page';
+import { Sheet } from '@/app/models/Sheet';
 import { Area } from '@/app/models/Area';
 
 // -------------------------------------------------------------------------
@@ -19,7 +19,7 @@ export const getters = {
   [getterTypes.GetArea](state: BookState): Area {
     return state.area;
   },
-  [getterTypes.GetPages](state: BookState): Page[] {
-    return state.pages;
+  [getterTypes.GetPages](state: BookState): Sheet[] {
+    return state.sheets;
   },
 };
