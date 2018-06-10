@@ -46,10 +46,6 @@ import { appConfig } from '@/config/app.config';
 
 Vue.config.productionTip = appConfig.env !== 'Production';
 
-// TODO: Dispatch main action during the bootstrap process
-// store.dispatch(MetaDataActions.LoadAPIInfo);
-// store.dispatch(AuthActions.CheckAuth);
-
 new Vue({
 
   /**

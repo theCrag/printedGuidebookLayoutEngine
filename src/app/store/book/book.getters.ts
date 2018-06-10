@@ -1,12 +1,14 @@
-import { Contributor } from '@/app/models/Contributor';
-import { GithubState } from './github.state';
+import { BookState } from './book.state';
+import { Page } from '@/app/models/Page';
+import { Area } from '@/app/models/Area';
 
 // -------------------------------------------------------------------------
 // Define Getter Types
 // -------------------------------------------------------------------------
 
 export const getterTypes = {
-  CONTRIBUTORS: 'CONTRIBUTORS',
+  GetArea: 'GetArea',
+  GetPages: 'GetPages',
 };
 
 // -------------------------------------------------------------------------
@@ -14,7 +16,10 @@ export const getterTypes = {
 // -------------------------------------------------------------------------
 
 export const getters = {
-  [getterTypes.CONTRIBUTORS](state: GithubState): Contributor[] {
-    return state.contributors;
+  [getterTypes.GetArea](state: BookState): Area {
+    return state.area;
+  },
+  [getterTypes.GetPages](state: BookState): Page[] {
+    return state.pages;
   },
 };

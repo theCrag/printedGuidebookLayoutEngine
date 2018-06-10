@@ -1,33 +1,34 @@
-import { actions, actionTypes } from './github.actions';
-import { getters, getterTypes } from './github.getters';
-import { mutations } from './github.mutations';
-import { initialState } from './github.state';
+import { actions, actionTypes } from './book.actions';
+import { getters, getterTypes } from './book.getters';
+import { mutations } from './book.mutations';
+import { initialState } from './book.state';
 
 // -------------------------------------------------------------------------
 // Export Types & Interfaces
 // -------------------------------------------------------------------------
 
-export * from './github.state';
+export * from './book.state';
 
 // -------------------------------------------------------------------------
 // Define Namespace, Actions & Getters
 // -------------------------------------------------------------------------
 
-export const GithubNamespace = 'github';
+export const BookNamespace = 'book';
 
-export const GithubActions = {
-  GetContributors: `${GithubNamespace}/${actionTypes.GET_CONTRIBUTORS}`,
+export const BookActions = {
+  FetchArea: `${BookNamespace}/${actionTypes.FETCH_AREA}`,
 };
 
-export const GithubGetters = {
-  Contributors: `${GithubNamespace}/${getterTypes.CONTRIBUTORS}`,
+export const BookGetters = {
+  GetArea: `${BookNamespace}/${getterTypes.GetArea}`,
+  GetPages: `${BookNamespace}/${getterTypes.GetPages}`,
 };
 
 // -------------------------------------------------------------------------
 // Export Store
 // -------------------------------------------------------------------------
 
-export const github = {
+export const book = {
   namespaced: true,
   state: initialState,
   getters,
