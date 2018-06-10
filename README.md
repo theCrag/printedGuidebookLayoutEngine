@@ -1,44 +1,20 @@
-<p align="center">
-  <img src="./w3tec-logo.png" alt="w3tec" width="400" />
-</p>
+<h1 align="center">Title</h1>
 
-<h1 align="center">Vue.js Example App</h1>
+<p align="center"><!-- Travis badges --></p>
 
 <p align="center">
-  <a href="https://david-dm.org/w3tecch/vue-example-app">
-    <img src="https://david-dm.org/w3tecch/vue-example-app/status.svg?style=flat" alt="dependency" />
-  </a>
-  <a href="https://travis-ci.org/w3tecch/vue-example-app">
-    <img src="https://travis-ci.org/w3tecch/vue-example-app.svg?branch=master" alt="travis" />
-  </a>
-  <a href="https://ci.appveyor.com/project/hirsch88/vue-example-app/branch/master">
-    <img src="https://ci.appveyor.com/api/projects/status/s43nfc2n01iuqpul/branch/master?svg=true" alt="appveyor" />
-  </a>
-  <a href="https://stackshare.io/hirsch88/vue-example-app">
-    <img src="https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat" alt="StackShare" />
-  </a>
-
-</p>
-
-<p align="center">
-  <b>A delightful starter kit for Vue.js with beautiful code written in TypeScript.</b></br>
-  <sub>Made with ❤️ by <a href="https://github.com/w3tecch">w3tech</a> and <a href="https://github.com/w3tecch/vue-example-app/graphs/contributors">contributors</a></sub>
+  TODO
 </p>
 
 <br />
 
-![divider](./w3tec-divider.png)
-
 ## ❯ Why
 
-The goal of this project is to have a feature complete boilerplate for awesome vue apps.
-
-![divider](./w3tec-divider.png)
+TODO
 
 ## ❯ Table of Contents
 
 - [Getting Started](#-getting-started)
-- [Configure WebWorkers](#-configure-webworkers)
 
 ## ❯ Getting Started
 
@@ -70,37 +46,6 @@ Go to the project dir and start your app with this npm script.
 ```bash
 yarn start serve
 ```
-
-![divider](./w3tec-divider.png)
-
-## ❯ Configure WebWorkers
-
-To use web workers we recommend [vue-worker](https://alligator.io/vuejs/vue-workers/). The integration is quite simple, just create a new plugin file called `vue-worker.plugin.ts` and add the following code snippet into it. Then link the file in the `index.ts` and you are got to go.
-
-```TypeScript
-import Vue from 'vue';
-import { PluginObject, PluginFunction } from 'vue';
-import SWorker from 'simple-web-worker';
-
-export const VueWorker: PluginObject<any> = {
-  install(VueInstance): void {
-    VueInstance.$worker = SWorker as any;
-    VueInstance.prototype.$worker = SWorker as any;
-  },
-};
-
-Vue.use(VueWorker);
-
-```
-
-![divider](./w3tec-divider.png)
-
-## ❯ Related Projects
-
-- [express-typescript-boilerplate](https://github.com/w3tecch/express-typescript-boilerplate) - A delightful way to building a RESTful API with NodeJs & TypeScript by @w3tecch.
-- [aurelia-typescript-boilerplate](https://github.com/w3tecch/aurelia-typescript-boilerplate) - An Aurelia starter kit with TypeScript
-
-![divider](./w3tec-divider.png)
 
 ## ❯ License
 
