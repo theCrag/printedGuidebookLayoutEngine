@@ -12,6 +12,15 @@ export class Topo {
   @Expose()
   public hashID: string;
 
+  @Expose()
+  public linked: string;
+
+  @Expose()
+  public width: string;
+
+  @Expose()
+  public height: string;
+
   @Expose({ name: 'objects' })
   @Type(() => Route)
   public routes: Route[];

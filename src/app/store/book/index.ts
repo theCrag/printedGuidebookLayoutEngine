@@ -23,6 +23,7 @@ export const BookActions = {
 export const BookGetters = {
   GetArea: `${BookNamespace}/${getterTypes.GetArea}`,
   GetPages: `${BookNamespace}/${getterTypes.GetPages}`,
+  GetLayouts: `${BookNamespace}/${getterTypes.GetLayouts}`,
 };
 
 // -------------------------------------------------------------------------

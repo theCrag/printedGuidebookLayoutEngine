@@ -12,8 +12,8 @@ export default class Description extends Vue {
 
     const pathItems = this.context.path.split('.');
     const nextItem = parseInt(pathItems.pop(), 10) + 1;
-    const prop = 'descriptions';
     const path = pathItems.join('.') + '.' + nextItem;
+    const prop = 'descriptions';
 
     this.log.info('emit next', prop, path);
     this.$eventBus.$emit('NEXT', { prop, path });

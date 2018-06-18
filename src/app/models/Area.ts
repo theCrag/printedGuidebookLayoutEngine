@@ -1,8 +1,9 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose, Type, Transform } from 'class-transformer';
 
 import { Description } from './Description';
 import { Geometry } from './Geometry';
 import { Topo } from './Topo';
+import { Route } from '@/app/models/Route';
 
 @Exclude()
 export class Area {
@@ -23,9 +24,25 @@ export class Area {
   @Expose()
   public subAreaCount?: number;
 
-  @Expose()
+  @Expose({ name: 'children' })
   @Type(() => Area)
-  public children?: Area[];
+  @Transform((values) => {
+    if (values) {
+      return values.filter((v: any) => v.type === 'area');
+    }
+    return [];
+  }, { toClassOnly: true })
+  public subAreas: Area[];
+
+  @Expose()
+  @Type(() => Route)
+  @Transform((_, area) => {
+    if (area.children) {
+      return area.children.filter((v: any) => v.type === 'route');
+    }
+    return [];
+  }, { toClassOnly: true })
+  public routes: Route[];
 
   @Expose()
   @Type(() => Topo)

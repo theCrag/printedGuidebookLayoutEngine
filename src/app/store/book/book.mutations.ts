@@ -16,4 +16,8 @@ export const mutations: MutationTree<BookState> = {
     state.sheets[state.sheets.length - 1].content.push(obj);
   },
 
+  [mutationTypes.SET_LAYOUTS](state: BookState, layouts: any): void {
+    state.layouts = layouts;
+  },
+
 };

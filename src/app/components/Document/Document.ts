@@ -6,6 +6,7 @@ import objectPath from 'object-path';
 import Page from '@/app/components/Page/Page';
 import { Area } from '@/app/models/Area';
 import { Sheet } from '@/app/models/Sheet';
+import { AreaLayout } from '@/app/models/AreaLayout';
 
 @Component({
   components: {
@@ -26,6 +27,11 @@ export default class Document extends Vue {
   @Getter(BookGetters.GetPages)
   public sheets: Sheet[];
 
+  @Getter(BookGetters.GetLayouts)
+  public layouts: AreaLayout[];
+
+  public treePath: number[] = [];
+
   private log = Vue.$createLogger('Document');
 
   public created(): void {
@@ -34,12 +40,31 @@ export default class Document extends Vue {
     this.$eventBus.$on('NEXT', (event: any) => this.onNext(event));
   }
 
-  @Watch('area', { deep: true })
-  public areaChanged(): any {
+  @Watch('layouts')
+  public layoutsChanged(): any {
+    this.log.info('layoutsChanged', this.layouts);
+    this.buildTreePath(this.layouts[0]);
+    this.log.info('treePath', this.treePath);
+
     this.onNext({
       prop: 'title',
       path: 'name',
     });
+  }
+
+  private buildTreePath(areaLayout: AreaLayout): void {
+    this.treePath.push(0);
+    if (areaLayout.subAreas.length > 0) {
+      this.buildTreePath(areaLayout.subAreas[0][0]);
+    }
+  }
+
+  public onNextLayoutTree(): void {
+    // TODO: go to the next sibling
+    // this.onNext({
+    //   prop: 'title',
+    //   path: 'name',
+    // });
   }
 
   public onNext(event: any): void {
