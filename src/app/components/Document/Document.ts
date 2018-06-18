@@ -91,6 +91,17 @@ export default class Document extends Vue {
         });
         break;
 
+      case 'topos':
+        if (!value) {
+          return;
+        }
+        this.addContent({
+          type: 'Topo',
+          value,
+          path: event.path,
+        });
+        break;
+
       default:
         this.log.warn('onNext->NOT_FOUND', event.prop, event.path, value);
     }

@@ -26,7 +26,8 @@ export default class Descriptions extends Vue {
 
     const pathItems = this.context.path.split('.');
     pathItems.pop();
-    const path = pathItems.join('.') + '.topos.0';
+    pathItems.push('topos');
+    const path = pathItems.join('.') + '.0';
     const prop = 'topos';
 
     this.log.info('emit next', prop, path);
