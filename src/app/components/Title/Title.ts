@@ -12,9 +12,8 @@ export default class Title extends Vue {
 
     const pathItems = this.context.path.split('.');
     pathItems.pop();
-    pathItems.push('descriptions');
     const prop = 'descriptions';
-    const path = pathItems.join('.') + '.0';
+    const path = pathItems.join('.');
 
     this.log.info('emit next', prop, path);
     this.$eventBus.$emit('NEXT', { prop, path });

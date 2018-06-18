@@ -1,0 +1,6 @@
+<div>
+    <Geometry v-if="geometry" :context="geometry"></Geometry>
+
+    <Description v-for="description in descriptions" :context="description" track-by="$index"></Description>
+
+</div>

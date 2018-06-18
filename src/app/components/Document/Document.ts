@@ -84,15 +84,8 @@ export default class Document extends Vue {
         break;
 
       case 'descriptions':
-        if (!value) {
-          return;
-          // this.onNext({
-          //   prop: ,
-          //   path: ,
-          // });
-        }
         this.addContent({
-          type: 'Description',
+          type: 'Descriptions',
           value,
           path: event.path,
         });

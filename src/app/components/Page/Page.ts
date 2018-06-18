@@ -2,12 +2,12 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
 import { Sheet } from '@/app/models/Sheet';
 import Title from '@/app/components/Title/Title';
-import Description from '@/app/components/Description/Description';
+import Descriptions from '@/app/components/Descriptions/Descriptions';
 
 @Component({
   components: {
     Title,
-    Description,
+    Descriptions,
   },
 })
 export default class Page extends Vue {
