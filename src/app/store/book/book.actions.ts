@@ -7,7 +7,6 @@ import { BookState } from './book.state';
 import { Area } from '@/app/models/Area';
 import { AreaLayout } from '@/app/models/AreaLayout';
 import { appConfig } from './../../../config/app.config';
-import { Sheet } from '@/app/models/Sheet';
 
 const log = Vue.$createLogger('BookActions');
 
@@ -24,6 +23,7 @@ export const actionTypes = {
   ADD_CONTENT: 'ADD_CONTENT',
   BUILD_LAYOUTS: 'BUILD_LAYOUTS',
   GO_TO_NEXT_PAGE: 'GO_TO_NEXT_PAGE',
+  GO_TO_NEXT_PAGE_DESC: 'GO_TO_NEXT_PAGE_DESC',
 };
 
 // -------------------------------------------------------------------------
@@ -65,7 +65,15 @@ export const actions: ActionTree<BookState, BookState> = {
    */
   [actionTypes.GO_TO_NEXT_PAGE]({ commit, state }: ActionContext<BookState, BookState>): void {
     log.info('GO_TO_NEXT_PAGE');
-    commit(mutationTypes.SET_SHEETS);
+    commit(mutationTypes.GO_TO_NEXT_PAGE);
+  },
+
+  /**
+   *
+   */
+  [actionTypes.GO_TO_NEXT_PAGE_DESC]({ commit, state }: ActionContext<BookState, BookState>, type: string): void {
+    log.info('GO_TO_NEXT_PAGE_DESC');
+    commit(mutationTypes.GO_TO_NEXT_PAGE_DESC, type);
   },
 };
 

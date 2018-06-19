@@ -28,10 +28,30 @@ export const mutations: MutationTree<BookState> = {
     state.layouts = layouts;
   },
 
-  [mutationTypes.SET_SHEETS](state: BookState): void {
+  [mutationTypes.GO_TO_NEXT_PAGE](state: BookState): void {
     const change = state.sheets[state.sheets.length - 1].content.pop();
     state.sheets.push(new Sheet(state.sheets.length + 1));
     state.sheets[state.sheets.length - 1].content.push(change);
+  },
+
+  [mutationTypes.GO_TO_NEXT_PAGE_DESC](state: BookState, type: string): void {
+    switch (type) {
+      case 'geometry':
+        break;
+
+      case 'description':
+        const lastElement = state.sheets[state.sheets.length - 1].content.length - 1;
+        const copy = Object.assign({}, state.sheets[state.sheets.length - 1].content[lastElement]);
+        log.info('copy', copy);
+        const last = state.sheets[state.sheets.length - 1].content[lastElement].value.descriptions.pop();
+        break;
+
+      default:
+        break;
+    }
+
+    // state.sheets.push(new Sheet(state.sheets.length + 1));
+    // state.sheets[state.sheets.length - 1].content.push(copy);
   },
 
 };

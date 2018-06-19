@@ -10,5 +10,6 @@ export default class Description extends Vue {
 
   public mounted(): void {
     this.log.info('onContextChanged', this.context);
+    this.$emit('is-ready');
   }
 }

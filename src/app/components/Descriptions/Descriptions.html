@@ -1,6 +1,6 @@
 <div>
-  <Geometry v-if="geometry" :context="geometry"></Geometry>
+  <Geometry v-if="geometry" :context="geometry" @is-ready="geometryIsReady" ref="geometryElement" />
 
-  <Description v-for="(description, index) in descriptions" :context="description" :key="`description-${index}`"></Description>
+  <Description v-for="(description, index) in descriptions" :context="description" :key="`description-${index}`" @is-ready="descriptionIsReady" ref="descriptionElement" />
 
 </div>

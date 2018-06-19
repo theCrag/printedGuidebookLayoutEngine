@@ -19,6 +19,7 @@ export const BookActions = {
   FetchArea: `${BookNamespace}/${actionTypes.FETCH_AREA}`,
   AddContent: `${BookNamespace}/${actionTypes.ADD_CONTENT}`,
   GoToNextPage: `${BookNamespace}/${actionTypes.GO_TO_NEXT_PAGE}`,
+  GoToNextPageDesc: `${BookNamespace}/${actionTypes.GO_TO_NEXT_PAGE_DESC}`,
 };
 
 export const BookGetters = {
