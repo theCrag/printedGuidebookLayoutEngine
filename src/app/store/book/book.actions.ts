@@ -45,8 +45,11 @@ export const actions: ActionTree<BookState, BookState> = {
   /**
    *
    */
-  [actionTypes.GO_TO_NEXT_PAGE_DESC]({ commit, state }: ActionContext<BookState, BookState>, type: string): void {
+  [actionTypes.GO_TO_NEXT_PAGE_DESC](
+    { commit, state }: ActionContext<BookState, BookState>,
+    changes: { elementOldPage: any, elementNewPage: any }
+  ): void {
     log.info('GO_TO_NEXT_PAGE_DESC');
-    commit(mutationTypes.GO_TO_NEXT_PAGE_DESC, type);
+    commit(mutationTypes.GO_TO_NEXT_PAGE_DESC, changes);
   },
 };

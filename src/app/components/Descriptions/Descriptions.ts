@@ -18,7 +18,7 @@ export default class Descriptions extends Vue {
   @Prop() public context: any;
 
   @Action(BookActions.GoToNextPageDesc)
-  public goToNextPageDesc: (type: string) => void;
+  public goToNextPageDesc: (changes: { elementOldPage: any, elementNewPage: any }) => void;
 
   public descriptions: DescriptionModel[] = [];
   public geometry: GeometryModel = new GeometryModel();
@@ -29,7 +29,10 @@ export default class Descriptions extends Vue {
     const geometryElement = $(this.$refs.geometryElement);
     this.log.info('geometryElement', geometryElement);
     if (!vueIsInsideCurrentSheet(geometryElement[geometryElement.length - 1])) {
-      return this.goToNextPageDesc('geometry');
+      return this.goToNextPageDesc({
+        elementOldPage: geometryElement[geometryElement.length - 1],
+        elementNewPage: geometryElement[geometryElement.length - 1],
+      });
     }
   }
 
@@ -38,7 +41,7 @@ export default class Descriptions extends Vue {
     this.log.info('descriptionElement', descriptionElement);
     for (let i = descriptionElement.length - 1; i >= 0; i--) {
       if (!vueIsInsideCurrentSheet(descriptionElement[i])) {
-        return this.goToNextPageDesc('description');
+        return this.goToNextPageDesc({ elementOldPage: descriptionElement[i - 1], elementNewPage: descriptionElement[i] });
       }
     }
   }
