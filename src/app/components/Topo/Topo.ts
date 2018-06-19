@@ -36,7 +36,7 @@ export default class Topo extends Vue {
         const sheetOffset = parentSheet.offset() || { top: 0 };
         const paddingTop = parseFloat(parentSheet.css('padding-top').slice(0, -2));
         const totalPageHeight = sheetOffset.top + paddingTop + (parentSheet.height() || 0);
-        parentSheet.parent().append(`<hr style="position:absolute; top:${totalPageHeight}px; width:100%; border-color: red; margin: 0">`);
+        // parentSheet.parent().append(`<hr style="position:absolute; top:${totalPageHeight}px;width:100%; border-color:red; margin:0">`);
         this.log.info('closest(.sheet)', parentSheet);
         this.log.info('paddingTop', paddingTop);
         this.log.info('totalPageHeight', totalPageHeight);
