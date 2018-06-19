@@ -16,16 +16,16 @@ export * from './book.state';
 export const BookNamespace = 'book';
 
 export const BookActions = {
-  FetchArea: `${BookNamespace}/${actionTypes.FETCH_AREA}`,
   AddContent: `${BookNamespace}/${actionTypes.ADD_CONTENT}`,
   GoToNextPage: `${BookNamespace}/${actionTypes.GO_TO_NEXT_PAGE}`,
   GoToNextPageDesc: `${BookNamespace}/${actionTypes.GO_TO_NEXT_PAGE_DESC}`,
 };
 
 export const BookGetters = {
-  GetArea: `${BookNamespace}/${getterTypes.GetArea}`,
   GetPages: `${BookNamespace}/${getterTypes.GetPages}`,
-  GetLayouts: `${BookNamespace}/${getterTypes.GetLayouts}`,
+  GetPageById: `${BookNamespace}/${getterTypes.GetPageById}`,
+  GetPageSize: `${BookNamespace}/${getterTypes.GetPageSize}`,
+  HasInitialized: `${BookNamespace}/${getterTypes.HasInitialized}`,
 };
 
 // -------------------------------------------------------------------------

@@ -11,6 +11,7 @@ import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger';
 
 import { BookState, book } from './book';
+import { AreaState, area } from './area';
 
 /**
  * Define your Store here
@@ -26,6 +27,7 @@ export const store = new Vuex.Store<Store>({
    * Assign the modules to the store.
    */
   modules: {
+    area: area as any,
     book: book as any,
   },
 

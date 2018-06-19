@@ -1,16 +1,17 @@
+import { Action } from 'vuex-class';
+
+import { BookActions } from '@/app/store/book';
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { buildImageUrl } from '@/app/services/api/crag.api';
-import { BookActions } from './../../store/book/index';
-import { Action } from 'vuex-class';
 import { htmlIsInsideCurrentSheet } from '@/app/services/utils/page-break.service';
 
 @Component
 export default class Topo extends Vue {
 
+  @Prop() public context: any;
+
   @Action(BookActions.GoToNextPage)
   public goToNextPage: () => void;
-
-  @Prop() public context: any;
 
   public topoURL: string = '';
 

@@ -15859,6 +15859,271 @@
         "copyrightID": "565415739"
       },
       {
+        "width": "1600",
+        "sequence": 1,
+        "number": "18610",
+        "dimensions": {
+          "modified": [
+            550,
+            236
+          ]
+        },
+        "hashID": "c466d9e3ebd0d27ea9571d8f817b5a52be0501f9",
+        "node": "806165931",
+        "origWidth": "1600",
+        "objects": [
+          {
+            "urlAncestorStub": "spain/alto-mijares/hoz-del-mijares",
+            "locatedness": 74,
+            "asciiName": "Central Park",
+            "numberPhotos": "4",
+            "numberTopos": 3,
+            "tlc": {
+              "node": {
+                "id": "190488567"
+              }
+            },
+            "redirectStubs": [],
+            "displayAverageHeight": [
+              24,
+              "m"
+            ],
+            "objectType": "Area",
+            "isEmerge": 1,
+            "ascentCount": "55",
+            "subType": "Sector",
+            "id": "587217471",
+            "altNames": [
+              {
+                "name": "El Habladero",
+                "type": "Alternate"
+              }
+            ],
+            "beta": [
+              {
+                "markdown": "==[en]==\n\n==[de]==\n\nEin sehr interessanter Sektor für Klettereien ab dem 6. Grad. Seine Schattige Lage ermöglicht entspanntes Klettern an heissen Tagen und ein schöner Lagerplatz im mittleren Teil machen ihn auch für Gruppen und Familien attraktiv. Einige Routen sind sehr Lang und benötigen eine entsprechende Seillänge. \n\nDie Klettereien sind sehr unterschiedlich: \n\n* Im linken Teil, der von einem oberen Band startet das über ein Fixseil erreicht wird, gibt es Steilplatten in scharfen Fels erster Güte. \n* Im Mittleren Teil ist bedingt durch die Länge oft Ausdauer angesagt. \n* Die Routen im rechten Teil sind um einen grossen Pfeiler verteilt und bieten einige steile Lochklettereien aber auch klassische Linien.  \n\n\n==[es]==",
+                "publisherID": "565415745",
+                "copyrightID": "565415739",
+                "name": "Description"
+              },
+              {
+                "markdown": "==[en]==\n\n==[de]==\n\nViele Routen im linken Teil des Sektors wurden schon um die Jahrtausendwende von Carlos de Dios und Kollegen eingerichtet und fristetet lange Zeit ein völlig unberechtigtes Schattendarsein. Erst mit der Neu- und Resterschliessung der Vorderen Sektoren bekam dieser schöne Sektor seine berechtigte Aufmerksammkeit - nicht zuletzt wegen der schönen Routen im Mittleren Schwierigkeitsbereich in oft Ausgezeichneten Fels. Die neusten und sehr vielfältigen Routen entstanden im rechten Teil ab 2012.\n\n==[es]==",
+                "publisherID": "565415745",
+                "copyrightID": "565415739",
+                "name": "History"
+              }
+            ],
+            "name": "Central Park",
+            "averageHeight": [
+              24,
+              "m"
+            ],
+            "numberRoutes": "37",
+            "depth": "7",
+            "priceCategory": "Low",
+            "objectID": "587217471",
+            "kudos": "184",
+            "hide": {},
+            "shape": "106.9 67.9 lbvnd Central%20Park,106.9 140.1,106.9 67.9,206.4 67.9,206.4 140.1",
+            "type": "area",
+            "maxPop": 31,
+            "permitNode": {
+              "node": {
+                "id": "190489071"
+              }
+            }
+          },
+          {
+            "urlAncestorStub": "spain/alto-mijares/hoz-del-mijares",
+            "locatedness": 27,
+            "asciiName": "Obras Selectas",
+            "numberPhotos": "2",
+            "numberTopos": 1,
+            "tlc": {
+              "node": {
+                "id": "190488567"
+              }
+            },
+            "redirectStubs": [],
+            "displayAverageHeight": [
+              26,
+              "m"
+            ],
+            "objectType": "Area",
+            "isEmerge": 1,
+            "ascentCount": "56",
+            "subType": "Sector",
+            "id": "587225973",
+            "name": "Obras Selectas",
+            "numberRoutes": "31",
+            "averageHeight": [
+              26,
+              "m"
+            ],
+            "depth": "7",
+            "priceCategory": "Low",
+            "objectID": "587225973",
+            "kudos": "163",
+            "hide": {},
+            "shape": "214.5 67.9 lbvnd Obras%20Selectas,214.5 140.1,214.5 67.9,300.8 67.9,300.8 140.1",
+            "type": "area",
+            "maxPop": 38,
+            "permitNode": {
+              "node": {
+                "id": "190489071"
+              }
+            }
+          },
+          {
+            "urlAncestorStub": "spain/alto-mijares/hoz-del-mijares",
+            "locatedness": 66,
+            "asciiName": "Sombra Perpetua",
+            "numberTopos": 3,
+            "tlc": {
+              "node": {
+                "id": "190488567"
+              }
+            },
+            "redirectStubs": [],
+            "displayAverageHeight": [
+              28,
+              "m"
+            ],
+            "objectType": "Area",
+            "isEmerge": 1,
+            "ascentCount": "21",
+            "subType": "Sector",
+            "id": "587233428",
+            "altNames": [
+              {
+                "name": "El Tubo",
+                "type": "Alternate"
+              }
+            ],
+            "name": "Sombra Perpetua",
+            "numberRoutes": "25",
+            "averageHeight": [
+              28,
+              "m"
+            ],
+            "depth": "7",
+            "priceCategory": "Low",
+            "objectID": "587233428",
+            "kudos": "86",
+            "hide": {},
+            "shape": "304.1 67.9 lbvnd Sombra%20Perpetua,304.1 140.1,304.1 67.9,383 67.9,383 140.1",
+            "type": "area",
+            "maxPop": 35,
+            "permitNode": {
+              "node": {
+                "id": "190489071"
+              }
+            }
+          },
+          {
+            "urlAncestorStub": "spain/alto-mijares/hoz-del-mijares",
+            "locatedness": 76,
+            "asciiName": "El paraiso",
+            "numberTopos": 1,
+            "tlc": {
+              "node": {
+                "id": "190488567"
+              }
+            },
+            "redirectStubs": [],
+            "displayAverageHeight": [
+              16,
+              "m"
+            ],
+            "objectType": "Area",
+            "isEmerge": 1,
+            "ascentCount": "11",
+            "subType": "Sector",
+            "id": "843824724",
+            "name": "El paraíso",
+            "numberRoutes": "11",
+            "averageHeight": [
+              16,
+              "m"
+            ],
+            "depth": "7",
+            "priceCategory": "Low",
+            "objectID": "843824724",
+            "kudos": "22",
+            "hide": {},
+            "shape": "406.2 67.9 lbvnd El%20para%C3%ADso,406.2 140.1,406.2 67.9,474 67.9,474 140.1",
+            "type": "area",
+            "maxPop": 20,
+            "permitNode": {
+              "node": {
+                "id": "190489071"
+              }
+            }
+          }
+        ],
+        "id": "1441499130",
+        "aspectFlipped": 0,
+        "insideNode": {
+          "urlAncestorStub": "spain/alto-mijares/hoz-del-mijares",
+          "locatedness": 93,
+          "asciiName": "El Lado Umbrio",
+          "numberPhotos": "6",
+          "numberTopos": 10,
+          "tlc": {
+            "node": {
+              "id": "190488567"
+            }
+          },
+          "redirectStubs": [],
+          "displayAverageHeight": [
+            25,
+            "m"
+          ],
+          "isEmerge": 1,
+          "ascentCount": "143",
+          "subType": "Sector",
+          "id": "806165931",
+          "beta": [
+            {
+              "markdown": "==[en]==\n\nShadowy sector for hot summer days that offers quite long routes in superb rock quality. \n\nSome of the difficult routes where equipped by Pedro Pons in the early 2000s. Meanwhile the old routes have been improved and therefore you can enjoy your efforts in the hard projects. \n\n==[de]==\n\nSchattiger Sommersektor mit recht langen Routen in sehr schönem Fels. \n\nEinige der schweren Routen wurden Anfang der 2000er  von Pedro Pons eingerichtet und wurden mittlerweile Saniert, so dass man seine Anstrengungen in den harten Projekten geniessen kann. \n\n==[es]==\n\nSector umbrillo ideal para el verano que ofrece viás largas en roca excelente. \n\nUnas de las vias mas dificiles, equipadas al principio de los años 2000 por Pedro Pons, cuya protección no esta al dia se estan renovando de momento.",
+              "publisherID": "565415745",
+              "copyrightID": "565415739",
+              "name": "Description"
+            },
+            {
+              "markdown": "http://www.thecrag.com/photo/592393686\n\n==[en]==\n\n**Walking Directions:** From the parking lot walk in direction of the down pipe from the power plant. Use an iron stair an follow the pipe steep uphill until you reach the rock. \n\nYou will reach the rock between the sector 'Obras Selectas' downhill to the left and 'Sombra Perpetua' a bit further uphill and right. To reach 'Central Park' traverse all the way to the left on the bottom of the rock.\n\n==[de]==\n\n**Zustieg:** Vom Parkplatz zu Fuss in Richtung Fallrohr des Wasserkraftwerkes über eine Leiter und weiter dem Fallrohr folgend steil ansteigend zu den Felsen. \n\nDen Felsen erreicht man zwischen den Sektoren 'Obras Selectas' und 'Sombra Perpetua'. Zum Ersteren hält man sich leicht absteigend links und zum zweiten weiter ansteigend. Um zum 'Central Park' zu gelangen hält man sich immer weiter links am Wandfuss.\n\n==[es]==",
+              "publisherID": "565415745",
+              "copyrightID": "565415739",
+              "name": "Approach"
+            }
+          ],
+          "name": "El Lado Umbrio",
+          "averageHeight": [
+            25,
+            "m"
+          ],
+          "numberRoutes": "104",
+          "depth": "6",
+          "priceCategory": "Low",
+          "kudos": "455",
+          "hide": {},
+          "subAreaCount": 4,
+          "type": "area",
+          "maxPop": 38,
+          "permitNode": {
+            "node": {
+              "id": "190489071"
+            }
+          }
+        },
+        "volume": null,
+        "origHeight": "686",
+        "lastUpdated": "1528845603",
+        "name": "",
+        "height": "686",
+        "copyrightID": "565415739"
+      },
+      {
         "width": "550",
         "sequence": 2,
         "number": "8124",
