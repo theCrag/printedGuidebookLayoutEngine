@@ -28,8 +28,10 @@ export const mutations: MutationTree<BookState> = {
     state.layouts = layouts;
   },
 
-  [mutationTypes.SET_SHEETS](state: BookState, sheets: any): void {
-    state.sheets = sheets;
+  [mutationTypes.SET_SHEETS](state: BookState): void {
+    const change = state.sheets[state.sheets.length - 1].content.pop();
+    state.sheets.push(new Sheet(state.sheets.length + 1));
+    state.sheets[state.sheets.length - 1].content.push(change);
   },
 
 };
