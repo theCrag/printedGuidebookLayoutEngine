@@ -1,15 +1,11 @@
-import { AreaLayout } from './../../models/AreaLayout';
 import { Sheet } from '@/app/models/Sheet';
-import { Area } from '@/app/models/Area';
 
 export interface BookState {
-  area: Area;
-  layouts: AreaLayout[];
   sheets: Sheet[];
+  hasInitialized: boolean;
 }
 
 export const initialState: BookState = {
-  area: new Area(),
-  layouts: [],
-  sheets: [],
+  sheets: [new Sheet(1)],
+  hasInitialized: false,
 };

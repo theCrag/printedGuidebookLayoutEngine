@@ -9,10 +9,6 @@ import { Sheet } from '@/app/models/Sheet';
 const log = Vue.$createLogger('BookMutations');
 
 export const mutations: MutationTree<BookState> = {
-  [mutationTypes.SET_NEW_AREA](state: BookState, area: Area): void {
-    state.area = area;
-    state.sheets = [new Sheet(1)];
-  },
 
   [mutationTypes.ADD_CONTENT](state: BookState, newContent: any): void {
     log.info('before', newContent);
@@ -22,10 +18,6 @@ export const mutations: MutationTree<BookState> = {
       newContent,
     ];
     log.info('after');
-  },
-
-  [mutationTypes.SET_LAYOUTS](state: BookState, layouts: any): void {
-    state.layouts = layouts;
   },
 
   [mutationTypes.SET_SHEETS](state: BookState): void {

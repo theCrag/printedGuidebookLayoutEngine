@@ -1,16 +1,17 @@
+import { find } from 'lodash';
+
 import { BookState } from './book.state';
 import { Sheet } from '@/app/models/Sheet';
-import { Area } from '@/app/models/Area';
-import { AreaLayout } from '@/app/models/AreaLayout';
 
 // -------------------------------------------------------------------------
 // Define Getter Types
 // -------------------------------------------------------------------------
 
 export const getterTypes = {
-  GetArea: 'GetArea',
   GetPages: 'GetPages',
-  GetLayouts: 'GetLayouts',
+  GetPageById: 'GetPageById',
+  GetPageSize: 'GetPageSize',
+  HasInitialized: 'HasInitialized',
 };
 
 // -------------------------------------------------------------------------
@@ -18,13 +19,21 @@ export const getterTypes = {
 // -------------------------------------------------------------------------
 
 export const getters = {
-  [getterTypes.GetArea](state: BookState): Area {
-    return state.area;
-  },
+
   [getterTypes.GetPages](state: BookState): Sheet[] {
     return state.sheets;
   },
-  [getterTypes.GetLayouts](state: BookState): AreaLayout[] {
-    return state.layouts;
+
+  [getterTypes.GetPageById]: (state: BookState) => (id: string) => {
+    return find(state.sheets, { id }) as Sheet | undefined;
   },
+
+  [getterTypes.GetPageSize](state: BookState, id: string): number {
+    return state.sheets.length;
+  },
+
+  [getterTypes.HasInitialized](state: BookState): boolean {
+    return state.hasInitialized;
+  },
+
 };

@@ -6,13 +6,11 @@
     "test": "nps test"
   },
   "dependencies": {
-    "@types/axios": "^0.14.0",
-    "@types/bluebird": "^3.5.20",
-    "@types/object-path": "^0.9.29",
     "axios": "^0.18.0",
     "bluebird": "^3.5.1",
     "class-transformer": "^0.1.9",
     "jquery": "^3.3.1",
+    "lodash": "^4.17.10",
     "logdown": "^3.2.3",
     "object-path": "^0.11.4",
     "paper-css": "^0.4.1",
@@ -23,6 +21,10 @@
     "vuex-class": "^0.3.0"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/bluebird": "^3.5.20",
+    "@types/lodash": "^4.14.110",
+    "@types/object-path": "^0.9.29",
     "@types/jest": "^22.0.1",
     "@types/jquery": "^3.3.3",
     "@vue/cli-plugin-e2e-nightwatch": "^3.0.0-beta.6",
