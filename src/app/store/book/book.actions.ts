@@ -96,14 +96,14 @@ const buildAreaLayouts = (area: Area) => {
       }
     }
 
-    results.push(AreaLayout.build(area, images.map((image, index) => ({
-      image,
+    results.push(AreaLayout.build(area.id, images.map((image, index) => ({
+      imageId: image.id,
       variant: imageCounter[index],
     }))));
   } while (imageCounter.some((i) => i < variants));
 
   return results.map((areaLayout) => {
-    areaLayout.subAreas = areaLayout.area.subAreas.map((subArea) => buildAreaLayouts(subArea));
+    areaLayout.subAreas = area.subAreas.map((subArea) => buildAreaLayouts(subArea));
     return areaLayout;
   });
 };
