@@ -22,6 +22,7 @@ export const actionTypes = {
   FETCH_AREA: 'FETCH_AREA',
   ADD_CONTENT: 'ADD_CONTENT',
   BUILD_LAYOUTS: 'BUILD_LAYOUTS',
+  GO_TO_NEXT_PAGE: 'GO_TO_NEXT_PAGE',
 };
 
 // -------------------------------------------------------------------------
@@ -56,6 +57,15 @@ export const actions: ActionTree<BookState, BookState> = {
     log.info('BUILD_LAYOUTS', area);
     const layouts = buildAreaLayouts(area);
     commit(mutationTypes.SET_LAYOUTS, layouts);
+  },
+
+  /**
+   *
+   */
+  [actionTypes.GO_TO_NEXT_PAGE]({ commit, state }: ActionContext<BookState, BookState>, obj: any): void {
+    log.info('GO_TO_NEXT_PAGE', obj);
+    const sheets = state.sheets;
+    commit(mutationTypes.SET_SHEETS, sheets);
   },
 };
 

@@ -20,4 +20,8 @@ export const mutations: MutationTree<BookState> = {
     state.layouts = layouts;
   },
 
+  [mutationTypes.SET_SHEETS](state: BookState, sheets: any): void {
+    state.sheets = sheets;
+  },
+
 };

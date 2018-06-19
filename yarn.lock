@@ -37,6 +37,10 @@
   version "22.2.3"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-22.2.3.tgz#0157c0316dc3722c43a7b71de3fdf3acbccef10d"
 
+"@types/jquery@^3.3.3":
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.3.tgz#8d1dc5a11be6e22b14d36536d306d34b6ac8de41"
+
 "@types/node@*":
   version "8.10.11"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.11.tgz#971ea8cb91adbe0b74e3fbd867dec192d5893a5f"

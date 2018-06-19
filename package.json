@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/jest": "^22.0.1",
+    "@types/jquery": "^3.3.3",
     "@vue/cli-plugin-e2e-nightwatch": "^3.0.0-beta.6",
     "@vue/cli-plugin-typescript": "^3.0.0-beta.6",
     "@vue/cli-plugin-unit-jest": "^3.0.0-beta.6",
