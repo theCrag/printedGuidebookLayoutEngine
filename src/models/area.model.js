@@ -1,4 +1,4 @@
-import { first } from 'lodash';
+import { first, findIndex, cloneDeep } from 'lodash';
 
 import { Topo } from './topo.model';
 import { Route } from './route.model';
@@ -22,9 +22,19 @@ export class Area {
 
     this.topos = (jsonArea.topos) ? jsonArea.topos.map(t => new Topo(t)) : [];
 
+    this.routes = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'route').map(r => new Route(r, this)) : [];
+
+    this.routeItems = cloneDeep(this.routes);
+    if (this.routeItems.length > 0) {
+      this.topos.forEach(topo => {
+        const firstRouteId = topo.routesId[0];
+        const indexOfRoute = findIndex(this.routeItems, routeItem => routeItem.id === firstRouteId);
+        this.routeItems.splice(indexOfRoute, 0, topo);
+      });
+    }
+
     this.subAreas = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'area').map(a => new Area(a, this)) : [];
 
-    this.routes = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'route').map(r => new Route(r, this)) : [];
   }
 
   first() {

@@ -8,11 +8,12 @@ export class Topo {
     this.linked = jsonTopo.linked;
     this.width = jsonTopo.width;
     this.height = jsonTopo.height;
+    this.type = 'Topo';
 
     this.layout = 1;
     this.url = (this.hashID) ? `https://static.thecrag.com/original-image/${this.hashID.substring(0, 2)}/${this.hashID.substring(2, 4)}/${this.hashID}` : undefined;
 
-    this.routes = (jsonTopo.objects) ? jsonTopo.objects.map(r => new Route(r)) : [];
+    this.routesId = (jsonTopo.objects) ? jsonTopo.objects.filter(r => r.objectType === 'Route').map(r => r.objectID) : [];
   }
 
 }

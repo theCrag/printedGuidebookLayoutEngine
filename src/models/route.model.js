@@ -5,10 +5,10 @@ export class Route {
   constructor(jsonRoute, parent) {
     this.id = jsonRoute.id;
     this.name = jsonRoute.name;
-    this.type = jsonRoute.type;
+    this.type = 'Route';
     this.parent = parent;
 
-    this.descriptions = (jsonRoute.beta) ? jsonRoute.beta.map(d => new Description(d)) : undefined;
+    this.descriptions = (jsonRoute.beta) ? jsonRoute.beta.map(d => new Description(d)) : [];
   }
 
 }

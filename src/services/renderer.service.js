@@ -1,5 +1,3 @@
-import { at } from 'lodash';
-
 import { createLogger } from '../utils/logger';
 import * as pageService from '../services/page.service';
 import * as areaView from '../views/area.view';
@@ -44,20 +42,28 @@ export const renderArea = (area, done) => {
     tasks.push(pageService.addContent(areaView.description(description)));
   });
 
-  area.topos.forEach(topo => {
-    tasks.push(pageService.addContent(areaView.topo(topo)));
-  });
+  // There are not routes
+  if (area.routes.length <= 0) {
+    area.topos.forEach(topo => {
+      tasks.push(pageService.addContent(areaView.topo(topo)));
+    });
+  }
+  // Render the routes of the this area
+  else {
+    tasks.push(pageService.addContent(areaView.routesContainer(area, 2)));
+    area.routeItems.forEach(item => tasks.push(pageService.addRouteItem(areaView.routeItem(item))))
+  }
 
-  log.info('tasks', tasks);
   const run = () => {
-    log.info('-->', tasks.length);
     if (tasks.length > 0) {
+      log.info('run task', tasks.length);
       const task = tasks.shift();
       return task(() => run());
     }
     area.rendered = true;
     done();
   };
+  log.info('start solving area tasks');
   run();
 
 }
