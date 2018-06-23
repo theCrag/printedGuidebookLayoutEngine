@@ -7,3 +7,7 @@ h1 {
   color: aqua;
   font-size: 2em;
 }
+
+img {
+  max-height: 400px;
+}

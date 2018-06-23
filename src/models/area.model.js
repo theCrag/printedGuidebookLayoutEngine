@@ -16,7 +16,7 @@ export class Area {
     this.parent = parent;
     this.rendered = false;
 
-    this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description(d)) : undefined;
+    this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description(d)) : [];
 
     this.geometry = (jsonArea.geometry) ? new Geometry(jsonArea.geometry) : undefined;
 
@@ -36,7 +36,14 @@ export class Area {
 
   next() {
     if (this.subAreas && this.subAreas.length > 0) {
-      return first(this.subAreas.filter(a => !a.rendered));
+      const subAreasToRender = this.subAreas.filter(a => !a.rendered);
+      if (subAreasToRender.length > 0) {
+        return first(subAreasToRender);
+      }
+    }
+
+    if (this.parent) {
+      return this.parent.next();
     }
   }
 

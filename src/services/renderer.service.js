@@ -13,21 +13,24 @@ export const renderLayoutTree = (tree) => {
   pageService.init();
   pageService.addPage();
 
-  // const subArea = tree.next();
-  // subArea.rendered = true;
-  // log.info('first subArea', subArea);
-
-  // const subSubArea = subArea.next();
-  // log.info('first subSubArea', subSubArea);
-
-  // const second = subArea.parent.next();
-  // log.info('second subArea', second);
-
-  renderArea(tree, () => {
+  doRenderArea(tree, () => {
     log.info('end', tree);
   });
 
 }
+
+export const doRenderArea = (area, done) => {
+  log.info('doRenderArea', area);
+  if (area) {
+    if (area.rendered) {
+      return doRenderArea(area.next(), done);
+    }
+    return renderArea(area, () => {
+      doRenderArea(area.next(), done);
+    });
+  }
+  done();
+};
 
 export const renderArea = (area, done) => {
   log.info('renderArea', area.name);
@@ -52,6 +55,7 @@ export const renderArea = (area, done) => {
       const task = tasks.shift();
       return task(() => run());
     }
+    area.rendered = true;
     done();
   };
   run();
