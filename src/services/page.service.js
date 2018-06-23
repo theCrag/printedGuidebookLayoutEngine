@@ -3,6 +3,7 @@ import { find, last, cloneDeep } from 'lodash';
 
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
+import * as areaView from '../views/area.view';
 
 const log = createLogger('page');
 
@@ -31,6 +32,8 @@ export const addContent = (content) => (done) => {
 
 export const addRouteMainTopo = () => (done) => { };
 
+export const addRoutesContainer = () => addContent(areaView.routesContainer(2));
+
 export const addRouteItem = (content) => (done) => {
   log.info('addRouteItem to', pageCounter);
   const page = $(`#page-${pageCounter}`);
@@ -39,18 +42,37 @@ export const addRouteItem = (content) => (done) => {
 
   const images = routesContainer.children().last().find('img');
   if (images.length > 0) {
-    images.on('load', () => done()); // validatePage(page, content, done));
+    images.on('load', () => validateRoutes(page, routesContainer, content, done));
   } else {
-    // validatePage(page, content, done);
+    validateRoutes(page, routesContainer, content, done);
     done();
   }
 
 };
 
+export const validateRoutes = (page, routesContainer, content, done) => {
+  const areSomeRoutesOutsideTheSheet = !routesContainer
+    .children()
+    .toArray()
+    .some(c => !isElementInsideCurrentSheet(c));
+
+  if (!areSomeRoutesOutsideTheSheet) {
+    log.info('the last route has no space in sheet');
+    const lastElement = last(routesContainer.children());
+    lastElement.remove();
+    addPage();
+    addRoutesContainer()(() => {
+      addRouteItem(content)(done);
+    });
+  } else {
+    done();
+  }
+}
+
 export const validatePage = (page, content, done) => {
   const lastElement = last(page.children());
   if (!isElementInsideCurrentSheet(lastElement)) {
-    log.info('content has not space in sheet')
+    log.info('content has no space in sheet');
     lastElement.remove();
     addPage();
     addContent(content)(done);

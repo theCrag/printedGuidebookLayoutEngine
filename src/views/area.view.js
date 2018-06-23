@@ -25,12 +25,10 @@ export const topo = (topo) => `
       style="width:100%;" />
   </div>`;
 
-export const routesContainer = (area, colAmount) => `
-  <div id="routes-${area.id}" class="routes">
+export const routesContainer = (colAmount) => `
+  <div class="routes">
     <div class="routes__topo"></div>
-    <div class="routes__columns routes__columns--2">
-      ${times(colAmount, () => `<div class="routes-column"></div>`).join('')}
-    </div>
+    <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;
 
 export const routeItem = (routeItem) => (routeItem.type === 'Topo')

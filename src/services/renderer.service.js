@@ -50,7 +50,7 @@ export const renderArea = (area, done) => {
   }
   // Render the routes of the this area
   else {
-    tasks.push(pageService.addContent(areaView.routesContainer(area, 2)));
+    tasks.push(pageService.addRoutesContainer());
     area.routeItems.forEach(item => tasks.push(pageService.addRouteItem(areaView.routeItem(item))))
   }
 
