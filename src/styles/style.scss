@@ -21,6 +21,7 @@ img {
   @include modifier ('right') {
     img {
       float: right;
+      margin-left: 15px;
     }
   }
 }

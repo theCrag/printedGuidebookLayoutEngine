@@ -40,14 +40,14 @@ export const renderArea = (area, done) => {
     pageService.addContent(areaView.geometry(cloneDeep(area))),
   ];
 
-  area.descriptions.forEach(description => {
-    tasks.push(pageService.addContent(areaView.description(description)));
+  area.descriptions.forEach((description, index) => {
+    tasks.push(pageService.addContent(areaView.description(description, area.id, index)));
   });
 
   // There are not routes
   if (area.routes.length === 0) {
-    area.topos.forEach(topo => {
-      tasks.push(pageService.addContent(areaView.topo(topo)));
+    area.topos.forEach((topo, index) => {
+      tasks.push(pageService.addContent(areaView.topo(topo, area.id, index)));
     });
   }
   // Render the routes of the this area
@@ -55,9 +55,9 @@ export const renderArea = (area, done) => {
     tasks.push(pageService.addRoutesContainer());
     area.routeItems.forEach((item, index) => {
       if (index === 0 && item.type === 'Topo') {
-        tasks.push(pageService.addRouteMainTopo(areaView.routeItem(item)))
+        tasks.push(pageService.addRouteMainTopo(areaView.routeItem(item, area.id, index)))
       } else {
-        tasks.push(pageService.addRouteItem(areaView.routeItem(item)))
+        tasks.push(pageService.addRouteItem(areaView.routeItem(item, area.id, index)))
       }
     })
   }

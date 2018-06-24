@@ -1,24 +1,24 @@
 import path from '../assets/pineapple.jpg';
 
 export const title = (area) => `
-  <h1 class="title">${area.name}</h1>`;
+  <h1 id="title-${area.id}" class="title">${area.name}</h1>`;
 
 export const geometry = (area) => `
   <div id="geometry-${area.id}" class="geometry ${area.descriptions.length === 0 ? '' : 'geometry--right'}">
     <img
       src="${path}"
       alt="Pineapple"
-      style="width:340px;height:340px;margin-left:15px;" />
+      style="width:340px;height:340px" />
   </div>`;
 
-export const description = (description) => `
-  <div class="description">
+export const description = (description, areaId, index) => `
+  <div id="description-${areaId}-${index}" class="description">
     <h2>${description.name}</h2>
     <p>${description.markdown}</p>
   </div>`;
 
-export const topo = (topo) => `
-  <div class="topo">
+export const topo = (topo, areaId, index) => `
+  <div id="topo-${areaId}-${index}" class="topo">
     <img
       src="${topo.url}"
       alt="Topo"
@@ -31,10 +31,10 @@ export const routesContainer = (colAmount) => `
     <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;
 
-export const routeItem = (routeItem) =>
+export const routeItem = (routeItem, areaId, index) =>
   (routeItem.type === 'Topo')
-    ? `<div class="route">${topo(routeItem)}</div><div class="route route--blank"></div>`
-    : `<div class="route">
+    ? `<div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
+    : `<div id="route-${areaId}-${index}" class="route">
       <div class="route__container">
         <div class="route__header">
           <div class="route__header__number">
