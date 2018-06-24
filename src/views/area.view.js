@@ -25,8 +25,8 @@ export const topo = (topo, areaId, index) => `
       style="width:100%;" />
   </div>`;
 
-export const routesContainer = (colAmount) => `
-  <div class="routes">
+export const routesContainer = (areaId, colAmount) => `
+  <div class="routes routes--${areaId}">
     <div class="routes__topo"></div>
     <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;

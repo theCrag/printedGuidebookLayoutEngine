@@ -34,6 +34,7 @@ export const doRenderArea = (area, done) => {
 
 export const renderArea = (area, done) => {
   log.info('renderArea', area.name);
+  pageService.initArea(area);
 
   const tasks = [
     pageService.addContent(areaView.title(cloneDeep(area))),
@@ -57,10 +58,12 @@ export const renderArea = (area, done) => {
       if (index === 0 && item.type === 'Topo') {
         tasks.push(pageService.addRouteMainTopo(areaView.routeItem(item, area.id, index)))
       } else {
-        tasks.push(pageService.addRouteItem(areaView.routeItem(item, area.id, index)))
+        tasks.push(pageService.addRouteItem(areaView.routeItem(item, area.id, index), index))
       }
     })
   }
+
+  tasks.push(pageService.validateArea(area));
 
   // log.info('start solving area tasks');
   runNextTask(area, tasks, done);

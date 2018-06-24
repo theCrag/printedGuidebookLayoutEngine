@@ -8,18 +8,31 @@ import * as areaView from '../views/area.view';
 const log = createLogger('page');
 
 let pageCounter = 0;
+let areaId;
+let routeContainerCounter = 0;
 
 export const init = () => pageCounter = 0;
+
+export const initArea = (area) => {
+  areaId = area.id
+  routeContainerCounter = 0;
+};
+
+export const isLeftPage = () => pageCounter % 2 === 0;
+export const isRightPage = () => !isLeftPage();
 
 export const getCurrentPage = () => $(`#page-${pageCounter}`);
 
 export const addPage = () => {
   pageCounter = pageCounter + 1;
-  $('main').append(page(pageCounter));
+  $('main').append(page(pageCounter, isLeftPage()));
   // log.info('addPage', pageCounter)
 };
 
-export const addRoutesContainer = () => addContent(areaView.routesContainer(2));
+export const addRoutesContainer = () => (done) => {
+  addContent(areaView.routesContainer(areaId, 2))(done);
+  routeContainerCounter = routeContainerCounter + 1;
+};
 
 export const addContent = (content) => (done) => {
   // log.info('addContent to', pageCounter);
@@ -41,28 +54,36 @@ export const addRouteMainTopo = (content) => (done) => {
 
   const images = routesContainer.find('img');
   if (images.length > 0) {
-    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteMainTopo', done));
+    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteMainTopo', undefined, done));
   } else {
-    validateRoutes(page, routesContainer, content, 'addRouteMainTopo', done);
+    validateRoutes(page, routesContainer, content, 'addRouteMainTopo', undefined, done);
   }
 };
 
-export const addRouteItem = (content) => (done) => {
+export const addRouteItem = (content, index) => (done) => {
   // log.info('addRouteItem to', pageCounter);
   const page = getCurrentPage();
+
+  if (index === 1) {
+    const routes = $(`.routes--${areaId}`);
+    if (routes.length > 1) {
+      $(routes[0]).appendTo(routes[1]);
+    }
+  }
+
   const routesContainer = page.find('.routes .routes__columns').last();
   routesContainer.append(content);
 
   const images = routesContainer.children().not('.route--blank').last().find('img');
   if (images.length > 0) {
-    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteItem', done));
+    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteItem', index, done));
   } else {
-    validateRoutes(page, routesContainer, content, 'addRouteItem', done);
+    validateRoutes(page, routesContainer, content, 'addRouteItem', index, done);
   }
 
 };
 
-export const validateRoutes = (page, routesContainer, content, func, done) => {
+export const validateRoutes = (page, routesContainer, content, func, index, done) => {
   const areSomeRoutesOutsideTheSheet = !routesContainer
     .children()
     .toArray()
@@ -78,7 +99,7 @@ export const validateRoutes = (page, routesContainer, content, func, done) => {
       if ('addRouteMainTopo' === func) {
         addRouteMainTopo(content)(done);
       } else {
-        addRouteItem(content)(done);
+        addRouteItem(content, index)(done);
       }
     });
   } else {
@@ -97,6 +118,13 @@ export const validatePage = (page, content, done) => {
     done();
   }
 }
+
+export const validateArea = (area) => (done) => {
+  const routes = $(`.routes--${area.id}`);
+  log.info('validateArea', area, routes);
+  // debugger;
+  done();
+};
 
 export const isElementInsideCurrentSheet = (element) => {
   const parentSheet = $(element.closest('.sheet'));
