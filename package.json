@@ -5,7 +5,7 @@
   "author": "hirsch88 <gery.hirschfeld@w3tec.ch>",
   "license": "MIT",
   "scripts": {
-    "start": "parcel ./src/index.html --no-cache",
+    "start": "parcel ./src/index.html --no-cache --no-hmr",
     "build": "parcel build ./src/index.html --no-cache"
   },
   "dependencies": {

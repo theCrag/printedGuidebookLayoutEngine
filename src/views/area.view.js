@@ -4,11 +4,10 @@ export const title = (area) => `
   <h1 id="title-${area.id}" class="title">${area.name}</h1>`;
 
 export const geometry = (area) => `
-  <div id="geometry-${area.id}" class="geometry ${area.descriptions.length === 0 ? '' : 'geometry--right'}">
+  <div id="geometry-${area.id}" class="geometry ${area.descriptions.length === 0 ? 'geometry--wide' : 'geometry--right'}">
     <img
       src="${path}"
-      alt="Pineapple"
-      style="width:340px;height:340px" />
+      alt="Pineapple" />
   </div>`;
 
 export const description = (description, areaId, index) => `

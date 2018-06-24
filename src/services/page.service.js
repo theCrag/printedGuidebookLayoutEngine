@@ -109,11 +109,54 @@ export const validateRoutes = (page, routesContainer, content, func, index, done
 
 export const validatePage = (page, content, done) => {
   const lastElement = last(page.children());
+  let secondLastIsTitle = false;
+  let secondLastElement = null;
   if (!isElementInsideCurrentSheet(lastElement)) {
-    // log.info('content has no space in sheet');
-    lastElement.remove();
-    addPage();
-    addContent(content)(done);
+
+    // split description text if it is a description
+    if ($(lastElement).attr('id').startsWith('description')){
+      const descId = $(lastElement).attr('id');
+      let descArray = [];
+      // remove the last word until the text fits in page
+      while (!isElementInsideCurrentSheet(lastElement)){
+        let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(' ');
+        descArray.unshift(oldDesc.pop());
+        $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
+      }
+      // add new page and append previously removed text
+      addPage();
+      const desc = descArray.join(' ');
+      let newDesc = `
+        <div id="${descId}" class="description">
+        <p>${desc}</p>
+      </div>`;
+      addContent(newDesc)(done);
+
+    } else {
+
+      // take title to next page if geometry has no space
+      if ($(lastElement).attr('id').startsWith('geometry')){
+        const areaId = $(lastElement).attr('id').split('-')[1];
+        secondLastElement = page.children()[page.children().length-2];
+        if ($(secondLastElement).attr('id')){
+          if ($(secondLastElement).attr('id') === 'title-'+areaId){
+            secondLastIsTitle = true;
+          }
+        }
+      }
+
+      // move last element to new page
+      lastElement.remove();
+      addPage();
+
+      // move title or last element to new page
+      if (secondLastIsTitle){
+        secondLastElement.remove();
+        addContent(secondLastElement)(() => addContent(content)(done));
+      } else {
+        addContent(content)(done);
+      }
+    }
   } else {
     done();
   }
@@ -136,7 +179,6 @@ export const isElementInsideCurrentSheet = (element) => {
   const elementOffset = element.offset() || { top: 0 };
   const elementBottom = elementOffset.top + (element.height() || 0);
 
-  // log.info('isElementInsideCurrentSheet', elementBottom < totalPageHeight);
   return elementBottom < totalPageHeight;
 }
 

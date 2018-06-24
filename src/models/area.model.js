@@ -26,7 +26,7 @@ export class Area {
 
     this.routeItems = cloneDeep(this.routes);
     if (this.routeItems.length > 0) {
-      this.topos.forEach(topo => {
+      this.topos.filter(topo => topo.linked === undefined).forEach(topo => {
         const firstRouteId = topo.routesId[0];
         const indexOfRoute = findIndex(this.routeItems, routeItem => routeItem.id === firstRouteId);
         this.routeItems.splice(indexOfRoute, 0, topo);
