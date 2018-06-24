@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 import { createLogger } from '../utils/logger';
 import * as pageService from '../services/page.service';
 import * as areaView from '../views/area.view';
@@ -34,8 +36,8 @@ export const renderArea = (area, done) => {
   log.info('renderArea', area.name);
 
   const tasks = [
-    pageService.addContent(areaView.title(area)),
-    pageService.addContent(areaView.geometry(area)),
+    pageService.addContent(areaView.title(cloneDeep(area))),
+    pageService.addContent(areaView.geometry(cloneDeep(area))),
   ];
 
   area.descriptions.forEach(description => {
@@ -43,7 +45,7 @@ export const renderArea = (area, done) => {
   });
 
   // There are not routes
-  if (area.routes.length <= 0) {
+  if (area.routes.length === 0) {
     area.topos.forEach(topo => {
       tasks.push(pageService.addContent(areaView.topo(topo)));
     });
@@ -54,16 +56,17 @@ export const renderArea = (area, done) => {
     area.routeItems.forEach(item => tasks.push(pageService.addRouteItem(areaView.routeItem(item))))
   }
 
-  const run = () => {
-    if (tasks.length > 0) {
-      log.info('run task', tasks.length);
-      const task = tasks.shift();
-      return task(() => run());
-    }
-    area.rendered = true;
-    done();
-  };
   log.info('start solving area tasks');
-  run();
+  runNextTask(area, tasks, done);
 
 }
+
+export const runNextTask = (area, tasks, done) => {
+  if (tasks.length > 0) {
+    // log.info('run task', tasks.length);
+    const task = tasks.shift();
+    return task(() => runNextTask(area, tasks, done));
+  }
+  area.rendered = true;
+  done();
+};

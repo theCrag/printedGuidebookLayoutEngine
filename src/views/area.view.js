@@ -5,7 +5,7 @@ export const title = (area) => `
   <h1 class="title">${area.name}</h1>`;
 
 export const geometry = (area) => `
-  <div id="geometry-${area.id}" class="geometry">
+  <div id="geometry-${area.id}" class="geometry ${area.descriptions.length === 0 ? '' : 'geometry--right'}">
     <img
       src="${path}"
       alt="Pineapple"

@@ -13,13 +13,15 @@ img {
   max-height: 400px;
 }
 
-.geometry img {
-  float: right;
+.geometry {
+  @include modifier ('right') {
+    img {
+      float: right;
+    }
+  }
 }
 
 .routes {
-  height: 400px;
-
   @include element ('topo') {}
 
   @include element ('columns') {
