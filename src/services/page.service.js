@@ -88,11 +88,27 @@ export const validateRoutes = (page, routesContainer, content, func, done) => {
 
 export const validatePage = (page, content, done) => {
   const lastElement = last(page.children());
+  let secondLastIsTitle = false;
+  let secondLastElement = null;
   if (!isElementInsideCurrentSheet(lastElement)) {
     // log.info('content has no space in sheet');
+    if ($(lastElement).attr('id').startsWith('geometry')){
+      const areaId = $(lastElement).attr('id').split('-')[1];
+      secondLastElement = page.children()[page.children().length-2];
+      if ($(secondLastElement).attr('id')){
+        if ($(secondLastElement).attr('id') === 'title-'+areaId){
+          secondLastIsTitle = true;
+        }
+      }
+    }
     lastElement.remove();
     addPage();
-    addContent(content)(done);
+    if (secondLastIsTitle){
+      secondLastElement.remove();
+      addContent(secondLastElement)(() => addContent(content)(done));
+    } else {
+      addContent(content)(done);
+    }
   } else {
     done();
   }

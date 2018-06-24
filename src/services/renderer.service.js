@@ -44,13 +44,13 @@ export const renderArea = (area, done) => {
     tasks.push(pageService.addContent(areaView.description(description, area.id, index)));
   });
 
-  // There are not routes
+  // There are no routes
   if (area.routes.length === 0) {
     area.topos.forEach((topo, index) => {
       tasks.push(pageService.addContent(areaView.topo(topo, area.id, index)));
     });
   }
-  // Render the routes of the this area
+  // Render the routes of this area
   else {
     tasks.push(pageService.addRoutesContainer());
     area.routeItems.forEach((item, index) => {
