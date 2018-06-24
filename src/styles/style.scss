@@ -123,6 +123,10 @@ img {
       justify-content: flex-end;
       align-items: center;
       flex: 1;
+
+      .clip {
+        margin-right: 2px;
+      }
     }
   }
 
