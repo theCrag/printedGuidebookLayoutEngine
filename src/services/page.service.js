@@ -40,7 +40,7 @@ export const addRouteItem = (content) => (done) => {
   const routesContainer = page.find('.routes .routes__columns').first();
   routesContainer.append(content);
 
-  const images = routesContainer.children().last().find('img');
+  const images = routesContainer.children().not('.route--blank').last().find('img');
   if (images.length > 0) {
     images.on('load', () => validateRoutes(page, routesContainer, content, done));
   } else {
