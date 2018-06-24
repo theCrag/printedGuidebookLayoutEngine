@@ -91,7 +91,7 @@ export const isElementInsideCurrentSheet = (element) => {
   const elementOffset = element.offset() || { top: 0 };
   const elementBottom = elementOffset.top + (element.height() || 0);
 
-  log.info('isElementInsideCurrentSheet', elementBottom < totalPageHeight);
+  // log.info('isElementInsideCurrentSheet', elementBottom < totalPageHeight);
   return elementBottom < totalPageHeight;
 }
 

@@ -1,0 +1,81 @@
+@charset 'UTF-8';
+@page {
+  size: A4;
+}
+@import 'bem';
+
+h1 {
+  color: aqua;
+  font-size: 2em;
+}
+
+img {
+  max-height: 400px;
+}
+
+.geometry img {
+  float: right;
+}
+
+.routes {
+  height: 400px;
+
+  @include element ('topo') {}
+
+  @include element ('columns') {
+    break-inside: avoid;
+    break-after: column;
+
+    @include modifier ('2') {
+      column-count: 2;
+    }
+  }
+}
+
+.route {
+  display: inline-block;
+  width: 100%;
+
+  @include modifier ('blank') {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  @include element ('container') {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+  }
+
+  @include element ('header') {
+    display: flex;
+    flex-direction: row;
+    margin: 5px 0;
+
+    @include element ('number') {
+      background: black;
+      padding: 2px;
+      width: 25px;
+      height: 25px;
+      text-align: center;
+      color: white;
+      border-radius: 4px;
+    }
+
+    @include element ('name') {
+      color: blue;
+      font-weight: bold;
+      padding: 0 5px;
+    }
+
+    @include element ('grade') {}
+
+    @include element ('style') {}
+  }
+
+  @include element ('body') {
+    display: flex;
+  }
+
+}

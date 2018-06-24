@@ -1,8 +1,5 @@
 import '../node_modules/paper-css/paper.css';
-import './styles/style.css';
-
-// import $ from "jquery";
-// import _ from "lodash";
+import './styles/style.scss';
 
 import { createLogger } from './utils/logger';
 import * as areaService from './services/area.service';
