@@ -1,4 +1,3 @@
-import { times } from 'lodash';
 import path from '../assets/pineapple.jpg';
 
 export const title = (area) => `

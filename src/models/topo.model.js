@@ -1,4 +1,4 @@
-import path from '../assets/pineapple.jpg';
+import path from '../assets/mountain.jpg';
 
 export class Topo {
 
