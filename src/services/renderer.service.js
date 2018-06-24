@@ -53,10 +53,16 @@ export const renderArea = (area, done) => {
   // Render the routes of the this area
   else {
     tasks.push(pageService.addRoutesContainer());
-    area.routeItems.forEach(item => tasks.push(pageService.addRouteItem(areaView.routeItem(item))))
+    area.routeItems.forEach((item, index) => {
+      if (index === 0 && item.type === 'Topo') {
+        tasks.push(pageService.addRouteMainTopo(areaView.routeItem(item)))
+      } else {
+        tasks.push(pageService.addRouteItem(areaView.routeItem(item)))
+      }
+    })
   }
 
-  log.info('start solving area tasks');
+  // log.info('start solving area tasks');
   runNextTask(area, tasks, done);
 
 }

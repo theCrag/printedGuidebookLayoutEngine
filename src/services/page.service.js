@@ -14,7 +14,7 @@ export const init = () => pageCounter = 0;
 export const addPage = () => {
   pageCounter = pageCounter + 1;
   $('main').append(page(pageCounter));
-  log.info('addPage', pageCounter)
+  // log.info('addPage', pageCounter)
 };
 
 export const addContent = (content) => (done) => {
@@ -30,26 +30,37 @@ export const addContent = (content) => (done) => {
   }
 };
 
-export const addRouteMainTopo = () => (done) => { };
+export const addRouteMainTopo = (content) => (done) => {
+  const page = $(`#page-${pageCounter}`);
+  const routesContainer = page.find('.routes .routes__topo').last();
+  routesContainer.append(content);
+
+  const images = routesContainer.find('img');
+  if (images.length > 0) {
+    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteMainTopo', done));
+  } else {
+    validateRoutes(page, routesContainer, content, 'addRouteMainTopo', done);
+  }
+};
 
 export const addRoutesContainer = () => addContent(areaView.routesContainer(2));
 
 export const addRouteItem = (content) => (done) => {
   // log.info('addRouteItem to', pageCounter);
   const page = $(`#page-${pageCounter}`);
-  const routesContainer = page.find('.routes .routes__columns').first();
+  const routesContainer = page.find('.routes .routes__columns').last();
   routesContainer.append(content);
 
   const images = routesContainer.children().not('.route--blank').last().find('img');
   if (images.length > 0) {
-    images.on('load', () => validateRoutes(page, routesContainer, content, done));
+    images.on('load', () => validateRoutes(page, routesContainer, content, 'addRouteItem', done));
   } else {
-    validateRoutes(page, routesContainer, content, done);
+    validateRoutes(page, routesContainer, content, 'addRouteItem', done);
   }
 
 };
 
-export const validateRoutes = (page, routesContainer, content, done) => {
+export const validateRoutes = (page, routesContainer, content, func, done) => {
   const areSomeRoutesOutsideTheSheet = !routesContainer
     .children()
     .toArray()
@@ -61,7 +72,11 @@ export const validateRoutes = (page, routesContainer, content, done) => {
     lastElement.remove();
     addPage();
     addRoutesContainer()(() => {
-      addRouteItem(content)(done);
+      if ('addRouteMainTopo' === func) {
+        addRouteMainTopo(content)(done);
+      } else {
+        addRouteItem(content)(done);
+      }
     });
   } else {
     done();
@@ -71,7 +86,7 @@ export const validateRoutes = (page, routesContainer, content, done) => {
 export const validatePage = (page, content, done) => {
   const lastElement = last(page.children());
   if (!isElementInsideCurrentSheet(lastElement)) {
-    log.info('content has no space in sheet');
+    // log.info('content has no space in sheet');
     lastElement.remove();
     addPage();
     addContent(content)(done);

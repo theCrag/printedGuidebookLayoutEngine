@@ -31,6 +31,8 @@ img {
   @include element ('columns') {
     break-inside: avoid;
     break-after: column;
+    column-gap: 40px;
+    column-rule: 4px solid #e7e7e7;
 
     @include modifier ('2') {
       column-count: 2;
