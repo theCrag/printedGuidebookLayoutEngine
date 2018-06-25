@@ -17,6 +17,12 @@ img {
   max-height: 400px;
 }
 
+.sheet {
+  @include modifier ('right') {
+    background-color: lemonchiffon;
+  }
+}
+
 .geometry {
   @include modifier ('right') {
     img {
