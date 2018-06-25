@@ -98,15 +98,26 @@ export const validateRoutes = (page, routesContainer, content, func, index, done
 
   if (!areSomeRoutesOutsideTheSheet) {
     // log.info('the last route has no space in sheet');
-    // debugger;
     const lastElement = last(routesContainer.children().not('.route--blank'));
     lastElement.remove();
+
     addPage();
     addRoutesContainer()(() => {
       if ('addRouteMainTopo' === func) {
         addRouteMainTopo(content)(done);
       } else {
-        addRouteItem(content, index)(done);
+        const secondLastElement = last(routesContainer.children().not('.route--blank'));
+        const $secondLastElement = $(secondLastElement);
+        if ($secondLastElement.hasClass('route--topo')) {
+          $secondLastElement.remove();
+
+          addRouteItem($secondLastElement.html(), index - 1)(() => {
+            addRouteItem(content, index)(done);
+          });
+
+        } else {
+          addRouteItem(content, index)(done);
+        }
       }
     });
   } else {
@@ -207,10 +218,13 @@ export const validateArea = (area) => (done) => {
   const routes = $(`.routes--${area.id}`);
   if (routes.length > 0) {
     log.info('validateArea', area, routes);
-    // debugger;
+    // TODO: Check right and left pages for routes;
 
+
+    done();
+  } else {
+    done();
   }
-  done();
 };
 
 export const isElementInsideCurrentSheet = (element) => {
