@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { cloneDeep } from 'lodash';
 
 import { createLogger } from '../utils/logger';
@@ -71,11 +72,17 @@ export const renderArea = (area, done) => {
 }
 
 export const runNextTask = (area, tasks, done) => {
-  if (tasks.length > 0) {
-    // log.info('run task', tasks.length);
-    const task = tasks.shift();
-    return task(() => runNextTask(area, tasks, done));
+  if (process.env.TEST === 'true') {
+    window.scrollTo(0, document.body.scrollHeight);
   }
-  area.rendered = true;
-  done();
+
+  if (tasks.length > 0) {
+    const task = tasks.shift();
+    setTimeout(() => {
+      return task(() => runNextTask(area, tasks, done));
+    }, (process.env.TEST === 'true') ? 100 : 0);
+  } else {
+    area.rendered = true;
+    done();
+  }
 };
