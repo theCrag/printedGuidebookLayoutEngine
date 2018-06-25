@@ -114,11 +114,11 @@ export const validatePage = (page, content, done) => {
   if (!isElementInsideCurrentSheet(lastElement)) {
 
     // split description text if it is a description
-    if ($(lastElement).attr('id').startsWith('description')){
+    if ($(lastElement).attr('id').startsWith('description')) {
       const descId = $(lastElement).attr('id');
       let descArray = [];
       // remove the last word until the text fits in page
-      while (!isElementInsideCurrentSheet(lastElement)){
+      while (!isElementInsideCurrentSheet(lastElement)) {
         let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(' ');
         descArray.unshift(oldDesc.pop());
         $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
@@ -135,11 +135,11 @@ export const validatePage = (page, content, done) => {
     } else {
 
       // take title to next page if geometry has no space
-      if ($(lastElement).attr('id').startsWith('geometry')){
+      if ($(lastElement).attr('id').startsWith('geometry')) {
         const areaId = $(lastElement).attr('id').split('-')[1];
-        secondLastElement = page.children()[page.children().length-2];
-        if ($(secondLastElement).attr('id')){
-          if ($(secondLastElement).attr('id') === 'title-'+areaId){
+        secondLastElement = page.children()[page.children().length - 2];
+        if ($(secondLastElement).attr('id')) {
+          if ($(secondLastElement).attr('id') === 'title-' + areaId) {
             secondLastIsTitle = true;
           }
         }
@@ -150,7 +150,7 @@ export const validatePage = (page, content, done) => {
       addPage();
 
       // move title or last element to new page
-      if (secondLastIsTitle){
+      if (secondLastIsTitle) {
         secondLastElement.remove();
         addContent(secondLastElement)(() => addContent(content)(done));
       } else {
@@ -164,8 +164,11 @@ export const validatePage = (page, content, done) => {
 
 export const validateArea = (area) => (done) => {
   const routes = $(`.routes--${area.id}`);
-  log.info('validateArea', area, routes);
-  // debugger;
+  if (routes.length > 0) {
+    log.info('validateArea', area, routes);
+    debugger;
+
+  }
   done();
 };
 
