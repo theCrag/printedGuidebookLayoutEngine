@@ -47,6 +47,13 @@ export const addContent = (content) => (done) => {
   }
 };
 
+export const appendToLastDescription = (content) => (done) => {
+  const page = getCurrentPage();
+  const lastElement = last(page.children());
+  $(lastElement).children()[$(lastElement).children().length - 1].innerText += content;
+  validatePage(page, content, done);
+};
+
 export const addRouteMainTopo = (content) => (done) => {
   const page = getCurrentPage();
   const routesContainer = page.find('.routes .routes__topo').last();
@@ -158,6 +165,7 @@ export const validateRoutes = (page, routesContainer, content, func, index, done
 
 export const validateDescription = (lastElement, page, content, done) => {
   const descId = $(lastElement).attr('id');
+  const areaId = descId.split('-')[1];
   let descArray = [];
   // remove the last word until the text fits in page
   while (!isElementInsideCurrentSheet(lastElement)) {
@@ -166,13 +174,32 @@ export const validateDescription = (lastElement, page, content, done) => {
     $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
   }
   // add new page and append previously removed text
-  addPage();
   const desc = descArray.join(' ');
-  let newDesc = `
-  <div id="${descId}" class="description">
-  <p>${desc}</p>
-  </div>`;
-  addContent(newDesc)(done);
+  if (desc.length < 300) {
+    let photos = [];
+    $.getJSON(`https://www.thecrag.com/area/${areaId}/photos/json?key=${process.env.API_KEY}`, function(data) {
+      data.data.photos.forEach(element => {
+        photos.push(element);
+      });
+    }).done(() => {
+      const photoPath = (photos[0].hashID) ? `https://static.thecrag.com/original-image/${photos[0].hashID.substring(0, 2)}/${photos[0].hashID.substring(2, 4)}/${photos[0].hashID}` : undefined;
+      const photo = `
+      <div id="photo-${descId}" class="photo">
+        <img
+          src="${photoPath}"
+          alt="Pineapple" />
+      </div>`;
+      lastElement.remove();
+      addContent(photo)(() => addContent(lastElement)(() => appendToLastDescription(desc)(done)));
+    });
+  } else {
+    addPage();
+    let newDesc = `
+    <div id="${descId}" class="description">
+    <p>${desc}</p>
+    </div>`;
+    addContent(newDesc)(done);
+  }
 }
 
 export const validateGeometry = (lastElement, page, content, done) => {
