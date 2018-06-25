@@ -107,56 +107,70 @@ export const validateRoutes = (page, routesContainer, content, func, index, done
   }
 }
 
-export const validatePage = (page, content, done) => {
-  const lastElement = last(page.children());
+export const validateDescription = (lastElement, page, content, done) => {
+  const descId = $(lastElement).attr('id');
+  let descArray = [];
+  // remove the last word until the text fits in page
+  while (!isElementInsideCurrentSheet(lastElement)) {
+    let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(' ');
+    descArray.unshift(oldDesc.pop());
+    $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
+  }
+  // add new page and append previously removed text
+  addPage();
+  const desc = descArray.join(' ');
+  let newDesc = `
+  <div id="${descId}" class="description">
+  <p>${desc}</p>
+  </div>`;
+  addContent(newDesc)(done);
+}
+
+export const validateGeometry = (lastElement, page, content, done) => {
   let secondLastIsTitle = false;
   let secondLastElement = null;
+  const areaId = $(lastElement).attr('id').split('-')[1];
+  secondLastElement = page.children()[page.children().length - 2];
+  if ($(secondLastElement).attr('id')) {
+    if ($(secondLastElement).attr('id') === 'title-' + areaId) {
+      secondLastIsTitle = true;
+    }
+  }
+
+  // move last element to new page
+  lastElement.remove();
+  addPage();
+
+  // move title or last element to new page
+  if (secondLastIsTitle) {
+    secondLastElement.remove();
+    addContent(secondLastElement)(() => addContent(content)(done));
+  } else {
+    addContent(content)(done);
+  }
+}
+
+export const validatePage = (page, content, done) => {
+  const lastElement = last(page.children());
+
   if (!isElementInsideCurrentSheet(lastElement)) {
 
-    // split description text if it is a description
-    if ($(lastElement).attr('id').startsWith('description')) {
-      const descId = $(lastElement).attr('id');
-      let descArray = [];
-      // remove the last word until the text fits in page
-      while (!isElementInsideCurrentSheet(lastElement)) {
-        let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(' ');
-        descArray.unshift(oldDesc.pop());
-        $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
-      }
-      // add new page and append previously removed text
-      addPage();
-      const desc = descArray.join(' ');
-      let newDesc = `
-        <div id="${descId}" class="description">
-        <p>${desc}</p>
-      </div>`;
-      addContent(newDesc)(done);
+    const $lastElement = $(lastElement);
+    const id = $lastElement.attr('id');
 
-    } else {
-
-      // take title to next page if geometry has no space
-      if ($(lastElement).attr('id').startsWith('geometry')) {
-        const areaId = $(lastElement).attr('id').split('-')[1];
-        secondLastElement = page.children()[page.children().length - 2];
-        if ($(secondLastElement).attr('id')) {
-          if ($(secondLastElement).attr('id') === 'title-' + areaId) {
-            secondLastIsTitle = true;
-          }
-        }
-      }
-
-      // move last element to new page
-      lastElement.remove();
-      addPage();
-
-      // move title or last element to new page
-      if (secondLastIsTitle) {
-        secondLastElement.remove();
-        addContent(secondLastElement)(() => addContent(content)(done));
-      } else {
-        addContent(content)(done);
-      }
+    if (id.startsWith('description')) {
+      return validateDescription(lastElement, page, content, done);
     }
+
+    if (id.startsWith('geometry')) {
+      return validateGeometry(lastElement, page, content, done);
+    }
+
+    // move last element to new page
+    lastElement.remove();
+    addPage();
+    addContent(content)(done);
+
   } else {
     done();
   }
@@ -166,7 +180,7 @@ export const validateArea = (area) => (done) => {
   const routes = $(`.routes--${area.id}`);
   if (routes.length > 0) {
     log.info('validateArea', area, routes);
-    debugger;
+    // debugger;
 
   }
   done();
