@@ -64,10 +64,17 @@ export const addRouteItem = (content, index) => (done) => {
   // log.info('addRouteItem to', pageCounter);
   const page = getCurrentPage();
 
+  // If this is the second route element and it happens that we have already
+  // 2 pages of routes we copy the first route element into the 2 page.
   if (index === 1) {
     const routes = $(`.routes--${areaId}`);
     if (routes.length > 1) {
-      $(routes[0]).appendTo(routes[1]);
+      log.warn('Move first route item to the new page');
+      const previousRoutes = $(routes[0]);
+      const currentRoutes = $(routes[1]);
+      previousRoutes.children('.routes__topo').children().appendTo(currentRoutes.children('.routes__topo'));
+      previousRoutes.children('.routes__columns').children().appendTo(currentRoutes.children('.routes__columns'));
+      previousRoutes.remove();
     }
   }
 
@@ -83,6 +90,23 @@ export const addRouteItem = (content, index) => (done) => {
 
 };
 
+export const removePossibleRouteZombies = () => {
+  // Remove possible routes zombies
+  const routes = getCurrentPage().children('.routes');
+  if (routes.length === 0) {
+    return;
+  }
+  const $lastRouteContainer = $(routes[0]);
+  const hasTopos = $lastRouteContainer.children('.routes__topo').find('.topo').length > 0;
+  const hasRoutes = $lastRouteContainer.children('.routes__columns').find('.route').not('.route--blank').length > 0;
+
+  // Remove empty route containers
+  if (!hasTopos && !hasRoutes) {
+    log.warn('Remove empty routes container');
+    $lastRouteContainer.remove();
+  }
+}
+
 export const validateRoutes = (page, routesContainer, content, func, index, done) => {
   const areSomeRoutesOutsideTheSheet = !routesContainer
     .children()
@@ -93,6 +117,20 @@ export const validateRoutes = (page, routesContainer, content, func, index, done
     // log.info('the last route has no space in sheet');
     const lastElement = last(routesContainer.children().not('.route--blank'));
     lastElement.remove();
+
+    removePossibleRouteZombies();
+
+    // // Remove possible routes zombies
+    // const $lastRouteContainer = $(getCurrentPage().children('.routes')[0]);
+    // const hasTopos = $lastRouteContainer.children('.routes__topo').find('.topo').length > 0;
+    // const hasRoutes = $lastRouteContainer.children('.routes__columns').find('.route').not('.route--blank').length > 0;
+
+    // // Remove empty route containers
+    // if (!hasTopos && !hasRoutes) {
+    //   console.log($lastRouteContainer);
+    //   log.warn('Remove empty routes container');
+    //   $lastRouteContainer.remove();
+    // }
 
     addPage();
     addRoutesContainer()(() => {
@@ -192,6 +230,27 @@ export const validateArea = (area) => (done) => {
   if (routes.length > 0) {
     log.info('validateArea', area, routes);
     // TODO: Check right and left pages for routes;
+    // const routesPages = $(`.routes.area-${area.id}`);
+    // if (routesPages.length > 1) {
+    //   if (!$(routesPages).first().closest('.sheet').hasClass('sheet--left')) {
+    //   }
+    // }
+
+    //   log.info('validateArea', area, routesPages);
+    //   // TODO: Check right and left pages for routes;
+
+    //   // if (!$(routesPages).first().closest('.sheet').hasClass('sheet--left')) {
+    //   //   addPage();
+    //   //   routesPages.toArray().reverse().forEach((routesPage, index) => {
+    //   //     console.log(routesPage);
+    //   //     $(routesPage).appendTo($(`#page-${pageCounter - index}`));
+    //   //   });
+    //   // }
+
+    //   done();
+    // } else {
+    //   done();
+    // }
 
 
     done();
