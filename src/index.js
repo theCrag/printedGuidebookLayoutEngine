@@ -8,7 +8,7 @@ import * as rendererService from './services/renderer.service';
 const log = createLogger('main');
 log.info("start");
 
-const rootAreaTree = areaService.fetchArea();
-log.info("rootAreaTree", rootAreaTree);
-
-rendererService.renderLayoutTree(rootAreaTree);
+const rootAreaTree = areaService.fetchArea(((rootAreaTree) => {
+  log.info("rootAreaTree", rootAreaTree);
+  rendererService.renderLayoutTree(rootAreaTree);
+}));
