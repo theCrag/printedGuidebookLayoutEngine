@@ -4,6 +4,7 @@ import { find, last, cloneDeep } from 'lodash';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
+import { getPhotos, getImageUrl } from "./api.service";
 
 const log = createLogger('page');
 
@@ -239,9 +240,9 @@ export const validateGeometry = (area, lastElement, page, content, done) => {
   // move title or last element to new page
   if (secondLastIsTitle) {
     secondLastElement.remove();
-    addContent(secondLastElement)(() => addContent(content)(done));
+    addContent(area, secondLastElement)(() => addContent(area, content)(done));
   } else {
-    addContent(content)(done);
+    addContent(area, content)(done);
   }
 }
 
@@ -249,37 +250,28 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   const descId = $(lastElement).attr('id');
   let descArray = [];
   // remove the last word until the text fits in page
+  const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
   while (!isElementInsideCurrentSheet(lastElement)) {
-    let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(' ');
+    let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(delimiter);
     descArray.unshift(oldDesc.pop());
-    $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(' ');
+    $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(delimiter);
   }
   // add new page and append previously removed text
-  const desc = descArray.join(' ');
-  if (desc.length < 300) {
-    let photos = [];
-    $.getJSON(`https://www.thecrag.com/area/${area.id}/photos/json?key=${process.env.API_KEY}`, function (data) {
-      data.data.photos.forEach(element => {
-        photos.push(element);
-      });
-    }).done(() => {
-      const photoPath = (photos[0].hashID) ? `https://static.thecrag.com/original-image/${photos[0].hashID.substring(0, 2)}/${photos[0].hashID.substring(2, 4)}/${photos[0].hashID}` : undefined;
-      const photo = `
-      <div id="photo-${descId}" class="photo">
-        <img
-          src="${photoPath}"
-          alt="Pineapple" />
-      </div>`;
+  const desc = descArray.join(delimiter);
+  if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
+    getPhotos(area.id, (photos) => {
+      const photoPath = getImageUrl(photos[0]);
+      const photo = areaView.Photo(area, descId, photoPath);
       lastElement.remove();
-      addContent(photo)(() => addContent(lastElement)(() => appendToLastDescription(area, desc)(done)));
+      addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
     });
   } else {
     addPage();
     let newDesc = `
     <div id="${descId}" class="description">
-    <p>${desc}</p>
+      <p>${desc}</p>
     </div>`;
-    addContent(newDesc)(done);
+    addContent(area, newDesc)(done);
   }
 }
 

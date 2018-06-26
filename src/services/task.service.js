@@ -14,7 +14,7 @@ export class TaskRunner {
   }
 
   start() {
-    if (process.env.TEST === 'true') {
+    if (process.env.APP_TEST === 'true') {
       window.scrollTo(0, document.body.scrollHeight);
     }
 
@@ -22,7 +22,7 @@ export class TaskRunner {
       const task = this.tasks.shift();
       setTimeout(() => {
         return task(() => this.start(this.area, this.tasks, this.done));
-      }, (process.env.TEST === 'true') ? 10 : 0);
+      }, (process.env.APP_TEST === 'true') ? 10 : 0);
     } else {
       this.area.rendered = true;
       this.done();
