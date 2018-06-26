@@ -15,6 +15,7 @@ export class Area {
 
     this.parent = parent;
     this.rendered = false;
+    this.breakBeforeRoutes = false;
 
     this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description(d)) : [];
 

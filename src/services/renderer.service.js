@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import { createLogger } from '../utils/logger';
 import * as pageService from '../services/page.service';
 import * as areaView from '../views/area.view';
+import { TaskRunner } from "./task.service";
 
 const log = createLogger('renderer');
 let treePath = '';
@@ -35,54 +36,47 @@ export const doRenderArea = (area, done) => {
 
 export const renderArea = (area, done) => {
   log.info('renderArea', area.name);
-  pageService.initArea(area);
 
-  const tasks = [
-    pageService.addContent(areaView.title(cloneDeep(area))),
-    pageService.addContent(areaView.geometry(cloneDeep(area))),
-  ];
+  const taskRunner = new TaskRunner(area, () => {
+    pageService.initArea();
 
-  area.descriptions.forEach((description, index) => {
-    tasks.push(pageService.addContent(areaView.description(description, area.id, index)));
-  });
+    const tasks = [
+      pageService.addContent(area, areaView.title(cloneDeep(area))),
+      pageService.addContent(area, areaView.geometry(cloneDeep(area))),
+    ];
 
-  // There are no routes
-  if (area.routes.length === 0) {
-    area.topos.forEach((topo, index) => {
-      tasks.push(pageService.addContent(areaView.topo(topo, area.id, index)));
+    area.descriptions.forEach((description, index) => {
+      tasks.push(pageService.addContent(area, areaView.description(description, area.id, index)));
     });
-  }
-  // Render the routes of this area
-  else {
-    tasks.push(pageService.addRoutesContainer());
-    area.routeItems.forEach((item, index) => {
-      if (index === 0 && item.type === 'Topo') {
-        tasks.push(pageService.addRouteMainTopo(areaView.routeItem(item, area.id, index)))
-      } else {
-        tasks.push(pageService.addRouteItem(areaView.routeItem(item, area.id, index), index))
-      }
-    })
-  }
 
-  tasks.push(pageService.validateArea(area));
+    // There are no routes
+    if (area.routes.length === 0) {
+      area.topos.forEach((topo, index) => {
+        tasks.push(pageService.addContent(area, areaView.topo(topo, area.id, index)));
+      });
+    }
+    // Render the routes of this area
+    else {
+      tasks.push(pageService.addRoutesContainer(area, true));
+      area.routeItems.forEach((item, index) => {
+        if (index === 0 && item.type === 'Topo') {
+          tasks.push(pageService.addRouteMainTopo(area, areaView.routeItem(item, area.id, index)))
+        } else {
+          tasks.push(pageService.addRouteItem(area, areaView.routeItem(item, area.id, index), index))
+        }
+      })
+    }
+
+    tasks.push(pageService.validateArea(area, () => {
+      pageService.removeAllAreaRelatedElements(area);
+      taskRunner.restart();
+    }));
+
+    return tasks;
+
+  }, done);
 
   // log.info('start solving area tasks');
-  runNextTask(area, tasks, done);
+  taskRunner.start();
 
 }
-
-export const runNextTask = (area, tasks, done) => {
-  if (process.env.TEST === 'true') {
-    window.scrollTo(0, document.body.scrollHeight);
-  }
-
-  if (tasks.length > 0) {
-    const task = tasks.shift();
-    setTimeout(() => {
-      return task(() => runNextTask(area, tasks, done));
-    }, (process.env.TEST === 'true') ? 100 : 0);
-  } else {
-    area.rendered = true;
-    done();
-  }
-};

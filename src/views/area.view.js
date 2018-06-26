@@ -1,23 +1,23 @@
 import path from '../assets/pineapple.jpg';
 
 export const title = (area) => `
-  <h1 id="title-${area.id}" class="title">${area.name}</h1>`;
+  <h1 id="title-${area.id}" class="title area-${area.id}">${area.name}</h1>`;
 
 export const geometry = (area) => `
-  <div id="geometry-${area.id}" class="geometry ${area.descriptions.length === 0 ? 'geometry--wide' : 'geometry--right'}">
+  <div id="geometry-${area.id}" class="geometry area-${area.id} ${area.descriptions.length === 0 ? 'geometry--wide' : 'geometry--right'}">
     <img
       src="${path}"
       alt="Pineapple" />
   </div>`;
 
 export const description = (description, areaId, index) => `
-  <div id="description-${areaId}-${index}" class="description">
+  <div id="description-${areaId}-${index}" class="description area-${areaId}">
     <h2>${description.name}</h2>
     <p>${description.markdown}</p>
   </div>`;
 
 export const topo = (topo, areaId, index) => `
-  <div id="topo-${areaId}-${index}" class="topo">
+  <div id="topo-${areaId}-${index}" class="topo area-${areaId}">
     <img
       src="${topo.url}"
       alt="Topo"
@@ -25,7 +25,7 @@ export const topo = (topo, areaId, index) => `
   </div>`;
 
 export const routesContainer = (areaId, colAmount) => `
-  <div class="routes routes--${areaId}">
+  <div class="routes routes-${areaId} area-${areaId}">
     <div class="routes__topo"></div>
     <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;
