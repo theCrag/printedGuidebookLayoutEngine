@@ -20,11 +20,10 @@ export const description = (description, areaId, index) => `
   </div>`;
 
 export const topo = (topo, areaId, index) => `
-  <div id="topo-${areaId}-${index}" class="topo area-${areaId}">
-    <img
-      src="${topo.url}"
-      alt="Topo"
-      style="width:100%;" />
+  <div
+    id="topo-${areaId}-${index}"
+    class="topo area-${areaId} topo--${topo.orientation === 0 ? 'landscape' : 'portrait'} topo--${topo.imageStyle === 0 ? 'full-page' : (topo.imageStyle === 1) ? 'full-width' : 'col-width'}">
+    <img src="${topo.url}" />
   </div>`;
 
 export const routesContainer = (areaId, colAmount) => `
