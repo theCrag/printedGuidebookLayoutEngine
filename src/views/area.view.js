@@ -32,7 +32,7 @@ export const routesContainer = (areaId, colAmount) => `
 
 export const routeItem = (routeItem, areaId, index) =>
   (routeItem.type === 'Topo')
-    ? `<div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
+    ? `<div class="route route--blank"></div><div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
     : `<div id="route-${areaId}-${index}" class="route">
       <div class="route__container">
         <div class="route__header">
