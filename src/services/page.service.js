@@ -250,26 +250,61 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   const areaId = $(lastElement).attr('id').split('-')[1];
   const index = $(lastElement).attr('id').split('-')[2];
   let descArray = [];
-  // const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
+  let innerTextDesc = [];
+  const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
 
   // remove the last word until the text fits in page
   while (!isElementInsideCurrentSheet(lastElement)) {
     const lastChild = last($(lastElement).children());
-    descArray.unshift(lastChild);
-    lastChild.remove();
+    switch (lastChild.tagName){
+      // how to proceed when the element is a <p></p>
+      case 'P':
+        // check if innerText exists, when not remove the element
+        if (lastChild.innerText === ""){
+          lastChild.remove();
+          // check if there is some text exported from the removed <p></p>, if yes, create a new P and add to array
+          if (innerTextDesc.length > 0){
+            let newP = $.parseHTML('<p></p>')[0];
+            newP.innerText = innerTextDesc.join(delimiter);
+            descArray.unshift(newP);
+            innerTextDesc = [];
+          }
+        } else {
+        // if innerText exists, remove the last word
+          let oldDesc = lastChild.innerText.split(delimiter);
+          innerTextDesc.unshift(oldDesc.pop());
+          lastChild.innerText = oldDesc.join(delimiter);
+        }
+        break;
+      default:
+        // move the whole element on new page
+        descArray.unshift(lastChild);
+        lastChild.remove();
+        break;
+    }
+    // move the title, if this is the lastElement
     const lastChildTitle = last($(lastElement).children());
     if (lastChildTitle.tagName === "H2"){
       descArray.unshift(lastChildTitle);
       lastChildTitle.remove();
     }
   }
+
+  // cleanup if the description block is empty now
   if ($(lastElement).children().length === 0){
     $(lastElement).remove();
   }
 
-  // add new page and append previously removed text
+  // create new <p></p> for left over text
+  if (innerTextDesc.length > 0) {
+    let newP = $.parseHTML('<p></p>')[0];
+    newP.innerText = innerTextDesc.join(delimiter);
+    descArray.unshift(newP);
+  }
+
+  // add new page and append previously removed elements
   // let desc = descArray.map((e) => $(desc).append(e));
-  log.info(descArray);
+  // log.info(descArray);
   // if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
   //   getPhotos(area.id, (photos) => {
   //     const photoPath = getImageUrl(photos[0]);

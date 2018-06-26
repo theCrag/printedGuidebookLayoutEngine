@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { createLogger } from '../utils/logger';
+import * as jsonData from '../data/description.json';
 
 const log = createLogger('api');
 
@@ -20,9 +21,13 @@ export const getImageUrl = (img) => {
 }
 
 export const getDescriptionHtml = (area, done) => {
-  $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
+  if(process.env.APP_TEST){
+    done(jsonData.data);
+  } else {
+    $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
     (jsonData) => done(jsonData.data))
     .fail(() => {
       log.error('could not get photos for area', areaId);
     });
+  }
 }
