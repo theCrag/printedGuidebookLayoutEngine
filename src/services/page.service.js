@@ -247,32 +247,42 @@ export const validateGeometry = (area, lastElement, page, content, done) => {
 }
 
 export const validateDescription = (area, lastElement, page, content, done) => {
-  const descId = $(lastElement).attr('id');
+  const areaId = $(lastElement).attr('id').split('-')[1];
+  const index = $(lastElement).attr('id').split('-')[2];
   let descArray = [];
+  // const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
+
   // remove the last word until the text fits in page
-  const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
   while (!isElementInsideCurrentSheet(lastElement)) {
-    let oldDesc = $(lastElement).children()[$(lastElement).children().length - 1].innerText.split(delimiter);
-    descArray.unshift(oldDesc.pop());
-    $(lastElement).children()[$(lastElement).children().length - 1].innerText = oldDesc.join(delimiter);
+    const lastChild = last($(lastElement).children());
+    descArray.unshift(lastChild);
+    lastChild.remove();
+    const lastChildTitle = last($(lastElement).children());
+    if (lastChildTitle.tagName === "H2"){
+      descArray.unshift(lastChildTitle);
+      lastChildTitle.remove();
+    }
   }
+  if ($(lastElement).children().length === 0){
+    $(lastElement).remove();
+  }
+
   // add new page and append previously removed text
-  const desc = descArray.join(delimiter);
-  if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
-    getPhotos(area.id, (photos) => {
-      const photoPath = getImageUrl(photos[0]);
-      const photo = areaView.Photo(area, descId, photoPath);
-      lastElement.remove();
-      addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
-    });
-  } else {
+  // let desc = descArray.map((e) => $(desc).append(e));
+  log.info(descArray);
+  // if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
+  //   getPhotos(area.id, (photos) => {
+  //     const photoPath = getImageUrl(photos[0]);
+  //     const photo = areaView.photo(area, descId, photoPath);
+  //     lastElement.remove();
+  //     addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
+  //   });
+  // } else {
     addPage();
-    let newDesc = `
-    <div id="${descId}" class="description">
-      <p>${desc}</p>
-    </div>`;
-    addContent(area, newDesc)(done);
-  }
+    let html = $.parseHTML(areaView.emptyDescription(areaId, index));
+    descArray.map((e) => $(html).append(e));
+    addContent(area, html)(done);
+  // }
 }
 
 export const removeAllAreaRelatedElements = (area) => {

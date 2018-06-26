@@ -8,7 +8,7 @@ export const geometry = (area) => `
     <img src="${path}" />
   </div>`;
 
-export const Photo = (area, descId, photoPath) => `
+export const photo = (area, descId, photoPath) => `
   <div id="photo-${descId}" class="photo area-${area.id}">
     <img src="${photoPath}" />
   </div>`;
@@ -17,6 +17,10 @@ export const description = (description, areaId, index) => `
   <div id="description-${areaId}-${index}" class="description area-${areaId}">
     <h2>${description.name}</h2>
     <p>${description.markdown}</p>
+  </div>`;
+
+export const emptyDescription = (areaId, index) => `
+  <div id="description-${areaId}-${index}" class="description area-${areaId}">
   </div>`;
 
 export const topo = (topo, areaId, index) => `

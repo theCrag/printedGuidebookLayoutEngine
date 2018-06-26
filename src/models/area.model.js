@@ -5,6 +5,7 @@ import { Route } from './route.model';
 import { Geometry } from './geometry.model';
 import { Description } from './description.model';
 import { FULL_WIDTH } from './image-styles';
+import { getDescriptionHtml } from '../services/api.service';
 
 export class Area {
 
@@ -15,8 +16,9 @@ export class Area {
     this.subAreaCount = jsonArea.subAreaCount;
 
     this.parent = parent;
-    this.rendered = false;
     this.breakBeforeRoutes = false;
+    this.rendered = false;
+    this.fetched = false;
 
     this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description(d)) : [];
 
@@ -71,6 +73,35 @@ export class Area {
 
     if (this.parent) {
       return this.parent.next();
+    }
+  }
+
+  fetchDescription(done) {
+    if (this.descriptions.length > 0){
+      getDescriptionHtml(this, (jsonArea) => {
+        this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description({
+          name: d.name,
+          markdown: d.markupHTML
+        })) : this.descriptions;
+        this.fetched = true;
+        done();
+      })
+    } else {
+      this.fetched = true;
+      done();
+    }
+  }
+
+  fetchNext() {
+    if (this.subAreas && this.subAreas.length > 0) {
+      const subAreasToFetch = this.subAreas.filter(a => !a.fetched);
+      if (subAreasToFetch.length > 0) {
+        return first(subAreasToFetch);
+      }
+    }
+
+    if (this.parent) {
+      return this.parent.fetchNext();
     }
   }
 
