@@ -1,3 +1,3 @@
-const FULL_PAGE = 0;
-const FULL_WIDTH = 1;
-const COl_WIDTH = 2;
+export const FULL_PAGE = 0;
+export const FULL_WIDTH = 1;
+export const COL_WIDTH = 2;

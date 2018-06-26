@@ -4,6 +4,7 @@ import { Topo } from './topo.model';
 import { Route } from './route.model';
 import { Geometry } from './geometry.model';
 import { Description } from './description.model';
+import { FULL_WIDTH } from './image-styles';
 
 export class Area {
 
@@ -27,10 +28,25 @@ export class Area {
 
     this.routeItems = cloneDeep(this.routes);
     if (this.routeItems.length > 0) {
-      this.topos.filter(topo => topo.linked === undefined).forEach(topo => {
-        const firstRouteId = topo.routesId[0];
-        const indexOfRoute = findIndex(this.routeItems, routeItem => routeItem.id === firstRouteId);
-        this.routeItems.splice(indexOfRoute, 0, topo);
+      this.topos
+        .filter(topo => topo.linked === undefined)
+        .forEach(topo => {
+          const firstRouteId = topo.routesId[0];
+          const indexOfRoute = findIndex(this.routeItems, routeItem => routeItem.id === firstRouteId);
+          this.routeItems.splice(indexOfRoute, 0, topo);
+        });
+
+      this.routeItems = this.routeItems.map((item, index) => {
+        if (item.type === 'Topo') {
+          if (index === 0) {
+            item.imageStyle = FULL_WIDTH;
+          } else {
+            if (item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
+              item.imageStyle = FULL_WIDTH;
+            }
+          }
+        }
+        return item;
       });
     }
 

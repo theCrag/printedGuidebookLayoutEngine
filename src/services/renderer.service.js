@@ -64,7 +64,7 @@ export const renderArea = (area, done) => {
         } else {
           tasks.push(pageService.addRouteItem(area, areaView.routeItem(item, area.id, index), index))
         }
-      })
+      });
     }
 
     tasks.push(pageService.validateArea(area, () => {
