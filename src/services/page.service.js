@@ -36,9 +36,13 @@ export const removeLastPage = () => {
 };
 
 export const addRoutesContainer = (area, isFirst) => (done) => {
-  if (area.breakBeforeRoutes && isFirst) {
-    addPage();
-  }
+  // if (area.breakBeforeRoutes && isFirst) {
+  //   addPage();
+  //   if (isRightPage()) {
+  //     addPage();
+
+  //   }
+  // }
   addContent(area, areaView.routesContainer(area.id, 2))(done);
   routeContainerCounter = routeContainerCounter + 1;
 };
@@ -111,6 +115,7 @@ export const validateRoutes = (area, page, routesContainer, content, func, index
     lastElement.remove();
     removePossibleRouteZombies();
     addPage();
+
     addRoutesContainer(area)(() => {
       if ('addRouteMainTopo' === func) {
         addRouteMainTopo(area, content)(done);
@@ -165,11 +170,11 @@ export const validateArea = (area, reset) => (done) => {
   const routes = $(`.routes-${area.id}`);
   if (routes.length > 1) {
     log.info('validateArea', area, routes);
-    const isFirstRoutesPageRight = routes.first().closest('.sheet').hasClass('sheet--right');
-    if (isFirstRoutesPageRight && !area.breakBeforeRoutes) {
-      area.breakBeforeRoutes = true;
-      return reset();
-    }
+    // const isFirstRoutesPageRight = routes.first().closest('.sheet').hasClass('sheet--right');
+    // if (isFirstRoutesPageRight && !area.breakBeforeRoutes) {
+    //   area.breakBeforeRoutes = true;
+    //   return reset();
+    // }
     done();
   } else {
     done();
@@ -209,7 +214,7 @@ export const removePossibleRouteZombies = () => {
   }
 }
 
-export const appendToLastDescription = (content) => (done) => {
+export const appendToLastDescription = (area, content) => (done) => {
   const page = getCurrentPage();
   const lastElement = last(page.children());
   $(lastElement).children()[$(lastElement).children().length - 1].innerText += content;
@@ -266,7 +271,7 @@ export const validateDescription = (area, lastElement, page, content, done) => {
           alt="Pineapple" />
       </div>`;
       lastElement.remove();
-      addContent(photo)(() => addContent(lastElement)(() => appendToLastDescription(desc)(done)));
+      addContent(photo)(() => addContent(lastElement)(() => appendToLastDescription(area, desc)(done)));
     });
   } else {
     addPage();
