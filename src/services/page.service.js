@@ -4,7 +4,7 @@ import { find, last, cloneDeep } from 'lodash';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
-import { getPhoto } from "./api.service";
+import { getPhotos, getImageUrl } from "./api.service";
 
 const log = createLogger('page');
 
@@ -259,9 +259,8 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   // add new page and append previously removed text
   const desc = descArray.join(delimiter);
   if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
-
-    getPhoto(area.id, (photos) => {
-      const photoPath = (photos[0].hashID) ? `https://static.thecrag.com/original-image/${photos[0].hashID.substring(0, 2)}/${photos[0].hashID.substring(2, 4)}/${photos[0].hashID}` : undefined;
+    getPhotos(area.id, (photos) => {
+      const photoPath = getImageUrl(photos[0]);
       const photo = areaView.Photo(descId, photoPath);
       lastElement.remove();
       addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
