@@ -13,10 +13,6 @@ h1 {
   font-size: 2em;
 }
 
-img {
-  max-height: 400px;
-}
-
 .sheet {
   @include modifier ('right') {
     background-color: lemonchiffon;
@@ -49,6 +45,20 @@ img {
     margin-bottom: 10px;
     width: 340px;
     height: auto;
+  }
+}
+
+.topo {
+  @include modifier ('full-width') {
+    img {
+      width: 100%;
+    }
+  }
+
+  @include modifier ('col-width') {
+    img {
+      width: 100%;
+    }
   }
 }
 

@@ -36,7 +36,7 @@ export const removeLastPage = () => {
   pageCounter = pageCounter - 1;
 };
 
-export const addRoutesContainer = (area, isFirst) => (done) => {
+export const addRoutesContainer = (area) => (done) => {
   // if (area.breakBeforeRoutes && isFirst) {
   //   addPage();
   //   if (isRightPage()) {
@@ -59,6 +59,11 @@ export const addContent = (area, content) => (done) => {
   } else {
     validatePage(area, page, content, done);
   }
+};
+
+export const addFullPageTopo = (area, content) => (done) => {
+  // TODO:
+  done();
 };
 
 export const addRouteMainTopo = (area, content) => (done) => {
@@ -111,11 +116,13 @@ export const validateRoutes = (area, page, routesContainer, content, func, index
     .some(c => !isElementInsideCurrentSheet(c));
 
   if (!areSomeRoutesOutsideTheSheet) {
+    debugger;
     // log.info('the last route has no space in sheet');
     const lastElement = last(routesContainer.children().not('.route--blank'));
     lastElement.remove();
-    removePossibleRouteZombies();
+    // removePossibleRouteZombies();
     addPage();
+
 
     addRoutesContainer(area)(() => {
       if ('addRouteMainTopo' === func) {

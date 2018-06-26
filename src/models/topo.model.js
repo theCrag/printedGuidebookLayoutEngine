@@ -13,13 +13,13 @@ export class Topo {
     this.height = jsonTopo.height;
     this.type = 'Topo';
 
-    // this.url = getImageUrl(this);
-    this.url = path;
+    this.url = getImageUrl(this);
+    // this.url = path;
 
     this.routesId = (jsonTopo.objects) ? jsonTopo.objects.filter(r => r.objectType === 'Route').map(r => r.objectID) : [];
 
     this.imageStyle = imageStyle || COL_WIDTH;
-    this.orientation = (this.width > this.height) ? LANDSCAPE : PORTRAIT;
+    this.orientation = (parseInt(this.width, 10) > parseInt(this.height, 10)) ? LANDSCAPE : PORTRAIT;
 
   }
 

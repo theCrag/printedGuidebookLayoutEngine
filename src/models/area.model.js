@@ -40,12 +40,8 @@ export class Area {
 
       this.routeItems = this.routeItems.map((item, index) => {
         if (item.type === 'Topo') {
-          if (index === 0) {
+          if (item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
             item.imageStyle = FULL_WIDTH;
-          } else {
-            if (item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
-              item.imageStyle = FULL_WIDTH;
-            }
           }
         }
         return item;
