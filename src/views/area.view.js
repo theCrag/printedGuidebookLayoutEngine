@@ -5,9 +5,12 @@ export const title = (area) => `
 
 export const geometry = (area) => `
   <div id="geometry-${area.id}" class="geometry area-${area.id} ${area.descriptions.length === 0 ? 'geometry--wide' : 'geometry--right'}">
-    <img
-      src="${path}"
-      alt="Pineapple" />
+    <img src="${path}" />
+  </div>`;
+
+export const Photo = (descId, photoPath) => `
+  <div id="photo-${descId}" class="photo">
+    <img src="${photoPath}" />
   </div>`;
 
 export const description = (description, areaId, index) => `
