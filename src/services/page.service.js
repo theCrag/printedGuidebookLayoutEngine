@@ -116,11 +116,10 @@ export const validateRoutes = (area, page, routesContainer, content, func, index
     .some(c => !isElementInsideCurrentSheet(c));
 
   if (!areSomeRoutesOutsideTheSheet) {
-    debugger;
     // log.info('the last route has no space in sheet');
     const lastElement = last(routesContainer.children().not('.route--blank'));
     lastElement.remove();
-    // removePossibleRouteZombies();
+    removePossibleRouteZombies();
     addPage();
 
 
@@ -263,21 +262,21 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   // remove the last word until the text fits in page
   while (!isElementInsideCurrentSheet(lastElement)) {
     const lastChild = last($(lastElement).children());
-    switch (lastChild.tagName){
+    switch (lastChild.tagName) {
       // how to proceed when the element is a <p></p>
       case 'P':
         // check if innerText exists, when not remove the element
-        if (lastChild.innerText === ""){
+        if (lastChild.innerText === "") {
           lastChild.remove();
           // check if there is some text exported from the removed <p></p>, if yes, create a new P and add to array
-          if (innerTextDesc.length > 0){
+          if (innerTextDesc.length > 0) {
             let newP = $.parseHTML('<p></p>')[0];
             newP.innerText = innerTextDesc.join(delimiter);
             descArray.unshift(newP);
             innerTextDesc = [];
           }
         } else {
-        // if innerText exists, remove the last word
+          // if innerText exists, remove the last word
           let oldDesc = lastChild.innerText.split(delimiter);
           innerTextDesc.unshift(oldDesc.pop());
           lastChild.innerText = oldDesc.join(delimiter);
@@ -291,14 +290,14 @@ export const validateDescription = (area, lastElement, page, content, done) => {
     }
     // move the title, if this is the lastElement
     const lastChildTitle = last($(lastElement).children());
-    if (lastChildTitle.tagName === "H2"){
+    if (lastChildTitle.tagName === "H2") {
       descArray.unshift(lastChildTitle);
       lastChildTitle.remove();
     }
   }
 
   // cleanup if the description block is empty now
-  if ($(lastElement).children().length === 0){
+  if ($(lastElement).children().length === 0) {
     $(lastElement).remove();
   }
 
@@ -320,10 +319,10 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   //     addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
   //   });
   // } else {
-    addPage();
-    let html = $.parseHTML(areaView.emptyDescription(areaId, index));
-    descArray.map((e) => $(html).append(e));
-    addContent(area, html)(done);
+  addPage();
+  let html = $.parseHTML(areaView.emptyDescription(areaId, index));
+  descArray.map((e) => $(html).append(e));
+  addContent(area, html)(done);
   // }
 }
 

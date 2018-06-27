@@ -59,7 +59,6 @@ export const renderArea = (area, done) => {
     }
     // Render the routes of this area
     else {
-      debugger;
       // tasks.push(pageService.addRoutesContainer(area));
       area.routeItems.forEach((item, index) => {
 

@@ -19,6 +19,12 @@ h1 {
   }
 }
 
+.description {
+  dt {
+    font-weight: bold;
+  }
+}
+
 .geometry {
   @include modifier ('right') {
     img {
