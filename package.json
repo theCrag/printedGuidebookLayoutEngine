@@ -1,8 +1,17 @@
 {
   "name": "printedGuidebookLayoutEngine",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
-  "author": "hirsch88 <gery.hirschfeld@w3tec.ch>",
+  "contributors": [
+    {
+      "name": "Gery Hirschfeld",
+      "url": "https://github.com/hirsch88"
+    },
+    {
+      "name": "Gabriel Brunner",
+      "url": "https://github.com/Brunn3r"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "start": "parcel ./src/index.html --no-cache --no-hmr",
