@@ -59,9 +59,7 @@ export const renderArea = (area, done) => {
     }
     // Render the routes of this area
     else {
-      // tasks.push(pageService.addRoutesContainer(area));
       area.routeItems.forEach((item, index) => {
-
 
         // If the first element is a full-page topo image
         if (index === 0 && item.type === 'Topo' && item.imageStyle === FULL_PAGE) {
@@ -72,7 +70,7 @@ export const renderArea = (area, done) => {
 
         // Init routes container possible page-width topo
         if (index === 0) {
-          tasks.push(pageService.addRoutesContainer(area));
+          tasks.push(pageService.addRoutesContainer(area, true));
 
           if (item.type === 'Topo' && item.imageStyle === FULL_WIDTH && item.orientation !== PORTRAIT) {
             tasks.push(pageService.addRouteMainTopo(area, areaView.topo(item, area.id, index)));
@@ -103,9 +101,11 @@ export const renderArea = (area, done) => {
       taskRunner.restart();
     }));
 
+
     return tasks;
 
   }, done);
+
 
   // log.info('start solving area tasks');
   taskRunner.start();

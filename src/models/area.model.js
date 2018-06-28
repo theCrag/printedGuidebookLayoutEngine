@@ -16,9 +16,11 @@ export class Area {
     this.subAreaCount = jsonArea.subAreaCount;
 
     this.parent = parent;
-    this.breakBeforeRoutes = false;
     this.rendered = false;
     this.fetched = false;
+
+    this.breakBeforeRoutes = false;
+    this.routesNeedToStartOnALeftPage = false;
 
     this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description(d)) : [];
 
@@ -46,17 +48,21 @@ export class Area {
         }
         return item;
       });
+
+      let routes = [];
+      this.routeItems = this.routeItems.reverse().map((item, index) => {
+        if (item.type === 'Route') {
+          routes.push(item.index);
+        } else {
+          item.routesResponsible = routes;
+          routes = [];
+        }
+        return item;
+      }).reverse();
     }
 
     this.subAreas = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'area').map(a => new Area(a, this)) : [];
 
-  }
-
-  first() {
-    if (this.subAreas && this.subAreas.length > 0) {
-      return first(this.subAreas);
-    }
-    return;
   }
 
   next() {
@@ -73,7 +79,7 @@ export class Area {
   }
 
   fetchDescription(done) {
-    if (this.descriptions.length > 0){
+    if (this.descriptions.length > 0) {
       getDescriptionHtml(this, (jsonArea) => {
         this.descriptions = (jsonArea.beta) ? jsonArea.beta.map(d => new Description({
           name: d.name,
