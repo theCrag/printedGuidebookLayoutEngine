@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { find, last, cloneDeep } from 'lodash';
+import { first, find, last, cloneDeep } from 'lodash';
 
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
@@ -36,14 +36,16 @@ export const removeLastPage = () => {
   pageCounter = pageCounter - 1;
 };
 
-export const addRoutesContainer = (area, isFirst) => (done) => {
-  if (area.routesNeedToStartOnALeftPage && isFirst) {
+export const prepareLeftPage = () => (done) => {
+  addPage();
+  if (isRightPage()) {
     addPage();
-    if (isRightPage()) {
-      addPage();
-    }
   }
-  addContent(area, areaView.routesContainer(area.id, 2))(done);
+  done();
+};
+
+export const addRoutesContainer = (area) => (done) => {
+  addContent(area, areaView.routesContainer(area.id, routeContainerCounter, 2))(done);
   routeContainerCounter = routeContainerCounter + 1;
 };
 
@@ -165,20 +167,55 @@ export const validatePage = (area, page, content, done) => {
 }
 
 export const validateArea = (area, reset) => (done) => {
-  const routes = $(`.routes-${area.id}`);
+  const routes = $(`.routes.area-${area.id}`);
   if (routes.length > 1) {
     log.info('validateArea', area, routes);
 
-    //
+    // Check if topo got missing on a right page
     const isFirstRoutesPageRight = routes.first().closest('.sheet').hasClass('sheet--right');
-    if (isFirstRoutesPageRight) {
+    if (isFirstRoutesPageRight && !area.routesNeedToStartOnALeftPage) {
       if (countRouteItems(routes.first()) === 1) {
         area.routesNeedToStartOnALeftPage = true;
         return reset();
       }
     }
 
-    // TODO:
+    // Validate if the last route of a topo is in sight, otherwise start with the topo on
+    // left top page.
+    let restartRendering = false;
+    area.routeItems = area.routeItems.map(item => {
+      if (item.type === 'Topo') {
+
+        if (item.routesResponsible.length > 0) {
+          const topoElement = $(`#topo-${item.id}`);
+          const topoPageElement = topoElement.closest('.sheet');
+          const topoPageElementIsALeftPage = topoPageElement.hasClass('sheet--left');
+          const pageElements = [topoPageElement];
+
+          if (topoPageElementIsALeftPage) {
+            const idPagePairs = topoPageElement.attr('id').split('-');
+            const nextTopoPage = $(`#page-${parseInt(first(idPagePairs), 10) + 1}`);
+            pageElements.push(nextTopoPage);
+
+          }
+
+          const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
+          const lastRouteInSight = topoPageElement.find(`#route-${area.id}-${first(item.routesResponsible)}`);
+
+          if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {
+            item.startOnLeftPage = true;
+            restartRendering = true;
+
+          }
+        }
+
+      }
+      return item;
+    });
+
+    if (restartRendering) {
+      return reset();
+    }
 
     done();
   } else {

@@ -28,7 +28,7 @@ export class Area {
 
     this.topos = (jsonArea.topos) ? jsonArea.topos.map(t => new Topo(t)) : [];
 
-    this.routes = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'route').map((route, index) => new Route(route, index, this)) : [];
+    this.routes = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'route').map((route, index) => new Route(route, index + 1, this)) : [];
 
     this.routeItems = cloneDeep(this.routes);
     if (this.routeItems.length > 0) {

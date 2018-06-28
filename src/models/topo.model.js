@@ -19,6 +19,7 @@ export class Topo {
     this.routesId = (jsonTopo.objects) ? jsonTopo.objects.filter(r => r.objectType === 'Route').map(r => r.objectID) : [];
 
     this.routesResponsible = [];
+    this.startOnLeftPage = false;
 
     this.imageStyle = imageStyle || COL_WIDTH;
     this.orientation = (parseInt(this.width, 10) > parseInt(this.height, 10)) ? LANDSCAPE : PORTRAIT;

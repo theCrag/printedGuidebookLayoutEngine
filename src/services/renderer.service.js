@@ -61,6 +61,10 @@ export const renderArea = (area, done) => {
     else {
       area.routeItems.forEach((item, index) => {
 
+        if (item.type === 'Topo' && item.startOnLeftPage) {
+          tasks.push(pageService.prepareLeftPage());
+        }
+
         // If the first element is a full-page topo image
         if (index === 0 && item.type === 'Topo' && item.imageStyle === FULL_PAGE) {
           tasks.push(pageService.addFullPageTopo(area, areaView.topo(item, area.id, index)));
@@ -70,7 +74,10 @@ export const renderArea = (area, done) => {
 
         // Init routes container possible page-width topo
         if (index === 0) {
-          tasks.push(pageService.addRoutesContainer(area, true));
+          if (area.routesNeedToStartOnALeftPage) {
+            tasks.push(pageService.prepareLeftPage());
+          }
+          tasks.push(pageService.addRoutesContainer(area));
 
           if (item.type === 'Topo' && item.imageStyle === FULL_WIDTH && item.orientation !== PORTRAIT) {
             tasks.push(pageService.addRouteMainTopo(area, areaView.topo(item, area.id, index)));

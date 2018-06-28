@@ -25,13 +25,13 @@ export const emptyDescription = (areaId, index) => `
 
 export const topo = (topo, areaId, index) => `
   <div
-    id="topo-${areaId}-${index}"
+    id="topo-${topo.id}"
     class="topo area-${areaId} topo--${topo.orientation === 0 ? 'landscape' : 'portrait'} topo--${topo.imageStyle === 0 ? 'full-page' : (topo.imageStyle === 1) ? 'full-width' : 'col-width'}">
     <img src="${topo.url}" />
   </div>`;
 
-export const routesContainer = (areaId, colAmount) => `
-  <div class="routes routes-${areaId} area-${areaId}">
+export const routesContainer = (areaId, index, colAmount) => `
+  <div class="routes routes-${index} area-${areaId}">
     <div class="routes__topo"></div>
     <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;
@@ -39,11 +39,11 @@ export const routesContainer = (areaId, colAmount) => `
 export const routeItem = (routeItem, areaId, index) =>
   (routeItem.type === 'Topo')
     ? `<div class="route route--blank"></div><div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
-    : `<div id="route-${areaId}-${index}" class="route">
+    : `<div id="route-${areaId}-${routeItem.index}" class="route">
       <div class="route__container">
         <div class="route__header">
           <div class="route__header__number">
-            ${routeItem.index + 1}
+            ${routeItem.index}
           </div>
           <div class="route__header__name">
             ${routeItem.name}
