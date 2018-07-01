@@ -1,28 +1,84 @@
 import path from '../assets/pineapple.jpg';
 
+/**
+ * @name title
+ * @description
+ * Creates the html for a area title
+ *
+ * @param {Area} area
+ * @returns {string} html
+ */
 export const title = (area) => `
   <h1 id="title-${area.id}" class="title area-${area.id}">${area.name}</h1>`;
 
+/**
+ * @name geometry
+ * @description
+ * Creates the html for the geometry element. On the current webpage this element
+ * is a google map integration.
+ *
+ * @param {Area} area
+ * @returns {string} html
+ */
 export const geometry = (area) => `
   <div id="geometry-${area.id}" class="geometry area-${area.id} ${area.descriptions.length === 0 ? 'geometry--wide' : 'geometry--right'}">
     <img src="${path}" />
   </div>`;
 
+/**
+ * @name photo
+ * @description
+ * Creates the html for a collected photo of the crag API.
+ *
+ * @param {Area} area
+ * @param {string} descId
+ * @param {string} photoPath
+ * @returns {string} html
+ */
 export const photo = (area, descId, photoPath) => `
   <div id="photo-${descId}" class="photo area-${area.id}">
     <img src="${photoPath}" />
   </div>`;
 
+/**
+ * @name description
+ * @description
+ * Creates the html for the area description.
+ *
+ * @param {Description} description
+ * @param {string} areaId
+ * @param {number} index
+ * @returns {string} html
+ */
 export const description = (description, areaId, index) => `
   <div id="description-${areaId}-${index}" class="description area-${areaId}">
     <h2>${description.name}</h2>
     <p>${description.markdown}</p>
   </div>`;
 
+/**
+ * @name emptyDescription
+ * @description
+ * TODO: Gabu
+ *
+ * @param {string} areaId
+ * @param {number} index
+ * @returns {string} html
+ */
 export const emptyDescription = (areaId, index) => `
   <div id="description-${areaId}-${index}" class="description area-${areaId}">
   </div>`;
 
+/**
+ * @name topo
+ * @description
+ * Creates the html for a topo image.
+ *
+ * @param {Topo} topo
+ * @param {string} areaId
+ * @param {number} index
+ * @returns {string} html
+ */
 export const topo = (topo, areaId, index) => `
   <div
     id="topo-${topo.id}"
@@ -30,12 +86,32 @@ export const topo = (topo, areaId, index) => `
     <img src="${topo.url}" />
   </div>`;
 
+/**
+ * @name routesContainer
+ * @description
+ * Creates a html container for upcoming routes.
+ *
+ * @param {string} areaId
+ * @param {number} index
+ * @param {number} colAmount
+ * @returns {string} html
+ */
 export const routesContainer = (areaId, index, colAmount) => `
   <div class="routes routes-${index} area-${areaId}">
     <div class="routes__topo"></div>
     <div class="routes__columns routes__columns--${colAmount}"></div>
   </div>`;
 
+/**
+ * @name routeItem
+ * @description
+ * Creates the route html and detects if it is a topo or just a route element.
+ *
+ * @param {Object{Route or Topo}} routeItem
+ * @param {string} areaId
+ * @param {number} index
+ * @returns {string} html
+ */
 export const routeItem = (routeItem, areaId, index) =>
   (routeItem.type === 'Topo')
     ? `<div class="route route--blank"></div><div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
