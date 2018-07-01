@@ -1,6 +1,4 @@
 /**
- * @name page
- * @description
  * Creates the html for a page.
  *
  * @param {number} id

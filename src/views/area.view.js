@@ -1,8 +1,6 @@
 import path from '../assets/pineapple.jpg';
 
 /**
- * @name title
- * @description
  * Creates the html for a area title
  *
  * @param {Area} area
@@ -12,8 +10,6 @@ export const title = (area) => `
   <h1 id="title-${area.id}" class="title area-${area.id}">${area.name}</h1>`;
 
 /**
- * @name geometry
- * @description
  * Creates the html for the geometry element. On the current webpage this element
  * is a google map integration.
  *
@@ -26,8 +22,6 @@ export const geometry = (area) => `
   </div>`;
 
 /**
- * @name photo
- * @description
  * Creates the html for a collected photo of the crag API.
  *
  * @param {Area} area
@@ -41,8 +35,6 @@ export const photo = (area, descId, photoPath) => `
   </div>`;
 
 /**
- * @name description
- * @description
  * Creates the html for the area description.
  *
  * @param {Description} description
@@ -57,8 +49,6 @@ export const description = (description, areaId, index) => `
   </div>`;
 
 /**
- * @name emptyDescription
- * @description
  * TODO: Gabu
  *
  * @param {string} areaId
@@ -70,8 +60,6 @@ export const emptyDescription = (areaId, index) => `
   </div>`;
 
 /**
- * @name topo
- * @description
  * Creates the html for a topo image.
  *
  * @param {Topo} topo
@@ -87,8 +75,6 @@ export const topo = (topo, areaId, index) => `
   </div>`;
 
 /**
- * @name routesContainer
- * @description
  * Creates a html container for upcoming routes.
  *
  * @param {string} areaId
@@ -103,8 +89,6 @@ export const routesContainer = (areaId, index, colAmount) => `
   </div>`;
 
 /**
- * @name routeItem
- * @description
  * Creates the route html and detects if it is a topo or just a route element.
  *
  * @param {Object{Route or Topo}} routeItem

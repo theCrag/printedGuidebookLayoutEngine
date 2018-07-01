@@ -4,7 +4,7 @@ import { first, find, last, cloneDeep } from 'lodash';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
-import { getPhotos, getImageUrl } from "./api.service";
+import { getPhotos, buildImageUrl } from "./api.service";
 
 const log = createLogger('page');
 
@@ -354,7 +354,7 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   // log.info(descArray);
   // if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
   //   getPhotos(area.id, (photos) => {
-  //     const photoPath = getImageUrl(photos[0]);
+  //     const photoPath = buildImageUrl(photos[0]);
   //     const photo = areaView.photo(area, descId, photoPath);
   //     lastElement.remove();
   //     addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));

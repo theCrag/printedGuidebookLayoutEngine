@@ -4,6 +4,25 @@ import * as jsonData from '../data/description.json';
 
 const log = createLogger('api');
 
+/**
+ * Builds the URL for a given image. With this URL we can display crag images
+ * in our HTML.
+ *
+ * @param {Object} img
+ * @returns {string} URL to the crag image.
+ */
+export const buildImageUrl = (img) => {
+  return (img.hashID)
+    ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`
+    : undefined;
+}
+
+/**
+ * Fetches the the photo information to an area.
+ *
+ * @param {string} areaId
+ * @param {Function} done Callback function.
+ */
 export const getPhotos = (areaId, done) => {
   $.getJSON(`${process.env.API_BASE_URL}/area/${areaId}/photos/json?key=${process.env.API_KEY}`,
     (jsonData) => {
@@ -16,18 +35,20 @@ export const getPhotos = (areaId, done) => {
     });
 }
 
-export const getImageUrl = (img) => {
-  return (img.hashID) ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}` : undefined;
-}
-
+/**
+ * Fetches all the html of the areas descriptions.
+ *
+ * @param {Area} area
+ * @param {Function} done Callback function.
+ */
 export const getDescriptionHtml = (area, done) => {
-  if(process.env.APP_TEST){
+  if (process.env.APP_TEST) {
     done(jsonData.data);
   } else {
     $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
-    (jsonData) => done(jsonData.data))
-    .fail(() => {
-      log.error('could not get photos for area', areaId);
-    });
+      (jsonData) => done(jsonData.data))
+      .fail(() => {
+        log.error('could not get photos for area', areaId);
+      });
   }
 }
