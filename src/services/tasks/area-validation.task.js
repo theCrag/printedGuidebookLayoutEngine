@@ -24,6 +24,7 @@ export class AreaValidationTask extends Task {
       if (isFirstRoutesPageRight && !this.area.routesNeedToStartOnALeftPage) {
         if (this.countRouteItems(routes.first()) === 1) {
           this.area.routesNeedToStartOnALeftPage = true;
+          this.log.warn('first element go missing on a right page!');
           return this.reset();
         }
       }
@@ -31,43 +32,42 @@ export class AreaValidationTask extends Task {
       // TODO: Gery has to fix this
       // Validate if the last route of a topo is in sight, otherwise start with the topo on
       // left top page.
-      // let restartRendering = false;
-      // this.area.routeItems = this.area.routeItems.map(item => {
-      //   if (item.type === 'Topo' && !restartRendering) {
+      let restartRendering = false;
+      this.area.routeItems = this.area.routeItems.map(item => {
+        if (item.type === 'Topo' && !restartRendering && !item.startOnLeftPag) {
 
-      //     if (item.routesResponsible.length > 0) {
-      //       const topoElement = $(`#topo-${item.id}`);
-      //       const topoPageElement = topoElement.closest('.sheet');
-      //       const topoPageElementIsALeftPage = topoPageElement.hasClass('sheet--left');
-      //       const pageElements = [topoPageElement];
+          if (item.routesResponsible.length > 0) {
+            const topoElement = $(`#topo-${item.id}`);
+            const topoPageElement = topoElement.closest('.sheet');
+            const topoPageElementIsALeftPage = topoPageElement.hasClass('sheet--left');
+            const pageElements = [topoPageElement];
 
 
-      //       if (topoPageElementIsALeftPage) {
-      //         const idPagePairs = topoPageElement.attr('id').split('-');
-      //         const nextTopoPage = $(`#page-${parseInt(first(idPagePairs), 10) + 1}`);
-      //         pageElements.push(nextTopoPage);
+            if (topoPageElementIsALeftPage) {
+              const idPagePairs = topoPageElement.attr('id').split('-');
+              const nextTopoPage = $(`#page-${parseInt(first(idPagePairs), 10) + 1}`);
+              pageElements.push(nextTopoPage);
 
-      //       }
+            }
 
-      //       const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
-      //       const lastRouteInSight = pages.find(`#route-${this.area.id}-${first(item.routesResponsible)}`);
-      //       this.log.info('topoPageElementIsALeftPage', topoPageElementIsALeftPage);
-      //       this.log.info('lastRouteInSight', lastRouteInSight.length > 0);
+            const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
+            const lastRouteInSight = pages.find(`#route-${this.area.id}-${first(item.routesResponsible)}`);
 
-      //       if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {
-      //         item.startOnLeftPage = true;
-      //         restartRendering = true;
+            if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {
+              item.startOnLeftPage = true;
+              restartRendering = true;
+              this.log.warn('last route is not in sight', topoElement, item);
 
-      //       }
-      //     }
+            }
+          }
 
-      //   }
-      //   return item;
-      // });
+        }
+        return item;
+      });
 
-      // if (restartRendering) {
-      //   return this.reset();
-      // }
+      if (restartRendering) {
+        return this.reset();
+      }
 
       done();
     } else {

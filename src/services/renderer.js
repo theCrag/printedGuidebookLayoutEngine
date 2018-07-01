@@ -71,7 +71,7 @@ export class Renderer {
         area.routeItems.forEach((item, index) => {
 
           if (item.type === 'Topo' && item.startOnLeftPage) {
-            tasks.push(new PrepareLeftPageTask(this.booklet, area, index));
+            tasks.push(new PrepareLeftPageTask(this.booklet, area));
           }
 
           // If the first element is a full-page topo image
@@ -84,7 +84,7 @@ export class Renderer {
           // Init routes container possible page-width topo
           if (index === 0) {
             if (area.routesNeedToStartOnALeftPage) {
-              tasks.push(new PrepareLeftPageTask(this.booklet, area, index));
+              tasks.push(new PrepareLeftPageTask(this.booklet, area));
 
             }
             tasks.push(new RoutesContainerTask(this.booklet, area));
