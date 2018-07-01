@@ -40,7 +40,7 @@ export class Area {
           this.routeItems.splice(indexOfRoute, 0, topo);
         });
 
-      this.routeItems = this.routeItems.map((item, index) => {
+      this.routeItems = this.routeItems.map((item) => {
         if (item.type === 'Topo') {
           if (item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
             item.imageStyle = FULL_WIDTH;
@@ -50,7 +50,7 @@ export class Area {
       });
 
       let routes = [];
-      this.routeItems = this.routeItems.reverse().map((item, index) => {
+      this.routeItems = this.routeItems.reverse().map((item) => {
         if (item.type === 'Route') {
           routes.push(item.index);
         } else {
@@ -87,7 +87,7 @@ export class Area {
         })) : this.descriptions;
         this.fetched = true;
         done();
-      })
+      });
     } else {
       this.fetched = true;
       done();

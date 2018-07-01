@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from 'jquery';
 import { createLogger } from '../utils/logger';
 import * as jsonData from '../data/description.json';
 
@@ -15,7 +15,7 @@ export const buildImageUrl = (img) => {
   return (img.hashID)
     ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`
     : undefined;
-}
+};
 
 /**
  * Fetches the the photo information to an area.
@@ -33,7 +33,7 @@ export const getPhotos = (areaId, done) => {
     .fail(() => {
       log.error('could not get photos for area', areaId);
     });
-}
+};
 
 /**
  * Fetches all the html of the areas descriptions.
@@ -48,7 +48,7 @@ export const getDescriptionHtml = (area, done) => {
     $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
       (jsonData) => done(jsonData.data))
       .fail(() => {
-        log.error('could not get photos for area', areaId);
+        log.error('could not get photos for area', area.id);
       });
   }
-}
+};

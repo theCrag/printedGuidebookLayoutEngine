@@ -1,10 +1,9 @@
-import $ from "jquery";
-import { first, find, last, cloneDeep } from 'lodash';
+import $ from 'jquery';
+import { first, last } from 'lodash';
 
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
-import { getPhotos, buildImageUrl } from "./api.service";
 
 const log = createLogger('page');
 
@@ -64,7 +63,7 @@ export const addContent = (area, content) => (done) => {
 
 export const addFullPageTopo = (area, content) => (done) => {
   // TODO:
-  debugger;
+  log.info('addFullPageTopo', area, content);
   done();
 };
 
@@ -164,7 +163,7 @@ export const validatePage = (area, page, content, done) => {
   } else {
     done();
   }
-}
+};
 
 export const validateArea = (area, reset) => (done) => {
   const routes = $(`.routes.area-${area.id}`);
@@ -199,7 +198,7 @@ export const validateArea = (area, reset) => (done) => {
 
           }
 
-          const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
+          // const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
           const lastRouteInSight = topoPageElement.find(`#route-${area.id}-${first(item.routesResponsible)}`);
 
           if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {
@@ -227,7 +226,7 @@ export const countRouteItems = (routesContainer) => {
   const amountTopo = $(routesContainer).find('.topo').not('.route--blank').length;
   const amountRoutes = $(routesContainer).find('.route').not('.route--blank').length;
   return amountTopo + amountRoutes;
-}
+};
 
 export const isElementInsideCurrentSheet = (element) => {
   if (element) {
@@ -243,7 +242,7 @@ export const isElementInsideCurrentSheet = (element) => {
     return elementBottom < totalPageHeight;
   }
   return true;
-}
+};
 
 export const removePossibleRouteZombies = () => {
   // Remove possible routes zombies
@@ -260,7 +259,7 @@ export const removePossibleRouteZombies = () => {
     log.warn('Remove empty routes container');
     $lastRouteContainer.remove();
   }
-}
+};
 
 export const appendToLastDescription = (area, content) => (done) => {
   const page = getCurrentPage();
@@ -291,7 +290,7 @@ export const validateGeometry = (area, lastElement, page, content, done) => {
   } else {
     addContent(area, content)(done);
   }
-}
+};
 
 export const validateDescription = (area, lastElement, page, content, done) => {
   const areaId = $(lastElement).attr('id').split('-')[1];
@@ -303,11 +302,12 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   // remove the last word until the text fits in page
   while (!isElementInsideCurrentSheet(lastElement)) {
     const lastChild = last($(lastElement).children());
+
     switch (lastChild.tagName) {
       // how to proceed when the element is a <p></p>
       case 'P':
         // check if innerText exists, when not remove the element
-        if (lastChild.innerText === "") {
+        if (lastChild.innerText === '') {
           lastChild.remove();
           // check if there is some text exported from the removed <p></p>, if yes, create a new P and add to array
           if (innerTextDesc.length > 0) {
@@ -329,9 +329,10 @@ export const validateDescription = (area, lastElement, page, content, done) => {
         lastChild.remove();
         break;
     }
+
     // move the title, if this is the lastElement
     const lastChildTitle = last($(lastElement).children());
-    if (lastChildTitle.tagName === "H2") {
+    if (lastChildTitle.tagName === 'H2') {
       descArray.unshift(lastChildTitle);
       lastChildTitle.remove();
     }
@@ -365,7 +366,7 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   descArray.map((e) => $(html).append(e));
   addContent(area, html)(done);
   // }
-}
+};
 
 export const removeAllAreaRelatedElements = (area) => {
   $(`.area-${area.id}`).remove();

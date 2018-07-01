@@ -1,4 +1,4 @@
-import path from '../assets/mountain.jpg';
+// import path from '../assets/mountain.jpg';
 import { COL_WIDTH } from './image-styles';
 import { LANDSCAPE, PORTRAIT } from './orientation';
 import { buildImageUrl } from '../services/api.service';

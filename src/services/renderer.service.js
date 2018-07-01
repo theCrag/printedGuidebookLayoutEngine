@@ -1,15 +1,14 @@
-import $ from "jquery";
+// import $ from 'jquery';
 import { cloneDeep } from 'lodash';
 
 import { createLogger } from '../utils/logger';
 import * as pageService from '../services/page.service';
 import * as areaView from '../views/area.view';
-import { TaskRunner } from "./task.service";
-import { FULL_WIDTH, COL_WIDTH, FULL_PAGE } from "../models/image-styles";
-import { PORTRAIT } from "../models/orientation";
+import { TaskRunner } from './task.service';
+import { FULL_WIDTH, FULL_PAGE } from '../models/image-styles';
+import { PORTRAIT } from '../models/orientation';
 
 const log = createLogger('renderer');
-let treePath = '';
 
 export const renderLayoutTree = (tree) => {
   log.info('start', tree);
@@ -21,7 +20,7 @@ export const renderLayoutTree = (tree) => {
     log.info('end', tree);
   });
 
-}
+};
 
 export const doRenderArea = (area, done) => {
   log.info('doRenderArea', area);
@@ -117,4 +116,4 @@ export const renderArea = (area, done) => {
   // log.info('start solving area tasks');
   taskRunner.start();
 
-}
+};

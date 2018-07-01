@@ -29,7 +29,7 @@ export const fetchArea = (done) => {
   doFetchAreaDescription(rootArea, () => {
     done(getRootArea());
   });
-}
+};
 
 /**
  * Fetches the html descriptions of the given area.
