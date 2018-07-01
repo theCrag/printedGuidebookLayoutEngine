@@ -96,6 +96,63 @@ export const addRouteItem = (area, content, index) => (done) => {
 
 };
 
+export const appendToLastDescription = (area, content) => (done) => {
+  const page = getCurrentPage();
+  const lastElement = last(page.children());
+  $(lastElement).children()[$(lastElement).children().length - 1].innerText += content;
+  validatePage(area, page, content, done);
+};
+
+export const countRouteItems = (routesContainer) => {
+  const amountTopo = $(routesContainer).find('.topo').not('.route--blank').length;
+  const amountRoutes = $(routesContainer).find('.route').not('.route--blank').length;
+  return amountTopo + amountRoutes;
+};
+
+
+export const removeAllAreaRelatedElements = (area) => {
+  $(`.area-${area.id}`).remove();
+  $('.sheet').toArray().reverse().forEach((sheet) => {
+    const $sheet = $(sheet);
+    if ($sheet.children().length === 0) {
+      removeLastPage();
+    }
+  });
+};
+
+export const removePossibleRouteZombies = () => {
+  // Remove possible routes zombies
+  const routes = getCurrentPage().children('.routes');
+  if (routes.length === 0) {
+    return;
+  }
+  const $lastRouteContainer = $(routes[0]);
+  const hasTopos = $lastRouteContainer.children('.routes__topo').find('.topo').length > 0;
+  const hasRoutes = $lastRouteContainer.children('.routes__columns').find('.route').not('.route--blank').length > 0;
+
+  // Remove empty route containers
+  if (!hasTopos && !hasRoutes) {
+    log.warn('Remove empty routes container');
+    $lastRouteContainer.remove();
+  }
+};
+
+export const isElementInsideCurrentSheet = (element) => {
+  if (element) {
+    const parentSheet = $(element.closest('.sheet'));
+    element = $(element);
+
+    const sheetOffset = parentSheet.offset() || { top: 0 };
+    const paddingTop = parseFloat(parentSheet.css('padding-top').slice(0, -2));
+    const totalPageHeight = sheetOffset.top + paddingTop + (parentSheet.height() || 0);
+    const elementOffset = element.offset() || { top: 0 };
+    const elementBottom = elementOffset.top + (element.height() || 0);
+
+    return elementBottom < totalPageHeight;
+  }
+  return true;
+};
+
 export const validateRoutes = (area, page, routesContainer, content, func, index, done) => {
   const areSomeRoutesOutsideTheSheet = routesContainer.find('.topo, .route')
     .children()
@@ -222,52 +279,6 @@ export const validateArea = (area, reset) => (done) => {
   }
 };
 
-export const countRouteItems = (routesContainer) => {
-  const amountTopo = $(routesContainer).find('.topo').not('.route--blank').length;
-  const amountRoutes = $(routesContainer).find('.route').not('.route--blank').length;
-  return amountTopo + amountRoutes;
-};
-
-export const isElementInsideCurrentSheet = (element) => {
-  if (element) {
-    const parentSheet = $(element.closest('.sheet'));
-    element = $(element);
-
-    const sheetOffset = parentSheet.offset() || { top: 0 };
-    const paddingTop = parseFloat(parentSheet.css('padding-top').slice(0, -2));
-    const totalPageHeight = sheetOffset.top + paddingTop + (parentSheet.height() || 0);
-    const elementOffset = element.offset() || { top: 0 };
-    const elementBottom = elementOffset.top + (element.height() || 0);
-
-    return elementBottom < totalPageHeight;
-  }
-  return true;
-};
-
-export const removePossibleRouteZombies = () => {
-  // Remove possible routes zombies
-  const routes = getCurrentPage().children('.routes');
-  if (routes.length === 0) {
-    return;
-  }
-  const $lastRouteContainer = $(routes[0]);
-  const hasTopos = $lastRouteContainer.children('.routes__topo').find('.topo').length > 0;
-  const hasRoutes = $lastRouteContainer.children('.routes__columns').find('.route').not('.route--blank').length > 0;
-
-  // Remove empty route containers
-  if (!hasTopos && !hasRoutes) {
-    log.warn('Remove empty routes container');
-    $lastRouteContainer.remove();
-  }
-};
-
-export const appendToLastDescription = (area, content) => (done) => {
-  const page = getCurrentPage();
-  const lastElement = last(page.children());
-  $(lastElement).children()[$(lastElement).children().length - 1].innerText += content;
-  validatePage(area, page, content, done);
-};
-
 export const validateGeometry = (area, lastElement, page, content, done) => {
 
   let secondLastIsTitle = false;
@@ -366,14 +377,4 @@ export const validateDescription = (area, lastElement, page, content, done) => {
   descArray.map((e) => $(html).append(e));
   addContent(area, html)(done);
   // }
-};
-
-export const removeAllAreaRelatedElements = (area) => {
-  $(`.area-${area.id}`).remove();
-  $('.sheet').toArray().reverse().forEach((sheet) => {
-    const $sheet = $(sheet);
-    if ($sheet.children().length === 0) {
-      removeLastPage();
-    }
-  });
 };

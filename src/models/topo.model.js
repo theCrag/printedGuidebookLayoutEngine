@@ -1,7 +1,7 @@
-// import path from '../assets/mountain.jpg';
+import path from '../assets/mountain.jpg';
 import { COL_WIDTH } from './image-styles';
 import { LANDSCAPE, PORTRAIT } from './orientation';
-import { buildImageUrl } from '../services/api.service';
+// import { buildImageUrl } from '../services/api.service';
 
 export class Topo {
 
@@ -13,8 +13,8 @@ export class Topo {
     this.height = jsonTopo.height;
     this.type = 'Topo';
 
-    this.url = buildImageUrl(this);
-    // this.url = path;
+    // this.url = buildImageUrl(this);
+    this.url = path;
 
     this.routesId = (jsonTopo.objects) ? jsonTopo.objects.filter(r => r.objectType === 'Route').map(r => r.objectID) : [];
 

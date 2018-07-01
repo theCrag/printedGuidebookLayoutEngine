@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import { cloneDeep } from 'lodash';
 
 import { createLogger } from '../utils/logger';
@@ -8,32 +7,66 @@ import { TaskRunner } from './task.service';
 import { FULL_WIDTH, FULL_PAGE } from '../models/image-styles';
 import { PORTRAIT } from '../models/orientation';
 
-const log = createLogger('renderer');
+export class Renderer {
 
-export const renderLayoutTree = (tree) => {
-  log.info('start', tree);
+  constructor(booklet) {
+    this.booklet = booklet;
 
-  pageService.init();
-  pageService.addPage();
+    this.log = createLogger('Renderer');
+  }
 
-  doRenderArea(tree, () => {
-    log.info('end', tree);
-  });
+  renderTree(tree, done) {
+    this.log.info('start', tree);
 
-};
+    this.booklet.init();
+    this.booklet.addPage();
 
-export const doRenderArea = (area, done) => {
-  log.info('doRenderArea', area);
-  if (area) {
-    if (area.rendered) {
-      return doRenderArea(area.next(), done);
-    }
-    return renderArea(area, () => {
-      doRenderArea(area.next(), done);
+    this._doRenderArea(tree, () => {
+      this.log.info('end', tree);
+      done(tree);
     });
   }
-  done();
-};
+
+  _doRenderArea(area, done) {
+    this.log.info('doRenderArea', area);
+    if (area) {
+      if (area.rendered) {
+        return this._doRenderArea(area.next(), done);
+      }
+      return this._renderArea(area, () => {
+        this._doRenderArea(area.next(), done);
+      });
+    }
+    done();
+  }
+
+
+}
+
+// export const renderLayoutTree = (tree) => {
+//   log.info('start', tree);
+
+//   pageService.init();
+//   pageService.addPage();
+
+//   doRenderArea(tree, () => {
+//     log.info('end', tree);
+//   });
+
+// };
+
+// export const doRenderArea = (area, done) => {
+//   log.info('doRenderArea', area);
+//   if (area) {
+//     if (area.rendered) {
+//       return doRenderArea(area.next(), done);
+//     }
+//     return renderArea(area, () => {
+//       doRenderArea(area.next(), done);
+//     });
+//   }
+//   done();
+// };
 
 export const renderArea = (area, done) => {
   log.info('renderArea', area.name);

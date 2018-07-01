@@ -39,15 +39,14 @@ export const photo = (area, descId, photoPath) => `
 /**
  * Creates the html for the area description.
  *
- * @param {Description} description
- * @param {string} areaId
+ * @param {Area} area
  * @param {number} index
  * @returns {string} html
  */
-export const description = (description, areaId, index) => `
-  <div id="description-${areaId}-${index}" class="description area-${areaId}">
-    <h2>${description.name}</h2>
-    <p>${description.markdown}</p>
+export const description = (area, index) => `
+  <div id="description-${area.id}-${index}" class="description area-${area.id}">
+    <h2>${area.descriptions[index].name}</h2>
+    <p>${area.descriptions[index].markdown}</p>
   </div>`;
 
 /**
