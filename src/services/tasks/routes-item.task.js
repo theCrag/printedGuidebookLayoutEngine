@@ -10,7 +10,7 @@ export class RoutesItemTask extends Task {
   }
 
   run(done) {
-    this.booklet.addRouteItem(this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
+    this.booklet.addRouteItem(this.area, this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
   }
 
   validate(page, routesContainer, done) {
@@ -32,7 +32,7 @@ export class RoutesItemTask extends Task {
 
         if ($secondLastElement.hasClass('route--topo')) {
           $secondLastElement.remove();
-          this.booklet.addRouteItem($secondLastElement.html(), () => {
+          this.booklet.addRouteItem(this.area, $secondLastElement.html(), () => {
             this.run(done);
           });
 

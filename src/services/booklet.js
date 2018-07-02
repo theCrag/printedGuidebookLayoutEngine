@@ -66,9 +66,7 @@ export class Booklet {
     }
   }
 
-  addRouteItem(html, done) {
-    const page = this.getCurrentPage();
-    const routesContainer = page.find('.routes').last();
+  addRoutesToContainer(routesContainer, html, done) {
     const routesColumnContainer = routesContainer.find('.routes__columns').last();
     routesColumnContainer.append(html);
 
@@ -79,7 +77,23 @@ export class Booklet {
     } else {
       done(page, routesContainer);
     }
+  }
 
+  addRouteItem(area, html, done) {
+    const page = this.getCurrentPage();
+    let routesContainer = page.find('.routes').last();
+    if (routesContainer.length <= 0){
+      this.addRoutesContainer(area, () => {
+        routesContainer = page.find('.routes').last();
+        this.addRoutesToContainer(routesContainer, html, (page, routesContainer) => {
+          done(page, routesContainer);
+        });
+      });
+    } else {
+      this.addRoutesToContainer(routesContainer, html, (page, routesContainer) => {
+        done(page, routesContainer);
+      });
+    }
   }
 
   addRoutesContainer(area, done) {
