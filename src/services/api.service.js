@@ -18,7 +18,7 @@ export const buildImageUrl = (img) => {
 };
 
 /**
- * Fetches the the photo information to an area.
+ * Fetches the photo information to an area.
  *
  * @param {string} areaId
  * @param {Function} done Callback function.

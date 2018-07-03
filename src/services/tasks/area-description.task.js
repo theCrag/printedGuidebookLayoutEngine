@@ -3,6 +3,8 @@ import { last, cloneDeep } from 'lodash';
 
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
+import { createLogger } from '../../utils/logger';
+import { getPhotos, buildImageUrl } from '../api.service';
 
 export class AreaDescriptionTask extends Task {
 
@@ -10,6 +12,7 @@ export class AreaDescriptionTask extends Task {
     super(booklet, area, areaView.description(cloneDeep(area), index));
 
     this.index = index;
+    this.log = createLogger('AreaDescriptionTask');
   }
 
   run(done) {
@@ -25,6 +28,7 @@ export class AreaDescriptionTask extends Task {
       const index = $(lastElement).attr('id').split('-')[2];
       let descArray = [];
       let innerTextDesc = [];
+      let uls = [];
       const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
 
       // remove the last word until the text fits in page
@@ -51,6 +55,15 @@ export class AreaDescriptionTask extends Task {
               lastChild.innerText = oldDesc.join(delimiter);
             }
             break;
+
+          case 'UL': {
+            // removes single <li></li> elements until it fits on page.
+            let li = last($(lastChild).children());
+            uls.unshift(li);
+            li.remove();
+            break;
+          }
+
           default:
             // move the whole element on new page
             descArray.unshift(lastChild);
@@ -78,6 +91,13 @@ export class AreaDescriptionTask extends Task {
         descArray.unshift(newP);
       }
 
+      //create new <ul></ul> for left over bullet point entries
+      if (uls.length > 0){
+        let newUl = $.parseHTML('<ul></ul>')[0];
+        uls.forEach(li => newUl.append(li));
+        descArray.unshift(newUl);
+      }
+
       // add new page and append previously removed elements
       // let desc = descArray.map((e) => $(desc).append(e));
       // log.info(descArray);
@@ -89,12 +109,24 @@ export class AreaDescriptionTask extends Task {
       //     addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
       //   });
       // } else {
-      this.booklet.addPage();
+
+      // add new page and append previously removed elements
+
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      this.booklet.addContent(html, done);
+      // if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
+      //   getPhotos(areaId, (photos) => {
+      //     debugger;
+      //     const photoPath = buildImageUrl(photos[0]);
+      //     const photo = areaView.photo(areaId, index, photoPath);
+      //     lastElement.remove();
+      //     descArray.map((e) => lastElement.append(e));
+      //     this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, done));
+      //   });
+      // } else {
+        this.booklet.addPage();
+        this.booklet.addContent(html, done);
       // }
-
     } else {
       done();
     }

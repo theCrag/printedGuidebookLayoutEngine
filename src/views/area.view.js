@@ -31,8 +31,8 @@ export const geometry = (area) => `
  * @param {string} photoPath
  * @returns {string} html
  */
-export const photo = (area, descId, photoPath) => `
-  <div id="photo-${descId}" class="photo area-${area.id}">
+export const photo = (areaId, index, photoPath) => `
+  <div id="photo-${areaId}-${index}" class="photo area-${areaId}">
     <img src="${photoPath}" />
   </div>`;
 
@@ -50,7 +50,8 @@ export const description = (area, index) => `
   </div>`;
 
 /**
- * TODO: Gabu
+ * Creates the html for the area description without any content.
+ * This is used to split description's content.
  *
  * @param {string} areaId
  * @param {number} index
