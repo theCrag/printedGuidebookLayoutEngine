@@ -16,8 +16,9 @@ export class AreaGeometryTask extends Task {
 
   validate(page, done) {
     const lastElement = last(page.children());
-
-    if (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
+    const img = lastElement.children[0];
+    // debugger;
+    if (!this.booklet.isElementInsideCurrentSheet(img)) {
 
       let secondLastIsTitle = false;
       let secondLastElement = null;

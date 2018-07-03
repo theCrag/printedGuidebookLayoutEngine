@@ -99,19 +99,6 @@ export class AreaDescriptionTask extends Task {
       }
 
       // add new page and append previously removed elements
-      // let desc = descArray.map((e) => $(desc).append(e));
-      // log.info(descArray);
-      // if (desc.length < process.env.APP_WIDOW_BOUNDARY) {
-      //   getPhotos(area.id, (photos) => {
-      //     const photoPath = buildImageUrl(photos[0]);
-      //     const photo = areaView.photo(area, descId, photoPath);
-      //     lastElement.remove();
-      //     addContent(area, photo)(() => addContent(area, lastElement)(() => appendToLastDescription(area, desc)(done)));
-      //   });
-      // } else {
-
-      // add new page and append previously removed elements
-
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
       // if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
