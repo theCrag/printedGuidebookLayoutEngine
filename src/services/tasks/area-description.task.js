@@ -4,7 +4,7 @@ import { last, cloneDeep } from 'lodash';
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
 import { createLogger } from '../../utils/logger';
-import { getPhotos, buildImageUrl } from '../api.service';
+// import { getPhotos, buildImageUrl } from '../api.service';
 
 export class AreaDescriptionTask extends Task {
 
@@ -111,8 +111,8 @@ export class AreaDescriptionTask extends Task {
       //     this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, done));
       //   });
       // } else {
-        this.booklet.addPage();
-        this.booklet.addContent(html, done);
+      this.booklet.addPage();
+      this.booklet.addContent(html, done);
       // }
     } else {
       done();

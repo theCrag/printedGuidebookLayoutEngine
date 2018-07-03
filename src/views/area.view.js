@@ -91,6 +91,16 @@ export const routesContainer = (areaId, index, colAmount) => `
   </div>`;
 
 /**
+ * Creates a html container for white spaces.
+ *
+ * @param {number} pageNumber
+ * @returns {string} html
+ */
+export const whitespaceContainer = (pageNumber) => `
+<div class="whitespace" id="whitespace-${pageNumber}">
+</div>`;
+
+/**
  * Creates the route html and detects if it is a topo or just a route element.
  *
  * @param {Object{Route or Topo}} routeItem

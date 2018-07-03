@@ -28,7 +28,10 @@ export class Renderer {
     this.booklet.init();
     this.booklet.addPage();
 
-    this._doRenderArea(tree, () => done(tree));
+    this._doRenderArea(tree, () => {
+      this.booklet.addWhitespaceContainers();
+      done(tree);
+    });
   }
 
   _doRenderArea(area, done) {

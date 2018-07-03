@@ -30,6 +30,7 @@ export class AreaValidationTask extends Task {
       }
 
       // TODO: Gery has to fix this
+      // TODO: wenn Topo + Routes auf einer Seite Platz haben, muss es nicht zwingend eine linke Seite sein
       // Validate if the last route of a topo is in sight, otherwise start with the topo on
       // left top page.
       let restartRendering = false;

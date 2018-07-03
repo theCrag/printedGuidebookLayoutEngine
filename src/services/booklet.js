@@ -52,6 +52,16 @@ export class Booklet {
     }
   }
 
+  addWhitespaceContainers() {
+    let i = 1;
+    $('.sheet').toArray().forEach((sheet) => {
+      const whitespaceContainer = areaView.whitespaceContainer(i);
+      const $sheet = $(sheet);
+      $sheet.append(whitespaceContainer);
+      i++;
+    });
+  }
+
   addRouteMainTopo(html, done) {
     const page = this.getCurrentPage();
     const routesContainer = page.find('.routes .routes__topo').last();
@@ -110,7 +120,6 @@ export class Booklet {
   }
 
   removeAllAreaRelatedElements(area) {
-    debugger;
     $(`.area-${area.id}`).remove();
     $('.sheet').toArray().reverse().some((sheet) => {
       const $sheet = $(sheet);
