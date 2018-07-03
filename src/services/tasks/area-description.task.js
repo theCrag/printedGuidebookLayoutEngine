@@ -4,7 +4,7 @@ import { last, cloneDeep } from 'lodash';
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
 import { createLogger } from '../../utils/logger';
-// import { getPhotos, buildImageUrl } from '../api.service';
+import { getPhotos, buildImageUrl } from '../api.service';
 
 export class AreaDescriptionTask extends Task {
 
@@ -61,6 +61,10 @@ export class AreaDescriptionTask extends Task {
             let li = last($(lastChild).children());
             uls.unshift(li);
             li.remove();
+            // removes empty <ul></ul> elements
+            if ($(lastChild).children().length === 0){
+              $(lastChild).remove();
+            }
             break;
           }
 
@@ -101,19 +105,24 @@ export class AreaDescriptionTask extends Task {
       // add new page and append previously removed elements
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      // if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
-      //   getPhotos(areaId, (photos) => {
-      //     debugger;
-      //     const photoPath = buildImageUrl(photos[0]);
-      //     const photo = areaView.photo(areaId, index, photoPath);
-      //     lastElement.remove();
-      //     descArray.map((e) => lastElement.append(e));
-      //     this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, done));
-      //   });
-      // } else {
-      this.booklet.addPage();
-      this.booklet.addContent(html, done);
-      // }
+      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
+        // if there is a widow, add an image
+        getPhotos(areaId, (photos) => {
+          const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
+          const photo = areaView.photo(areaId, index, photoPath);
+          const maxHeight = parseInt(this.booklet.getMaxHeight(lastElement));
+          lastElement.remove();
+          descArray.map((e) => lastElement.append(e));
+          this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, () => {
+            $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
+            this.validate(page, done);
+          }));
+        });
+      } else {
+        // if there is no widow, add content
+        this.booklet.addPage();
+        this.booklet.addContent(html, done);
+      }
     } else {
       done();
     }

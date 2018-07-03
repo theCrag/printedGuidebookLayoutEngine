@@ -33,7 +33,7 @@ export const geometry = (area) => `
  */
 export const photo = (areaId, index, photoPath) => `
   <div id="photo-${areaId}-${index}" class="photo area-${areaId}">
-    <img src="${photoPath}" />
+    <img src="${photoPath}" id="photo-img-${areaId}-${index}" />
   </div>`;
 
 /**

@@ -164,4 +164,20 @@ export class Booklet {
     return true;
   }
 
+  getMaxHeight(element) {
+    if (element) {
+      const parentSheet = $(element.closest('.sheet'));
+      element = $(element);
+
+      const sheetOffset = parentSheet.offset();
+      const paddingTop = parseFloat(parentSheet.css('padding-top').slice(0, -2));
+      const totalPageHeight = sheetOffset.top + paddingTop + parentSheet.height();
+      const elementOffset = element.offset();
+      const elementTop = elementOffset.top;
+
+      return totalPageHeight - elementTop;
+    }
+    return 0;
+  }
+
 }
