@@ -110,11 +110,14 @@ export class Booklet {
   }
 
   removeAllAreaRelatedElements(area) {
+    debugger;
     $(`.area-${area.id}`).remove();
-    $('.sheet').toArray().reverse().forEach((sheet) => {
+    $('.sheet').toArray().reverse().some((sheet) => {
       const $sheet = $(sheet);
       if ($sheet.children().length === 0) {
         this.removeLastPage();
+      } else {
+        return true;
       }
     });
   }
