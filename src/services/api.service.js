@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { createLogger } from '../utils/logger';
 import * as jsonData from '../data/description.json';
+import * as adJsonData from '../data/ads.json';
 
 const log = createLogger('api');
 
@@ -51,4 +52,12 @@ export const getDescriptionHtml = (area, done) => {
         log.error('could not get photos for area', area.id);
       });
   }
+};
+
+export const getAds = () => {
+  const ads = [];
+  adJsonData.advertiser.forEach((ad) => {
+    ads.push(ad);
+  });
+  return ads;
 };

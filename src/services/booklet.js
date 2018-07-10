@@ -3,6 +3,7 @@ import $ from 'jquery';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
+import { getAds } from './api.service';
 
 
 export class Booklet {
@@ -50,16 +51,6 @@ export class Booklet {
     } else {
       done(page);
     }
-  }
-
-  addWhitespaceContainers() {
-    let i = 1;
-    $('.sheet').toArray().forEach((sheet) => {
-      const whitespaceContainer = areaView.whitespaceContainer(i);
-      const $sheet = $(sheet);
-      $sheet.append(whitespaceContainer);
-      i++;
-    });
   }
 
   addRouteMainTopo(html, done) {
@@ -175,9 +166,43 @@ export class Booklet {
       const elementOffset = element.offset();
       const elementTop = elementOffset.top;
 
-      return totalPageHeight - elementTop;
+      return parseInt(totalPageHeight - elementTop);
     }
     return 0;
+  }
+
+  addWhitespaceContainers() {
+    let i = 1;
+    $('.sheet').toArray().forEach((sheet) => {
+      const whitespaceContainer = areaView.whitespaceContainer(i);
+      const $sheet = $(sheet);
+      $sheet.append(whitespaceContainer);
+      i++;
+    });
+  }
+
+  getWhitespaceContainers() {
+    let containers = [];
+    $('.whitespace').toArray().forEach((container) => {
+      const $container = $(container);
+      const element = {};
+      element.id = $container.attr('id');
+      element.page = $container.attr('id').split('-')[1];
+      let maxH = this.getMaxHeight(container);
+      element.maxHeight = maxH < 0 ? 0 : maxH;
+      containers.push(element);
+    });
+    return containers;
+  }
+
+  fillWhitespaceContainers(containers) {
+    const ads = getAds();
+    containers.forEach((element) => {
+      if (element.maxHeight !== 0){
+        this.log.info(element);
+      }
+    });
+    this.log.info(ads);
   }
 
 }

@@ -110,7 +110,7 @@ export class AreaDescriptionTask extends Task {
         getPhotos(areaId, (photos) => {
           const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
           const photo = areaView.photo(areaId, index, photoPath);
-          const maxHeight = parseInt(this.booklet.getMaxHeight(lastElement));
+          const maxHeight = this.booklet.getMaxHeight(lastElement);
           lastElement.remove();
           descArray.map((e) => lastElement.append(e));
           this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, () => {

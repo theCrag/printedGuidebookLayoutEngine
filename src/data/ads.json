@@ -1,0 +1,55 @@
+{
+    "advertiser" : [
+        {
+           "label" : "Bergfreunde",
+           "link"  : "https://www.bergfreunde.de/klettern/?pid=15109",
+           "priority" : 0.3,
+           "images" : [
+            {
+                "origWidth" : 1472,
+                "origHeight" : 2080,
+                "hashID" : "8ef5e0d8e49c902edbf004c3e0ea08699370ae90"
+            },
+            {
+                "origWidth" : 2080,
+                "origHeight" : 1472,
+                "hashID" : "0ed7fabbbdb5b2a83f937c4001cd2e5cf05f0e4b"
+            }
+           ]
+        },
+        {
+            "label" : "Refugio Alto Mijares",
+            "link"  : "http://altomijares.org/refugio/",
+            "priority" : 0.5,
+            "images" : [
+             {
+                 "origWidth" : 1472,
+                 "origHeight" : 2080,
+                 "hashID" : "7a3a6efbafa65056173d68c1f61468bc10cd45c9"
+             },
+             {
+                 "origWidth" : 2080,
+                 "origHeight" : 1472,
+                 "hashID" : "39603a815b8149527003ee229877918cf631eed7"
+             }
+            ]
+         },
+         {
+            "label" : "Awesome Woodys",
+            "link"  : "https://awesomewoodys.com/",
+            "priority" : 0.2,
+            "images" : [
+             {
+                 "origWidth" : 1472,
+                 "origHeight" : 2080,
+                 "hashID" : "33be4628ed7841a85a4b98643386c625dbabde8d"
+             },
+             {
+                 "origWidth" : 2080,
+                 "origHeight" : 1472,
+                 "hashID" : "506c4bb5a02b11c42eb1ad383b3b5cca5bd765b"
+             }
+            ]
+         }
+    ]
+}
