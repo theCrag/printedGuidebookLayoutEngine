@@ -106,15 +106,11 @@ export const whitespaceContainer = (pageNumber) => `
  * @param {number} whitespaceId
  * @param {string} photoPath
  * @param {number} maxHeight
- * @param {Object} img
- * @param {Object} ad
  * @returns {string} html
  */
-export const advertisement = (whitespaceId, photoPath, maxHeight, img, ad) => `
-  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${img.hashID}">
-    <a href="${ad.link}" target="_blank">
-      <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" alt="${ad.label}" />
-    </a>
+export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
+  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${hashID}">
+    <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
   </div>`;
 
 /**
@@ -123,15 +119,11 @@ export const advertisement = (whitespaceId, photoPath, maxHeight, img, ad) => `
  * @param {number} whitespaceId
  * @param {string} photoPath
  * @param {number} maxHeight
- * @param {Object} img
- * @param {Object} ad
  * @returns {string} html
  */
-export const advertisementRight = (whitespaceId, photoPath, maxHeight, img, ad) => `
-<div id="advertisement-${whitespaceId}-right" class="advertisement-right" hashID="${img.hashID}">
-  <a href="${ad.link}" target="_blank">
-    <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" alt="${ad.label}" />
-  </a>
+export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) => `
+<div id="advertisement-${whitespaceId}-right" class="advertisement-right" hashID="${hashID}">
+  <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
 </div>`;
 
 /**

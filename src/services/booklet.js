@@ -300,14 +300,13 @@ export class Booklet {
     const ads = advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
 
     // take random advertisement from array with advertisement priorities
-    const random = Math.floor((Math.random() * ads.length));
-    ads[random].images
+    ads[Math.floor((Math.random() * ads.length))].images
       .filter((image) => element.portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
       .forEach((img) => {
         const photoPath = buildImageUrl(img);
         let ad;
         if (!float) {
-          ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img, ads[random]);
+          ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
           // if image is to small, append it to the last element
           if (img.origHeight + process.env.APP_AD_MIN_HEIGHT >= element.maxHeight) {
             $(`#${element.id}`).append(ad);
@@ -322,7 +321,7 @@ export class Booklet {
             lastElement.filled = true;
           }
         } else {
-          ad = areaView.advertisementRight(element.id, photoPath, element.maxHeight, img, ads[random]);
+          ad = areaView.advertisementRight(element.id, photoPath, element.maxHeight, img.hashID);
           $(`#${element.id}`).append(ad);
         }
 
