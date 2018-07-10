@@ -30,8 +30,11 @@ export class Renderer {
 
     this._doRenderArea(tree, () => {
       this.booklet.addWhitespaceContainers();
-      this.booklet.fillWhitespaceContainers(this.booklet.getWhitespaceContainers(), () => {
-        done(tree);
+      const containers = this.booklet.getWhitespaceContainers();
+      this.booklet.fillWhitespaceContainers(containers, () => {
+        this.booklet.fillAdditionalWhitespaceContainers(containers, () => {
+          done(tree);
+        });
       });
     });
   }

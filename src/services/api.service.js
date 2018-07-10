@@ -64,6 +64,13 @@ export const getAds = () => {
   adJsonData.advertiser.forEach((ad) => {
     ads.push(ad);
   });
-  ads.sort((a, b) => { return b.priority - a.priority; });
-  return ads;
+
+  // make array with priorities
+  let keys = [];
+  ads.forEach((ad) => {
+    for (var i = 0; i < (ad.priority * 10); i++) {
+      keys.push(ad);
+    }
+  });
+  return keys;
 };

@@ -51,6 +51,20 @@ h1 {
     height: auto;
   }
 }
+.advertisement-left {
+  float: left;
+  width: 359px;
+}
+
+.advertisement-right {
+  text-align: center;
+  float: right;
+  width: 359px;
+  img {
+    max-width: 359px;
+    height: auto;
+  }
+}
 
 .photo {
   img {

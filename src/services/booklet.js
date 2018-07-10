@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { last } from 'lodash';
 
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
@@ -15,32 +16,62 @@ export class Booklet {
     this.log = createLogger('Booklet');
   }
 
+  /**
+   * TODO: Gery
+   */
   init() {
     this.pageCounter = 0;
   }
 
+  /**
+   * TODO: Gery
+   */
   initArea() {
     this.routeContainerCounter = 0;
   }
 
+  /**
+   * Returns if it is a left page or not.
+   *
+   * @returns {boolean} isLeftPage
+   */
   isLeftPage() {
     return this.pageCounter % 2 === 0;
   }
 
+  /**
+   * Returns if it is a right page or not.
+   *
+   * @returns {boolean} isRightPage
+   */
   isRightPage() {
     return !this.isLeftPage();
   }
 
+  /**
+   * Returns the last page.
+   *
+   * @returns {Object} currentPage
+   */
   getCurrentPage() {
     return $(`#page-${this.pageCounter}`);
   }
 
+  /**
+   * Adds a new empty page.
+   */
   addPage() {
     this.pageCounter = this.pageCounter + 1;
     $('main').append(page(this.pageCounter, this.isLeftPage()));
     this.log.info('addPage', this.pageCounter);
   }
 
+  /**
+   * Adds content to the current page.
+   *
+   * @param {string} html
+   * @param {Function} done
+   */
   addContent(html, done) {
     const page = this.getCurrentPage();
     page.append(html);
@@ -53,6 +84,12 @@ export class Booklet {
     }
   }
 
+  /**
+   * TODO: Gery
+   *
+   * @param {string} html
+   * @param {Function} done
+   */
   addRouteMainTopo(html, done) {
     const page = this.getCurrentPage();
     const routesContainer = page.find('.routes .routes__topo').last();
@@ -67,6 +104,13 @@ export class Booklet {
     }
   }
 
+  /**
+   * TODO: Gery
+   *
+   * @param {Object} routesContainer
+   * @param {string} html
+   * @param {Function} done
+   */
   addRoutesToContainer(routesContainer, html, done) {
     const routesColumnContainer = routesContainer.find('.routes__columns').last();
     routesColumnContainer.append(html);
@@ -80,10 +124,17 @@ export class Booklet {
     }
   }
 
+  /**
+   * TODO: Gery
+   *
+   * @param {Area} area
+   * @param {string} html
+   * @param {Function} done
+   */
   addRouteItem(area, html, done) {
     const page = this.getCurrentPage();
     let routesContainer = page.find('.routes').last();
-    if (routesContainer.length <= 0){
+    if (routesContainer.length <= 0) {
       this.addRoutesContainer(area, () => {
         routesContainer = page.find('.routes').last();
         this.addRoutesToContainer(routesContainer, html, (page, routesContainer) => {
@@ -97,11 +148,20 @@ export class Booklet {
     }
   }
 
+  /**
+   * TODO: Gery
+   *
+   * @param {Area} area
+   * @param {Function} done
+   */
   addRoutesContainer(area, done) {
     this.addContent(areaView.routesContainer(area.id, this.routeContainerCounter, 2), done);
     this.routeContainerCounter = this.routeContainerCounter + 1;
   }
 
+  /**
+   * Removes the last page.
+   */
   removeLastPage() {
     if (this.pageCounter === 1) {
       return;
@@ -110,6 +170,11 @@ export class Booklet {
     this.pageCounter = this.pageCounter - 1;
   }
 
+  /**
+   * Removes the whole content of an area and as well empty pages at the end.
+   *
+   * @param {Area} area
+   */
   removeAllAreaRelatedElements(area) {
     $(`.area-${area.id}`).remove();
     $('.sheet').toArray().reverse().some((sheet) => {
@@ -122,6 +187,9 @@ export class Booklet {
     });
   }
 
+  /**
+   * TODO: Gery
+   */
   removePossibleRouteZombies() {
     // Remove possible routes zombies
     const routes = this.getCurrentPage().children('.routes');
@@ -139,6 +207,12 @@ export class Booklet {
     }
   }
 
+  /**
+   * Takes a jQuery element and checks if the element fits in the current page.
+   *
+   * @param {Object} element
+   * @returns {boolean} fits
+   */
   isElementInsideCurrentSheet(element) {
     if (element) {
       const parentSheet = $(element.closest('.sheet'));
@@ -155,6 +229,12 @@ export class Booklet {
     return true;
   }
 
+  /**
+   * Takes a jQuery element and returns the max available height for this element.
+   *
+   * @param {Object} element
+   * @returns {number} maxHeight
+   */
   getMaxHeight(element) {
     if (element) {
       const parentSheet = $(element.closest('.sheet'));
@@ -171,6 +251,9 @@ export class Booklet {
     return 0;
   }
 
+  /**
+   * Adds whitespaceContainers to the end of each page.
+   */
   addWhitespaceContainers() {
     let i = 1;
     $('.sheet').toArray().forEach((sheet) => {
@@ -181,6 +264,11 @@ export class Booklet {
     });
   }
 
+  /**
+   * Returns an array containing all elements with class ".whitespace".
+   *
+   * @returns {Array} containers
+   */
   getWhitespaceContainers() {
     let containers = [];
     $('.whitespace').toArray().forEach((container) => {
@@ -188,50 +276,85 @@ export class Booklet {
       const element = {};
       element.id = $container.attr('id');
       element.page = $container.attr('id').split('-')[1];
+      element.filled = false;
       let maxH = this.getMaxHeight(container);
       element.maxHeight = maxH < 0 ? 0 : maxH;
+      element.portrait = element.maxHeight > process.env.APP_CONTENT_WIDTH ? true : false;
       containers.push(element);
     });
     return containers;
   }
 
+  /**
+   * Physically appends an advertisement to the element.
+   *
+   * @param {Object} element
+   * @param {Array} containers
+   * @param {boolean} float
+   * @param {string} hashID
+   */
+  addAdvertisement(element, containers, float, hashID = null) {
+    const advertisements = getAds();
+
+    // filter advertisements to avoid having the same advertisements next to each other
+    const ads = advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
+
+    // take random advertisement from array with advertisement priorities
+    ads[Math.floor((Math.random() * ads.length))].images
+      .filter((image) => element.portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
+      .forEach((img) => {
+        const photoPath = buildImageUrl(img);
+        let ad;
+        if (!float) {
+          ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
+          // if image is to small, append it to the last element
+          if (img.origHeight + process.env.APP_AD_MIN_HEIGHT >= element.maxHeight) {
+            $(`#${element.id}`).append(ad);
+            element.filled = true;
+          } else {
+            let lastElement = last(
+              containers
+                .filter(element => element.filled !== true)
+                .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
+            );
+            $(`#${lastElement.id}`).append(ad);
+            lastElement.filled = true;
+          }
+        } else {
+          ad = areaView.advertisementRight(element.id, photoPath, element.maxHeight, img.hashID);
+          $(`#${element.id}`).append(ad);
+        }
+
+      });
+  }
+
+  /**
+   * Appends an advertisement to a whitespace-container.
+   *
+   * @param {Array} containers
+   * @param {Function} done
+   */
   fillWhitespaceContainers(containers, done) {
-    // get all advertisements
-    const ads = getAds();
-
-    // create array with advertisements on the basis of priority
-    let keys = [];
-    ads.forEach((ad) => {
-      ad.images.filter((image) => image.origWidth > image.origHeight);
-      for (var i = 0; i < (ad.priority * 10); i++){
-        keys.push(ad);
-      }
-    });
-
     // fill white spaces
-    let portrait = false;
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-      .forEach((element) => {
-        if (element.maxHeight > 718) {
-          portrait = true;
+      .sort((a, b) => { return b.maxHeight - a.maxHeight; })
+      .some((element) => {
+        // check if element is already filled
+        if (!element.filled) {
+          this.addAdvertisement(element, containers, false);
         } else {
-          portrait = false;
+          // if element is filled: break
+          return true;
         }
-        keys[Math.floor((Math.random() * keys.length))].images
-          .filter((image) => portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
-          .forEach((img) => {
-            const photoPath = buildImageUrl(img);
-            const ad = areaView.advertisement(element.id, photoPath, element.maxHeight);
-            $(`#${element.id}`).append(ad);
-          });
       });
 
+    // wait for image loading
     const images = $('.advertisement').find('img');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {
-        if (--totalImageCount === 0){
+        if (--totalImageCount === 0) {
           done();
         }
       });
@@ -239,5 +362,42 @@ export class Booklet {
       done();
     }
   }
+
+  /**
+   * Appends a second advertisement to a whitespace-container.
+   *
+   * @param {Array} containers
+   * @param {Function} done
+   */
+  fillAdditionalWhitespaceContainers(containers, done) {
+    containers
+      .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
+      .filter(element => $(`#${element.id}`).children().length !== 0)
+      .forEach((element) => {
+        $(`#${element.id}`).children().toArray().forEach((e) => {
+          $(e).children().toArray().forEach((img) => {
+            if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
+              const hashID = $(img).parent().attr('hashID');
+              this.addAdvertisement(element, containers, true, hashID);
+              $(img).parent().addClass('advertisement-left');
+            }
+          });
+        });
+      });
+
+    // wait for image loading
+    const images = $('.advertisement-right').find('img');
+    let totalImageCount = images.length;
+    if (images.length > 0) {
+      images.on('load', () => {
+        if (--totalImageCount === 0) {
+          done();
+        }
+      });
+    } else {
+      done();
+    }
+  }
+
 
 }

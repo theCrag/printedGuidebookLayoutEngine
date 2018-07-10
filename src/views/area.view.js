@@ -108,10 +108,23 @@ export const whitespaceContainer = (pageNumber) => `
  * @param {number} maxHeight
  * @returns {string} html
  */
-export const advertisement = (whitespaceId, photoPath, maxHeight) => `
-  <div id="advertisement-${whitespaceId}" class="advertisement">
+export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
+  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${hashID}">
     <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
   </div>`;
+
+/**
+ * Creates the html for a collected advertisement with float right of the crag API.
+ *
+ * @param {number} whitespaceId
+ * @param {string} photoPath
+ * @param {number} maxHeight
+ * @returns {string} html
+ */
+export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) => `
+<div id="advertisement-${whitespaceId}-right" class="advertisement-right" hashID="${hashID}">
+  <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+</div>`;
 
 /**
  * Creates the route html and detects if it is a topo or just a route element.
