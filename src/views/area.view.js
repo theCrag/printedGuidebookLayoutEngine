@@ -109,7 +109,7 @@ export const whitespaceContainer = (pageNumber) => `
  * @returns {string} html
  */
 export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
-  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${hashID}">
+  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${hashID}" style="height: ${maxHeight}px;">
     <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
   </div>`;
 
@@ -122,7 +122,7 @@ export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
  * @returns {string} html
  */
 export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) => `
-<div id="advertisement-${whitespaceId}-right" class="advertisement-right" hashID="${hashID}">
+<div id="advertisement-${whitespaceId}-right" class="advertisement advertisement-right" hashID="${hashID}" style="height: ${maxHeight}px;">
   <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
 </div>`;
 

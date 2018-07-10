@@ -306,19 +306,23 @@ export class Booklet {
         const photoPath = buildImageUrl(img);
         let ad;
         if (!float) {
-          ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
-          // if image is to small, append it to the last element
-          if (img.origHeight + process.env.APP_AD_MIN_HEIGHT >= element.maxHeight) {
-            $(`#${element.id}`).append(ad);
-            element.filled = true;
-          } else {
-            let lastElement = last(
-              containers
-                .filter(element => element.filled !== true)
-                .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-            );
-            $(`#${lastElement.id}`).append(ad);
-            lastElement.filled = true;
+          if (!element.filled) {
+            // if image is to small, append it to the last element
+            if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
+              ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
+              $(`#${element.id}`).append(ad);
+              element.filled = true;
+            } else {
+              let lastElement = last(
+                containers
+                  .filter(element => element.filled !== true)
+                  .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
+              );
+              ad = areaView.advertisement(element.id, photoPath, lastElement.maxHeight, img.hashID);
+              $(`#${lastElement.id}`).append(ad);
+              lastElement.filled = true;
+              this.addAdvertisement(element, containers, float, hashID);
+            }
           }
         } else {
           ad = areaView.advertisementRight(element.id, photoPath, element.maxHeight, img.hashID);
@@ -339,14 +343,8 @@ export class Booklet {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
-      .some((element) => {
-        // check if element is already filled
-        if (!element.filled) {
-          this.addAdvertisement(element, containers, false);
-        } else {
-          // if element is filled: break
-          return true;
-        }
+      .forEach((element) => {
+        this.addAdvertisement(element, containers, false);
       });
 
     // wait for image loading

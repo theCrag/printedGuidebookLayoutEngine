@@ -47,22 +47,30 @@ h1 {
 .advertisement {
   text-align: center;
   img {
-    max-width: 718px;
+    max-width: 710px;
     height: auto;
+    vertical-align: middle;
   }
+}
+.advertisement:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 .advertisement-left {
   float: left;
   width: 359px;
+  img {
+    max-width: 355px;
+  }
 }
 
 .advertisement-right {
-  text-align: center;
   float: right;
   width: 359px;
   img {
-    max-width: 359px;
-    height: auto;
+    max-width: 355px;
   }
 }
 
