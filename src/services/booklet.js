@@ -3,7 +3,7 @@ import $ from 'jquery';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
-import { getAds } from './api.service';
+import { getAds, buildImageUrl } from './api.service';
 
 
 export class Booklet {
@@ -195,14 +195,49 @@ export class Booklet {
     return containers;
   }
 
-  fillWhitespaceContainers(containers) {
+  fillWhitespaceContainers(containers, done) {
+    // get all advertisements
     const ads = getAds();
-    containers.forEach((element) => {
-      if (element.maxHeight !== 0){
-        this.log.info(element);
+
+    // create array with advertisements on the basis of priority
+    let keys = [];
+    ads.forEach((ad) => {
+      ad.images.filter((image) => image.origWidth > image.origHeight);
+      for (var i = 0; i < (ad.priority * 10); i++){
+        keys.push(ad);
       }
     });
-    this.log.info(ads);
+
+    // fill white spaces
+    let portrait = false;
+    containers
+      .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
+      .forEach((element) => {
+        if (element.maxHeight > 718) {
+          portrait = true;
+        } else {
+          portrait = false;
+        }
+        keys[Math.floor((Math.random() * keys.length))].images
+          .filter((image) => portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
+          .forEach((img) => {
+            const photoPath = buildImageUrl(img);
+            const ad = areaView.advertisement(element.id, photoPath, element.maxHeight);
+            $(`#${element.id}`).append(ad);
+          });
+      });
+
+    const images = $('.advertisement').find('img');
+    let totalImageCount = images.length;
+    if (images.length > 0) {
+      images.on('load', () => {
+        if (--totalImageCount === 0){
+          done();
+        }
+      });
+    } else {
+      done();
+    }
   }
 
 }

@@ -26,8 +26,8 @@ export const geometry = (area) => `
 /**
  * Creates the html for a collected photo of the crag API.
  *
- * @param {Area} area
- * @param {string} descId
+ * @param {number} areaId
+ * @param {number} index
  * @param {string} photoPath
  * @returns {string} html
  */
@@ -99,6 +99,19 @@ export const routesContainer = (areaId, index, colAmount) => `
 export const whitespaceContainer = (pageNumber) => `
 <div class="whitespace" id="whitespace-${pageNumber}">
 </div>`;
+
+/**
+ * Creates the html for a collected advertisement of the crag API.
+ *
+ * @param {number} whitespaceId
+ * @param {string} photoPath
+ * @param {number} maxHeight
+ * @returns {string} html
+ */
+export const advertisement = (whitespaceId, photoPath, maxHeight) => `
+  <div id="advertisement-${whitespaceId}" class="advertisement">
+    <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+  </div>`;
 
 /**
  * Creates the route html and detects if it is a topo or just a route element.

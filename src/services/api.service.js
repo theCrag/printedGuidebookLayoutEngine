@@ -54,10 +54,16 @@ export const getDescriptionHtml = (area, done) => {
   }
 };
 
+/**
+ * Fetches the advertisements information.
+ *
+ * @returns {Array} ads
+ */
 export const getAds = () => {
   const ads = [];
   adJsonData.advertiser.forEach((ad) => {
     ads.push(ad);
   });
+  ads.sort((a, b) => { return b.priority - a.priority; });
   return ads;
 };
