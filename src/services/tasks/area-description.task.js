@@ -105,21 +105,28 @@ export class AreaDescriptionTask extends Task {
       // add new page and append previously removed elements
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
-        // if there is a widow, add an image
-        getPhotos(areaId, (photos) => {
-          const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
-          const photo = areaView.photo(areaId, index, photoPath);
-          const maxHeight = this.booklet.getMaxHeight(lastElement);
-          lastElement.remove();
-          descArray.map((e) => lastElement.append(e));
-          this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, () => {
-            $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
-            this.validate(page, done);
-          }));
-        });
+      if (!$(lastElement).prev().hasClass('photo')){
+        if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
+          // if there is a widow, add an image
+          getPhotos(areaId, (photos) => {
+            const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
+            const photo = areaView.photo(areaId, index, photoPath);
+            const maxHeight = this.booklet.getMaxHeight(lastElement);
+            lastElement.remove();
+            descArray.map((e) => lastElement.append(e));
+            this.booklet.addContent(photo, () => this.booklet.addContent(lastElement, () => {
+              $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
+              this.validate(page, done);
+            }));
+          });
+        } else {
+          // if there is no widow, add content
+          this.booklet.addPage();
+          this.booklet.addContent(html, done);
+        }
       } else {
-        // if there is no widow, add content
+        // if photo is already inserted before, add content
+        // TODO: check if image already inserted should be greater??
         this.booklet.addPage();
         this.booklet.addContent(html, done);
       }
