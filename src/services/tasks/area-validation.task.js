@@ -4,6 +4,9 @@ import { first } from 'lodash';
 import { createLogger } from '../../utils/logger';
 import { Task } from './task';
 
+/**
+ * Here the rendered area will validated and optimized.
+ */
 export class AreaValidationTask extends Task {
 
   constructor(booklet, area, reset) {
@@ -13,6 +16,13 @@ export class AreaValidationTask extends Task {
     this.log = createLogger('AreaValidationTask');
   }
 
+  /**
+   * Verifies if all the mentioned routes in a topo are
+   * in sight of it. This means that the routes do not need
+   * the minimum of scrolling pages.
+   *
+   * @param {Function} done
+   */
   run(done) {
     const routes = $(`.routes.area-${this.area.id}`);
 

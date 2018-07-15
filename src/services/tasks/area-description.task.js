@@ -6,6 +6,9 @@ import { Task } from './task';
 import { createLogger } from '../../utils/logger';
 import { getPhotos, buildImageUrl } from '../api.service';
 
+/**
+ * Adds a description of an area to the DOM.
+ */
 export class AreaDescriptionTask extends Task {
 
   constructor(booklet, area, index) {
@@ -15,10 +18,21 @@ export class AreaDescriptionTask extends Task {
     this.log = createLogger('AreaDescriptionTask');
   }
 
+  /**
+   * Simply adds the html template to the current page.
+   *
+   * @param {Function} done
+   */
   run(done) {
     this.booklet.addContent(this.html, (page) => this.validate(page, done));
   }
 
+  /**
+   * TODO: Gabu
+   *
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
   validate(page, done) {
     const lastElement = last(page.children());
 
@@ -62,7 +76,7 @@ export class AreaDescriptionTask extends Task {
             uls.unshift(li);
             li.remove();
             // removes empty <ul></ul> elements
-            if ($(lastChild).children().length === 0){
+            if ($(lastChild).children().length === 0) {
               $(lastChild).remove();
             }
             break;
@@ -96,7 +110,7 @@ export class AreaDescriptionTask extends Task {
       }
 
       //create new <ul></ul> for left over bullet point entries
-      if (uls.length > 0){
+      if (uls.length > 0) {
         let newUl = $.parseHTML('<ul></ul>')[0];
         uls.forEach(li => newUl.append(li));
         descArray.unshift(newUl);
@@ -105,7 +119,7 @@ export class AreaDescriptionTask extends Task {
       // add new page and append previously removed elements
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY){
+      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
         // if there is a widow, add an image
         getPhotos(areaId, (photos) => {
           const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);

@@ -4,20 +4,34 @@ import { last, cloneDeep } from 'lodash';
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
 
+/**
+ * Adds the map of the area to the DOM.
+ */
 export class AreaGeometryTask extends Task {
 
   constructor(booklet, area) {
     super(booklet, area, areaView.geometry(cloneDeep(area)));
   }
 
+  /**
+   * Simply adds the html template to the current page.
+   *
+   * @param {Function} done
+   */
   run(done) {
     this.booklet.addContent(this.html, (page) => this.validate(page, done));
   }
 
+  /**
+   * Validates if the map matches to the same page as his area
+   * title and description.
+   *
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
   validate(page, done) {
     const lastElement = last(page.children());
     const img = lastElement.children[0];
-    // debugger;
     if (!this.booklet.isElementInsideCurrentSheet(img)) {
 
       let secondLastIsTitle = false;

@@ -3,6 +3,10 @@ import { last } from 'lodash';
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
 
+/**
+ * Adds a area topo image of an area to the DOM.
+ * This image shows the subareas of an area.
+ */
 export class AreaTopoTask extends Task {
 
   constructor(booklet, area, index) {
@@ -11,10 +15,21 @@ export class AreaTopoTask extends Task {
     this.index = index;
   }
 
+  /**
+   * Simply adds the html template to the current page.
+   *
+   * @param {Function} done
+   */
   run(done) {
     this.booklet.addContent(this.html, (page) => this.validate(page, done));
   }
 
+  /**
+   * Validates if the image has enough space on the current page.
+   *
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
   validate(page, done) {
     const lastElement = last(page.children());
 
