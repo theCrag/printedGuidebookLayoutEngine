@@ -11,7 +11,6 @@ log.info('start');
 
 areaService.fetchArea(((rootAreaTree) => {
   log.info('rootAreaTree', rootAreaTree);
-  // rendererService.renderLayoutTree(rootAreaTree);
 
   const renderer = new Renderer();
   renderer.renderTree(rootAreaTree, () => {
