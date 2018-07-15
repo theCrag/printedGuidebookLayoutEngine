@@ -6,7 +6,9 @@ import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
 import { getAds, buildImageUrl } from './api.service';
 
-
+/**
+ * The booklet class keeps track of the rendered pages.
+ */
 export class Booklet {
 
   constructor() {
@@ -17,14 +19,18 @@ export class Booklet {
   }
 
   /**
-   * TODO: Gery
+   * Sets the current page to zero. To restart
+   * the booklet creation. The page counter is used
+   * to mark the pages with their number.
    */
   init() {
     this.pageCounter = 0;
   }
 
   /**
-   * TODO: Gery
+   * Resets the routes container counter. This counter is used
+   * for the routes container to mark them with an index to be
+   * identical.
    */
   initArea() {
     this.routeContainerCounter = 0;
@@ -85,7 +91,7 @@ export class Booklet {
   }
 
   /**
-   * TODO: Gery
+   * Adds a full width topo image before the upcoming routes.
    *
    * @param {string} html
    * @param {Function} done
@@ -105,27 +111,7 @@ export class Booklet {
   }
 
   /**
-   * TODO: Gery
-   *
-   * @param {Object} routesContainer
-   * @param {string} html
-   * @param {Function} done
-   */
-  addRoutesToContainer(routesContainer, html, done) {
-    const routesColumnContainer = routesContainer.find('.routes__columns').last();
-    routesColumnContainer.append(html);
-
-    const images = routesColumnContainer.children().not('.route--blank').last().find('img');
-    if (images.length > 0) {
-      images.on('load', () => done(page, routesContainer));
-
-    } else {
-      done(page, routesContainer);
-    }
-  }
-
-  /**
-   * TODO: Gery
+   * Adds a route or a topo with width of the column.
    *
    * @param {Area} area
    * @param {string} html
@@ -149,7 +135,29 @@ export class Booklet {
   }
 
   /**
-   * TODO: Gery
+   * Adds a route item to the container and verifies if the appended
+   * element is image, so it can hold until the image is fully loaded in the DOM.
+   *
+   * @param {Object} routesContainer
+   * @param {string} html
+   * @param {Function} done
+   */
+  addRoutesToContainer(routesContainer, html, done) {
+    const routesColumnContainer = routesContainer.find('.routes__columns').last();
+    routesColumnContainer.append(html);
+
+    const images = routesColumnContainer.children().not('.route--blank').last().find('img');
+    if (images.length > 0) {
+      images.on('load', () => done(page, routesContainer));
+
+    } else {
+      done(page, routesContainer);
+    }
+  }
+
+  /**
+   * Adds a routes container with the configured column amount.
+   * All the upcoming routes and topos will be added to this container.
    *
    * @param {Area} area
    * @param {Function} done
@@ -188,7 +196,9 @@ export class Booklet {
   }
 
   /**
-   * TODO: Gery
+   * Due to the optimization work in can happen that some
+   * empty route containers lay in the DOM. So this method
+   * remove those mentioned containers.
    */
   removePossibleRouteZombies() {
     // Remove possible routes zombies

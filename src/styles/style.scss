@@ -46,21 +46,25 @@ h1 {
 
 .advertisement {
   text-align: center;
+
   img {
     max-width: 710px;
     height: auto;
     vertical-align: middle;
   }
 }
+
 .advertisement:before {
   content: "";
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
+
 .advertisement-left {
   float: left;
   width: 359px;
+
   img {
     max-width: 355px;
   }
@@ -69,6 +73,7 @@ h1 {
 .advertisement-right {
   float: right;
   width: 359px;
+
   img {
     max-width: 355px;
   }

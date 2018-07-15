@@ -14,6 +14,9 @@ import { RoutesFullPageTopoTask } from './tasks/routes-full-page-topo.task';
 import { RoutesItemTask } from './tasks/routes-item.task';
 import { AreaValidationTask } from './tasks/area-validation.task';
 
+/**
+ * Renderer is responsible for rendering the area tree.
+ */
 export class Renderer {
 
   constructor() {
@@ -22,6 +25,14 @@ export class Renderer {
     this.log = createLogger('Renderer');
   }
 
+  /**
+   * Renders a tree with is subareas. Moreover it initialized
+   * the booklet instance. After that it starts rendering
+   * area for area.
+   *
+   * @param {Area} tree
+   * @param {Function} done
+   */
   renderTree(tree, done) {
     this.log.info('start', tree);
 
@@ -39,6 +50,14 @@ export class Renderer {
     });
   }
 
+  /**
+   * Starts rendering one area and when it is done it starts rendering
+   * the next area of the tree until there are no area to render left.
+   *
+   * @param {Area} area
+   * @param {Function} done
+   * @private
+   */
   _doRenderArea(area, done) {
     this.log.info('doRenderArea', area);
     if (area) {
@@ -52,9 +71,21 @@ export class Renderer {
     done();
   }
 
+  /**
+   * Defines the task runner for one area and all the task
+   * to render an area.
+   *
+   * @param {Area} area
+   * @param {Function} done
+   * @private
+   */
   _renderArea(area, done) {
     this.log.info('renderArea', area.name);
 
+    /**
+     * The third parameter, which is a function, creates all the
+     * tasks to render an area.
+     */
     const taskRunner = new TaskRunner(area, done, () => {
       const tasks = [];
 
