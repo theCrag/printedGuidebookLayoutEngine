@@ -80,9 +80,19 @@ export class AreaDescriptionTask extends Task {
     }
   }
 
+  /**
+   * Validates if the descriptions matches on the current page if not, it does
+   * split the description blocks. Split is done by a predefined delimiter for
+   * P-elements. For UL-elements it splits by the LI-elements. The function
+   * validates as well if there are a widow on the new page, if so it inserts
+   * an image before.
+   *
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
   validate(page, done) {
     const lastElement = last(page.children());
-    const saveLastElement = $(lastElement).clone();
+    const origLastElement = $(lastElement).clone();
 
     if (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
 
@@ -107,7 +117,8 @@ export class AreaDescriptionTask extends Task {
             // check if innerText exists, when not remove the element
             if (lastChild.innerText === '') {
               lastChild.remove();
-              // check if there is some text exported from the removed <p></p>, if yes, create a new P and add to array
+              // check if there is some text exported from the removed <p></p>,
+              // if yes, create a new P and add to array
               this.checkLeftoverP(descArray, innerTextDesc, delimiter);
               innerTextDesc = [];
             } else {
@@ -165,7 +176,7 @@ export class AreaDescriptionTask extends Task {
             const photo = areaView.photo(areaId, index, photoPath);
             const maxHeight = this.booklet.getMaxHeight(lastElement);
             lastElement.remove();
-            this.booklet.addContent(photo, () => this.booklet.addContent(saveLastElement, () => {
+            this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
               $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
               this.validate(page, done);
             }));
@@ -176,7 +187,7 @@ export class AreaDescriptionTask extends Task {
           $(lastElement).prev().addClass('photo-full');
           lastElement.remove();
           this.booklet.addPage();
-          this.booklet.addContent(saveLastElement, () => this.validate(page, done));
+          this.booklet.addContent(origLastElement, () => this.validate(page, done));
         }
       } else {
         // if there is no widow, add content to new page
