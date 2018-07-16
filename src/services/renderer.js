@@ -45,6 +45,7 @@ export class Renderer {
       const containers = this.booklet.getWhitespaceContainers();
       this.booklet.fillWhitespaceContainers(containers, () => {
         this.booklet.fillAdditionalWhitespaceContainers(containers, () => {
+          this.booklet.setRootTitle(tree.name);
           done(tree);
         });
       });

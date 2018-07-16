@@ -64,6 +64,15 @@ export class Booklet {
   }
 
   /**
+   * Sets the root title in header on every page
+   *
+   * @param {string} title
+   */
+  setRootTitle(title) {
+    $('.root-title').html(title);
+  }
+
+  /**
    * Adds a new empty page.
    */
   addPage() {
