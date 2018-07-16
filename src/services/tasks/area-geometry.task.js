@@ -43,11 +43,11 @@ export class AreaGeometryTask extends Task {
         }
       }
 
-      // move last element to new page
+      // Move last element to new page
       lastElement.remove();
       this.booklet.addPage();
 
-      // move title or last element to new page
+      // Move title or last element to new page
       if (secondLastIsTitle) {
         secondLastElement.remove();
         this.booklet.addContent(secondLastElement, () => this.booklet.addContent(this.html, done));

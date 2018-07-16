@@ -35,7 +35,7 @@ export class AreaDescriptionTask extends Task {
    * @param {string} delimiter
    */
   checkLeftoverP(descArray, innerTextDesc, delimiter) {
-    // create new <p></p> for left over text
+    // Create new <p></p> for left over text
     if (innerTextDesc.length > 0) {
       let newP = $.parseHTML('<p></p>')[0];
       newP.innerText = innerTextDesc.join(delimiter);
@@ -50,7 +50,7 @@ export class AreaDescriptionTask extends Task {
    * @param {Array} uls
    */
   checkLeftoverUL(descArray, uls) {
-    //create new <ul></ul> for left over bullet point entries
+    // Create new <ul></ul> for left over bullet point entries
     if (uls.length > 0) {
       let newUl = $.parseHTML('<ul></ul>')[0];
       uls.forEach(li => newUl.append(li));
@@ -80,9 +80,19 @@ export class AreaDescriptionTask extends Task {
     }
   }
 
+  /**
+   * Validates if the descriptions matches on the current page if not, it does
+   * split the description blocks. Split is done by a predefined delimiter for
+   * P-elements. For UL-elements it splits by the LI-elements. The function
+   * validates as well if there are a widow on the new page, if so it inserts
+   * an image before.
+   *
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
   validate(page, done) {
     const lastElement = last(page.children());
-    const saveLastElement = $(lastElement).clone();
+    const origLastElement = $(lastElement).clone();
 
     if (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
 
@@ -94,7 +104,7 @@ export class AreaDescriptionTask extends Task {
       let uls = [];
       const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
 
-      // remove the last word until the text fits in page
+      // Remove the last word until the text fits in page
       while (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
         const lastChild = last($(lastElement).children());
         if (!(order[0] === lastChild.tagName)) {
@@ -102,16 +112,17 @@ export class AreaDescriptionTask extends Task {
         }
 
         switch (lastChild.tagName) {
-          // how to proceed when the element is a <p></p>
+          // How to proceed when the element is a <p></p>
           case 'P':
-            // check if innerText exists, when not remove the element
+            // Check if innerText exists, when not remove the element
             if (lastChild.innerText === '') {
               lastChild.remove();
-              // check if there is some text exported from the removed <p></p>, if yes, create a new P and add to array
+              // Check if there is some text exported from the removed <p></p>,
+              // if yes, create a new P and add to array
               this.checkLeftoverP(descArray, innerTextDesc, delimiter);
               innerTextDesc = [];
             } else {
-              // if innerText exists, remove the last word
+              // If innerText exists, remove the last word
               let oldDesc = lastChild.innerText.split(delimiter);
               innerTextDesc.unshift(oldDesc.pop());
               lastChild.innerText = oldDesc.join(delimiter);
@@ -119,11 +130,11 @@ export class AreaDescriptionTask extends Task {
             break;
 
           case 'UL': {
-            // removes single <li></li> elements until it fits on page.
+            // Removes single <li></li> elements until it fits on page.
             let li = last($(lastChild).children());
             uls.unshift(li);
             li.remove();
-            // removes empty <ul></ul> elements
+            // Removes empty <ul></ul> elements
             if ($(lastChild).children().length === 0) {
               lastChild.remove();
               this.checkLeftoverUL(descArray, uls);
@@ -133,13 +144,13 @@ export class AreaDescriptionTask extends Task {
           }
 
           default:
-            // move the whole element on new page
+            // Move the whole element on new page
             descArray.unshift(lastChild);
             lastChild.remove();
             break;
         }
 
-        // move the title, if this is the lastElement
+        // Move the title, if this is the lastElement
         const lastChildTitle = last($(lastElement).children());
         if (lastChildTitle.tagName === 'H2') {
           descArray.unshift(lastChildTitle);
@@ -148,38 +159,38 @@ export class AreaDescriptionTask extends Task {
       }
       order.forEach((type) => this.checkLeftovers(descArray, innerTextDesc, uls, delimiter, type));
 
-      // cleanup if the description block is empty now
+      // Cleanup if the description block is empty now
       if ($(lastElement).children().length === 0) {
         $(lastElement).remove();
       }
 
-      // add new page and append previously removed elements
+      // Add new page and append previously removed elements
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
       this.log.info('widow-recognition', (last(html).innerText.length));
       if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
         if (!$(lastElement).prev().hasClass('photo')) {
-          // if there is a widow, add an image
+          // If there is a widow, add an image
           getPhotos(areaId, (photos) => {
             const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
             const photo = areaView.photo(areaId, index, photoPath);
             const maxHeight = this.booklet.getMaxHeight(lastElement);
             lastElement.remove();
-            this.booklet.addContent(photo, () => this.booklet.addContent(saveLastElement, () => {
+            this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
               $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
               this.validate(page, done);
             }));
           });
         } else {
-          // if photo is already inserted before, make photo wider and add content to new page
+          // If photo is already inserted before, make photo wider and add content to new page
           $(lastElement).prev().removeClass('photo');
           $(lastElement).prev().addClass('photo-full');
           lastElement.remove();
           this.booklet.addPage();
-          this.booklet.addContent(saveLastElement, () => this.validate(page, done));
+          this.booklet.addContent(origLastElement, () => this.validate(page, done));
         }
       } else {
-        // if there is no widow, add content to new page
+        // If there is no widow, add content to new page
         this.booklet.addPage();
         this.booklet.addContent(html, done);
       }

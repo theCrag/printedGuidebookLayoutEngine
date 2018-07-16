@@ -35,7 +35,7 @@ export class AreaTopoTask extends Task {
 
     if (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
 
-      // move last element to new page
+      // Move last element to new page
       lastElement.remove();
       this.booklet.addPage();
       this.run(done);
