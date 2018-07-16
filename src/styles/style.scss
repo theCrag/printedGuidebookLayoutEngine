@@ -44,26 +44,37 @@ h1 {
   }
 }
 
+.whitespace {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .advertisement {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  // text-align: center;
 
   img {
     max-width: 710px;
     height: auto;
-    vertical-align: middle;
+    // vertical-align: middle;
   }
 }
 
-.advertisement:before {
-  content: "";
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
+// .advertisement:before {
+//   content: "";
+//   display: inline-block;
+//   height: 100%;
+//   vertical-align: middle;
+// }
 
 .advertisement-left {
-  float: left;
-  width: 359px;
+  // float: left;
+  // width: 359px;
 
   img {
     max-width: 355px;
@@ -71,8 +82,8 @@ h1 {
 }
 
 .advertisement-right {
-  float: right;
-  width: 359px;
+  // float: right;
+  // width: 359px;
 
   img {
     max-width: 355px;
@@ -221,4 +232,56 @@ h1 {
     display: flex;
   }
 
+}
+
+.cover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  @include element ('logo') {
+    display: flex;
+    width: 360px;
+    margin-top: 100px;
+    z-index: 100;
+  }
+
+  @include element ('title') {
+    display: flex;
+    font-size: 4em;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    z-index: 100;
+    font-weight: bold;
+    text-rendering: optimizelegibility;
+    color: white;
+    text-shadow: 0 .2em .5em rgba(0,0,0,.5);
+  }
+
+  @include element ('date') {
+    display: flex;
+    font-size: 2em;
+    margin-top: 0;
+    z-index: 100;
+    font-weight: bold;
+    color: white;
+    text-rendering: optimizelegibility;
+    text-shadow: 0 .2em .5em rgba(0,0,0,.5);
+  }
+
+  @include element ('background') {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+
+    @include modifier ('landscape') {
+      max-width: 100%;
+    }
+
+    @include modifier ('portrait') {
+      max-height: 100%;
+    }
+
+  }
 }

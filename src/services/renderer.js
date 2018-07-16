@@ -4,6 +4,7 @@ import { Booklet } from '../services/booklet';
 import { PORTRAIT } from '../models/orientation';
 import { FULL_PAGE, FULL_WIDTH } from '../models/image-styles';
 import { AreaTitleTask } from './tasks/area-title.task';
+import { CoverPageTask } from './tasks/cover.page.task';
 import { AreaGeometryTask } from './tasks/area-geometry.task';
 import { AreaDescriptionTask } from './tasks/area-description.task';
 import { AreaTopoTask } from './tasks/area-topo.task';
@@ -90,6 +91,10 @@ export class Renderer {
       const tasks = [];
 
       this.booklet.initArea();
+
+      if (area.parent === undefined) {
+        tasks.push(new CoverPageTask(this.booklet, area));
+      }
 
       tasks.push(new AreaTitleTask(this.booklet, area));
       tasks.push(new AreaGeometryTask(this.booklet, area));

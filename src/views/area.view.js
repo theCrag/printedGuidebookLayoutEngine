@@ -1,9 +1,34 @@
 import path from '../assets/google-maps.png';
+import logoDark from '../assets/logo-dark.svg';
+import { buildImageUrl } from '../services/api.service';
+
 
 /**
  * HTML for the bolt image with is used in the routes
  */
 const boltSvg = '<span class="clip"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 18" width="11" height="18"><path d="m8,17 0,-2 c1,0 2,-1 2,-2 l0,-9 c0,-2 -2,-3 -4,-3 -4,0 -5,3 -5,5 0,1 1,1.5 1.5,1.5 0.5,1.5 0.5,2.5 1,4 C2,13.4 5,15.4 6,15.4 l0,2 z M3,6.4 c0,0 0,-3 3,-3 1,0 2,0 2,2 l0,7 c0,1 -1,1 -2,1 -1,0 -2,-2 -2,-2 l -1,-5" style="fill:currentColor"></path></svg></span>';
+
+/**
+ * Creates the html for a area title
+ *
+ * @param {Area} area
+ * @returns {string} html
+ */
+export const cover = (area, photo) => {
+  const photoPath = buildImageUrl(photo);
+  let orientation = 'landscape';
+  if (parseInt(photo.origHeight, 10) > parseInt(photo.origWidth, 10)) {
+    orientation = 'portrait';
+  }
+
+  return `
+    <div class="cover area-${area.id}">
+      <img class="cover__logo" src="${logoDark}" />
+      <h1 class="cover__title">${area.name}</h1>
+      <h2 class="cover__date">${(new Date()).getDate()}.${(new Date()).getMonth() + 1}.${(new Date()).getFullYear()}</h2>
+      <img class="cover__background cover__background--${orientation}" src="${photoPath}" />
+    </div>`;
+};
 
 /**
  * Creates the html for a area title
