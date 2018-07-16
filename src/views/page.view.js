@@ -16,7 +16,7 @@ export const page = (id, isLeftPage) => `
         <img class="logo" src="${logo}"/>
       </div>
       <div>
-        <span>Root Title</span>
+        <span class="root-title"></span>
       </div>
     </header>
     <footer>
