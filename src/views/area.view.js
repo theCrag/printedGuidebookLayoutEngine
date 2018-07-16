@@ -150,8 +150,8 @@ export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
  * @returns {string} html
  */
 export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) => `
-<div id="advertisement-${whitespaceId}-right" class="advertisement advertisement-right" hashID="${hashID}" style="height: ${maxHeight}px;">
-  <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+<div id="advertisement-${whitespaceId}-right" class="advertisement advertisement-two advertisement-right" hashID="${hashID}" style="height: ${maxHeight}px;">
+  <img src="${photoPath}" id="advertisement-img-${whitespaceId}-right" style="max-height: ${maxHeight}px;" />
 </div>`;
 
 /**

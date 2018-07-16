@@ -386,7 +386,7 @@ export class Booklet {
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
               const hashID = $(img).parent().attr('hashID');
               this.addAdvertisement(element, containers, true, hashID);
-              $(img).parent().addClass('advertisement-left');
+              $(img).parent().addClass('advertisement-two');
             }
           });
         });
