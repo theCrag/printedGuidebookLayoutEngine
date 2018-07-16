@@ -16,17 +16,13 @@ const boltSvg = '<span class="clip"><svg xmlns="http://www.w3.org/2000/svg" view
  */
 export const cover = (area, photo) => {
   const photoPath = buildImageUrl(photo);
-  let orientation = 'landscape';
-  if (parseInt(photo.origHeight, 10) > parseInt(photo.origWidth, 10)) {
-    orientation = 'portrait';
-  }
 
   return `
     <div class="cover area-${area.id}">
       <img class="cover__logo" src="${logoDark}" />
       <h1 class="cover__title">${area.name}</h1>
       <h2 class="cover__date">${(new Date()).getDate()}.${(new Date()).getMonth() + 1}.${(new Date()).getFullYear()}</h2>
-      <img class="cover__background cover__background--${orientation}" src="${photoPath}" />
+      <div class="cover__background" style="background-image: url('${photoPath}');" />
     </div>`;
 };
 
