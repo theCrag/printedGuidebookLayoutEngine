@@ -81,6 +81,60 @@ export class AreaDescriptionTask extends Task {
   }
 
   /**
+   * Adds a description block or part of a description block to the page.
+   * Recognized widows and tries to eliminate them by adding an image
+   * before the current description block. If image is already inserted,
+   * but widow still exists, it makes the image wider.
+   *
+   * @param {string} html
+   * @param {HTMLElement} lastElement
+   * @param {number} areaId
+   * @param {number} index
+   * @param {HTMLElement} origLastElement
+   * @param {HTMLElement} page
+   * @param {Function} done
+   */
+  addDescriptionBlock(html, lastElement, areaId, index, origLastElement, page, done) {
+    if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
+      if (!$(lastElement).prev().hasClass('photo')) {
+        // If there is a widow, add an image
+        getPhotos(areaId, (photos) => {
+          const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
+          const photo = areaView.photo(areaId, index, photoPath);
+          const maxHeight = this.booklet.getMaxHeight(lastElement);
+          lastElement.remove();
+          this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
+            $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
+            this.validate(page, done);
+          }));
+        });
+      } else {
+        // If photo is already inserted before, make photo wider and add content to new page
+        $(lastElement).prev().removeClass('photo');
+        $(lastElement).prev().addClass('photo-full');
+        lastElement.remove();
+        this.booklet.addPage();
+        this.booklet.addContent(origLastElement, () => this.validate(page, done));
+      }
+    } else {
+      // If there is no widow, add content to new page
+      this.booklet.addPage();
+      this.booklet.addContent(html, done);
+    }
+  }
+
+  /**
+   * Cleanup if the description block is empty now
+   *
+   * @param {Object} lastElement
+   */
+  cleanupLastElement(lastElement){
+    if ($(lastElement).children().length === 0) {
+      $(lastElement).remove();
+    }
+  }
+
+  /**
    * Validates if the descriptions matches on the current page if not, it does
    * split the description blocks. Split is done by a predefined delimiter for
    * P-elements. For UL-elements it splits by the LI-elements. The function
@@ -159,41 +213,12 @@ export class AreaDescriptionTask extends Task {
       }
       order.forEach((type) => this.checkLeftovers(descArray, innerTextDesc, uls, delimiter, type));
 
-      // Cleanup if the description block is empty now
-      if ($(lastElement).children().length === 0) {
-        $(lastElement).remove();
-      }
+      this.cleanupLastElement(lastElement);
 
-      // Add new page and append previously removed elements
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      this.log.info('widow-recognition', (last(html).innerText.length));
-      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
-        if (!$(lastElement).prev().hasClass('photo')) {
-          // If there is a widow, add an image
-          getPhotos(areaId, (photos) => {
-            const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
-            const photo = areaView.photo(areaId, index, photoPath);
-            const maxHeight = this.booklet.getMaxHeight(lastElement);
-            lastElement.remove();
-            this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
-              $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
-              this.validate(page, done);
-            }));
-          });
-        } else {
-          // If photo is already inserted before, make photo wider and add content to new page
-          $(lastElement).prev().removeClass('photo');
-          $(lastElement).prev().addClass('photo-full');
-          lastElement.remove();
-          this.booklet.addPage();
-          this.booklet.addContent(origLastElement, () => this.validate(page, done));
-        }
-      } else {
-        // If there is no widow, add content to new page
-        this.booklet.addPage();
-        this.booklet.addContent(html, done);
-      }
+      this.addDescriptionBlock(html, lastElement, areaId, index, origLastElement, page, done);
+
     } else {
       done();
     }
