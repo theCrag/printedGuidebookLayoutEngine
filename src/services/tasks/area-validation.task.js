@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { first } from 'lodash';
+import { last, first } from 'lodash';
 
 import { createLogger } from '../../utils/logger';
 import { Task } from './task';
@@ -29,23 +29,26 @@ export class AreaValidationTask extends Task {
     if (routes.length > 1) {
       this.log.info('validateArea', this.area, routes);
 
+
       // Check if topo got missing on a right page
       const isFirstRoutesPageRight = routes.first().closest('.sheet').hasClass('sheet--right');
       if (isFirstRoutesPageRight && !this.area.routesNeedToStartOnALeftPage) {
         if (this.countRouteItems(routes.first()) === 1) {
           this.area.routesNeedToStartOnALeftPage = true;
+          this.area.routeItems = this.area.routeItems.map(routeItem => {
+            routeItem.startOnLeftPage = false;
+            return routeItem;
+          });
           this.log.warn('first element go missing on a right page!');
           return this.reset();
         }
       }
 
-      // TODO: Gery has to fix this
-      // TODO: wenn Topo + Routes auf einer Seite Platz haben, muss es nicht zwingend eine linke Seite sein
       // Validate if the last route of a topo is in sight, otherwise start with the topo on
       // left top page.
       let restartRendering = false;
       this.area.routeItems = this.area.routeItems.map(item => {
-        if (item.type === 'Topo' && !restartRendering && !item.startOnLeftPag) {
+        if (item.type === 'Topo' && !restartRendering && !item.startOnLeftPage) {
 
           if (item.routesResponsible.length > 0) {
             const topoElement = $(`#topo-${item.id}`);
@@ -53,10 +56,9 @@ export class AreaValidationTask extends Task {
             const topoPageElementIsALeftPage = topoPageElement.hasClass('sheet--left');
             const pageElements = [topoPageElement];
 
-
             if (topoPageElementIsALeftPage) {
               const idPagePairs = topoPageElement.attr('id').split('-');
-              const nextTopoPage = $(`#page-${parseInt(first(idPagePairs), 10) + 1}`);
+              const nextTopoPage = $(`#page-${parseInt(last(idPagePairs), 10) + 1}`);
               pageElements.push(nextTopoPage);
 
             }
