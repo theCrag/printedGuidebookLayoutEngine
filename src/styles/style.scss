@@ -145,6 +145,7 @@ h1 {
 
     @include element ('number') {
       background: black;
+      -webkit-print-color-adjust: exact;
       padding: 2px;
       width: 20px;
       height: 21px;
@@ -182,6 +183,7 @@ h1 {
       align-items: center;
       border-radius: 4px;
       padding: 0 4px;
+      -webkit-print-color-adjust: exact;
 
       @include modifier ('gb0') {
         background-color: #fff;
@@ -287,6 +289,7 @@ h1 {
     position: absolute;
     top: 0;
 
+    -webkit-print-color-adjust: exact;
     background-repeat: no-repeat;
     background-position: center center;
     -webkit-background-size: cover;
