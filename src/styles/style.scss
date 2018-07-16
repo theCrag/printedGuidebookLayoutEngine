@@ -186,10 +186,41 @@ h1 {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: orange;
-      border: 1px solid darkorange;
       border-radius: 4px;
       padding: 0 4px;
+
+      @include modifier('gb0') {
+        background-color: #fff;
+        border: 1px solid #999;
+      }
+
+      @include modifier('gb1') {
+        background-color: #53b41b;
+        border: 1px solid #3d9209;
+      }
+
+      @include modifier('gb2') {
+        background-color: #ffe200;
+        border: 1px solid #cfae00;
+      }
+
+      @include modifier('gb3') {
+        background-color: #f90;
+        border: 1px solid #e6842a;
+      }
+
+      @include modifier('gb4') {
+        background-color: #db2424;
+        border: 1px solid #ca0909;
+      }
+
+      @include modifier('gb5') {
+        background-color: #aa1c7b;
+        border: 1px solid #9b1178;
+      }
+
+
+
     }
 
     @include element ('style') {

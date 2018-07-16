@@ -151,7 +151,7 @@ export const routeItem = (routeItem, areaId, index) =>
           </div>
           <div class="route__header__extras">
             ${routeItem.grade ? `
-            <div class="route__header__grade">
+            <div class="route__header__grade route__header__grade--${parseInt(routeItem.grade) < 7 ? 'gb2' : parseInt(routeItem.grade) > 7 ? 'gb4' : 'gb3'}">
               ${routeItem.grade}
             </div>
             `: ''}
