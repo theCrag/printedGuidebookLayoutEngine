@@ -306,10 +306,10 @@ export class Booklet {
   addAdvertisement(element, containers, float, hashID = null) {
     const advertisements = getAds();
 
-    // filter advertisements to avoid having the same advertisements next to each other
+    // Filter advertisements to avoid having the same advertisements next to each other
     const ads = advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
 
-    // take random advertisement from array with advertisement priorities
+    // Take random advertisement from array with advertisement priorities
     ads[Math.floor((Math.random() * ads.length))].images
       .filter((image) => element.portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
       .forEach((img) => {
@@ -317,7 +317,7 @@ export class Booklet {
         let ad;
         if (!float) {
           if (!element.filled) {
-            // if image is to small, append it to the last element
+            // If image is to small, append it to the last element
             if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
               ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
               $(`#${element.id}`).append(ad);
@@ -349,7 +349,6 @@ export class Booklet {
    * @param {Function} done
    */
   fillWhitespaceContainers(containers, done) {
-    // fill white spaces
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
@@ -357,7 +356,7 @@ export class Booklet {
         this.addAdvertisement(element, containers, false);
       });
 
-    // wait for image loading
+    // Wait for image loading
     const images = $('.advertisement').find('img');
     let totalImageCount = images.length;
     if (images.length > 0) {
@@ -393,7 +392,7 @@ export class Booklet {
         });
       });
 
-    // wait for image loading
+    // Wait for image loading
     const images = $('.advertisement-right').find('img');
     let totalImageCount = images.length;
     if (images.length > 0) {
