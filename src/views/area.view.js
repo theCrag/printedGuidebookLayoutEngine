@@ -19,7 +19,7 @@ export const cover = (area, photo) => {
 
   return `
     <div class="cover area-${area.id}">
-      <img class="cover__logo" src="${logoDark}" />
+      <img class="cover__logo logo" src="${logoDark}" />
       <h1 class="cover__title">${area.name}</h1>
       <h2 class="cover__date">${(new Date()).getDate()}.${(new Date()).getMonth() + 1}.${(new Date()).getFullYear()}</h2>
       <div class="cover__background" style="background-image: url('${photoPath}');" />

@@ -69,6 +69,7 @@ export class Booklet {
   addPage() {
     this.pageCounter = this.pageCounter + 1;
     $('main').append(page(this.pageCounter, this.isLeftPage()));
+    $('.total-pages').html(this.pageCounter);
     this.log.info('addPage', this.pageCounter);
   }
 
@@ -82,7 +83,7 @@ export class Booklet {
     const page = this.getCurrentPage();
     page.append(html);
 
-    const images = page.children().last().find('img');
+    const images = page.children().last().find('img').not('.logo');
     if (images.length > 0) {
       images.on('load', () => done(page));
     } else {
@@ -101,7 +102,7 @@ export class Booklet {
     const routesContainer = page.find('.routes .routes__topo').last();
     routesContainer.append(html);
 
-    const images = routesContainer.find('img');
+    const images = routesContainer.find('img').not('.logo');
     if (images.length > 0) {
       images.on('load', () => done(page, routesContainer));
 
@@ -146,7 +147,7 @@ export class Booklet {
     const routesColumnContainer = routesContainer.find('.routes__columns').last();
     routesColumnContainer.append(html);
 
-    const images = routesColumnContainer.children().not('.route--blank').last().find('img');
+    const images = routesColumnContainer.children().not('.route--blank').last().find('img').not('.logo');
     if (images.length > 0) {
       images.on('load', () => done(page, routesContainer));
 
@@ -187,7 +188,7 @@ export class Booklet {
     $(`.area-${area.id}`).remove();
     $('.sheet').toArray().reverse().some((sheet) => {
       const $sheet = $(sheet);
-      if ($sheet.children().length === 0) {
+      if ($sheet.children().length === 2) {
         this.removeLastPage();
       } else {
         return true;
@@ -357,7 +358,7 @@ export class Booklet {
       });
 
     // Wait for image loading
-    const images = $('.advertisement').find('img');
+    const images = $('.advertisement').find('img').not('.logo');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {
@@ -393,7 +394,7 @@ export class Booklet {
       });
 
     // Wait for image loading
-    const images = $('.advertisement-right').find('img');
+    const images = $('.advertisement-right').find('img').not('.logo');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {

@@ -28,17 +28,8 @@ export class CoverPageTask extends Task {
     getPhotos(this.area.id, (photos) => {
       this.html = areaView.cover(cloneDeep(this.area), photos[1]);
       this.booklet.addContent(this.html, () => {
-        const page = this.booklet.getCurrentPage();
-        const images = page.find('img');
-        if (images.length > 1) {
-          images.on('load', () => {
-            this.booklet.addPage();
-            done();
-          });
-        } else {
-          this.booklet.addPage();
-          done();
-        }
+        this.booklet.addPage();
+        done();
       });
     });
   }
