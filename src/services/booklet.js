@@ -275,8 +275,10 @@ export class Booklet {
    * Adds whitespaceContainers to the end of each page.
    */
   addWhitespaceContainers() {
+    let sheets = $('.sheet').toArray();
+    sheets.shift();
     let i = 1;
-    $('.sheet').toArray().forEach((sheet) => {
+    sheets.forEach((sheet) => {
       const whitespaceContainer = areaView.whitespaceContainer(i);
       const $sheet = $(sheet);
       $sheet.append(whitespaceContainer);
