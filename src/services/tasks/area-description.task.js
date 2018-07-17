@@ -303,18 +303,14 @@ export class AreaDescriptionTask extends Task {
               let current = $lastChild.html().split(delimiter);
               let texts = [];
               texts.unshift(current.pop().trim());
-              // if ($lastChild.html().includes('Tororo')){
+              // if ($lastChild.html().includes('Hitman')){
               //   debugger;
               // }
               if (last(texts).includes('</')){
-                if (last(texts).startsWith('<') && last(texts).charAt(1) === '/'){
+                if ((last(texts).match(/</g) || []).length < 2){
                   do {
                     texts.unshift(current.pop().trim());
-                  } while (!first(texts).startsWith('<'));
-                } else if (!last(texts).startsWith('<')){
-                  do {
-                    texts.unshift(current.pop().trim());
-                  } while (!first(texts).startsWith('<'));
+                  } while ((texts.join(delimiter).match(/</g) || []).length < 2);
                 }
               }
               destination.unshift(texts.join(delimiter));
