@@ -102,7 +102,7 @@ h1 {
   @include modifier ('col-width') {
     img {
       max-width: 100%;
-      max-height:920px;
+      max-height: 920px;
     }
   }
 }
@@ -134,7 +134,6 @@ h1 {
 }
 
 .route {
-  display: inline-block;
   width: 100%;
 
   @include modifier ('blank') {
