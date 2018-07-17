@@ -32,9 +32,13 @@ export const getArea = (areaPath, done) => {
  * @returns {string} URL to the crag image.
  */
 export const buildImageUrl = (img) => {
-  return (img.hashID)
-    ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`
-    : undefined;
+  if (img) {
+    return (img.hashID)
+      ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`
+      : '';
+  } else {
+    return '';
+  }
 };
 
 /**
@@ -47,7 +51,9 @@ export const getPhotos = (areaId, done) => {
   $.getJSON(`${process.env.API_BASE_URL}/area/${areaId}/photos/json?key=${process.env.API_KEY}`,
     (jsonData) => {
       const photos = [];
-      jsonData.data.photos.forEach(element => photos.push(element));
+      if (jsonData.data.numberPhotos > 0) {
+        jsonData.data.photos.forEach(element => photos.push(element));
+      }
       done(photos);
     })
     .fail(() => {
