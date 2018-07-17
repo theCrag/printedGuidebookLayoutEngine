@@ -266,6 +266,7 @@ h1 {
     font-weight: bold;
     text-rendering: optimizelegibility;
     color: white;
+    -webkit-print-color-adjust: exact;
     text-shadow: 0 .2em .5em rgba(0,0,0,.5);
   }
 
@@ -276,6 +277,7 @@ h1 {
     z-index: 100;
     font-weight: bold;
     color: white;
+    -webkit-print-color-adjust: exact;
     text-rendering: optimizelegibility;
     text-shadow: 0 .2em .5em rgba(0,0,0,.5);
   }
