@@ -26,7 +26,11 @@ export class CoverPageTask extends Task {
     this.log.info('set cover page');
 
     getPhotos(this.area.id, (photos) => {
-      this.html = areaView.cover(cloneDeep(this.area), photos[1]);
+      let photo = undefined;
+      if (photos.length > 0) {
+        photo = photos[1];
+      }
+      this.html = areaView.cover(cloneDeep(this.area), photo);
       this.booklet.addContent(this.html, () => {
         this.booklet.addPage();
         done();
