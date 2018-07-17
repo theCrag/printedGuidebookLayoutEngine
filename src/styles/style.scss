@@ -13,6 +13,10 @@ h1 {
   font-size: 2em;
 }
 
+.emoji {
+  height: 12px;
+}
+
 .sheet.padding-10mm {
   padding: 25mm 10mm;
 }
@@ -287,6 +291,7 @@ h1 {
     position: absolute;
     top: 0;
 
+    background-color: #9dd3ff;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
     background-repeat: no-repeat;
