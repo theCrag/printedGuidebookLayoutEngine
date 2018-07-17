@@ -160,8 +160,8 @@ export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) =
  */
 export const routeItem = (routeItem, areaId, index) =>
   (routeItem.type === 'Topo')
-    ? `<div class="route route--blank"></div><div id="route-${areaId}-${index}" class="route">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
-    : `<div id="route-${areaId}-${routeItem.index}" class="route">
+    ? `<div class="route route--blank"></div><div id="route-${areaId}-${index}" class="route route__topo">${topo(routeItem, areaId, index)}</div><div class="route route--blank"></div>`
+    : `<div id="route-${areaId}-${routeItem.index}" class="route route__description">
       <div class="route__container">
         <div class="route__header">
           <div class="route__header__number">
@@ -191,6 +191,25 @@ export const routeItem = (routeItem, areaId, index) =>
         </div>
         <div class="route__body">
           ${routeItem.descriptions.map(d => d.markdown).join('<br/>')}
+        </div>
+      </div>
+    </div>
+    <div class="route route--blank"></div>`;
+
+/**
+ * Creates a empty route html. This template is used for the
+ * route text breaking.
+ *
+ * @param {Object{Route or Topo}} routeItem
+ * @param {String} areaId
+ * @param {String} body
+ * @returns {String} html
+ */
+export const emptyRouteItem = (routeItem, areaId, body) =>
+  `<div id="route-${areaId}-${routeItem.index}" class="route route__description">
+      <div class="route__container">
+        <div class="route__body">
+          ${body}
         </div>
       </div>
     </div>
