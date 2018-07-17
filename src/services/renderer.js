@@ -14,6 +14,8 @@ import { RoutesMainTopoTask } from './tasks/routes-main-topo.task';
 import { RoutesFullPageTopoTask } from './tasks/routes-full-page-topo.task';
 import { RoutesItemTask } from './tasks/routes-item.task';
 import { AreaValidationTask } from './tasks/area-validation.task';
+import { AreaDescriptionHeightTask } from './tasks/area-description-height.task';
+
 
 /**
  * Renderer is responsible for rendering the area tree.
@@ -103,6 +105,8 @@ export class Renderer {
       area.descriptions.forEach((_, index) => {
         tasks.push(new AreaDescriptionTask(this.booklet, area, index));
       });
+
+      tasks.push(new AreaDescriptionHeightTask(this.booklet, area));
 
       // There are no routes
       if (area.routes.length === 0) {
