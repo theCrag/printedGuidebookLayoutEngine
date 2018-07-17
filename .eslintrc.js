@@ -30,5 +30,6 @@ module.exports = {
       "always"
     ],
     "no-debugger": 0,
+    "no-case-declarations": 0,
   }
 };

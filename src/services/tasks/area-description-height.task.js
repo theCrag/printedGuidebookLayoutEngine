@@ -35,7 +35,6 @@ export class AreaDescriptionHeightTask extends Task {
     if (geometryOnCurrentPage){
       const $lastElement = $(lastElement);
 
-      this.log.info($geometry);
       const geometryOffset = $geometry.offset();
       const totalGeometryHeight = geometryOffset.top + $geometry.height() + parseFloat($geometry.css('margin-bottom').slice(0, -2));
       const elementOffset = $lastElement.offset();
