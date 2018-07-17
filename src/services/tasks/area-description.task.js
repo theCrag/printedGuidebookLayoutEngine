@@ -86,7 +86,6 @@ export class AreaDescriptionTask extends Task {
    * before the current description block. If image is already inserted,
    * but widow still exists, it makes the image wider.
    *
-   * @param {string} html
    * @param {HTMLElement} lastElement
    * @param {number} areaId
    * @param {number} index
@@ -94,32 +93,26 @@ export class AreaDescriptionTask extends Task {
    * @param {HTMLElement} page
    * @param {Function} done
    */
-  addDescriptionBlock(html, lastElement, areaId, index, origLastElement, page, done) {
-    if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
-      if (!$(lastElement).prev().hasClass('photo')) {
-        // If there is a widow, add an image
-        getPhotos(areaId, (photos) => {
-          const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
-          const photo = areaView.photo(areaId, index, photoPath);
-          const maxHeight = this.booklet.getMaxHeight(lastElement);
-          lastElement.remove();
-          this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
-            $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
-            this.validate(page, done);
-          }));
-        });
-      } else {
-        // If photo is already inserted before, make photo wider and add content to new page
-        $(lastElement).prev().removeClass('photo');
-        $(lastElement).prev().addClass('photo-full');
+  eliminateWidow(lastElement, areaId, index, origLastElement, page, done) {
+    if (!$(lastElement).prev().hasClass('photo')) {
+      // If there is a widow, add an image
+      getPhotos(areaId, (photos) => {
+        const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
+        const photo = areaView.photo(areaId, index, photoPath);
+        const maxHeight = this.booklet.getMaxHeight(lastElement);
         lastElement.remove();
-        this.booklet.addPage();
-        this.booklet.addContent(origLastElement, () => this.validate(page, done));
-      }
+        this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, () => {
+          $(`#photo-img-${areaId}-${index}`).css('max-height', `${maxHeight}px`);
+          this.validate(page, done);
+        }));
+      });
     } else {
-      // If there is no widow, add content to new page
+      // If photo is already inserted before, make photo wider and add content to new page
+      $(lastElement).prev().removeClass('photo');
+      $(lastElement).prev().addClass('photo-full');
+      lastElement.remove();
       this.booklet.addPage();
-      this.booklet.addContent(html, done);
+      this.booklet.addContent(origLastElement, () => this.validate(page, done));
     }
   }
 
@@ -217,7 +210,13 @@ export class AreaDescriptionTask extends Task {
 
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       descArray.map((e) => $(html).append(e));
-      this.addDescriptionBlock(html, lastElement, areaId, index, origLastElement, page, done);
+      if ((last(html).innerText.length) < process.env.APP_WIDOW_BOUNDARY) {
+        this.eliminateWidow(html, lastElement, areaId, index, origLastElement, page, done);
+      } else {
+        // If there is no widow, add content to new page
+        this.booklet.addPage();
+        this.booklet.addContent(html, done);
+      }
 
     } else {
       done();
