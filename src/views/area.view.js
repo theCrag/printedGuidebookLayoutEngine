@@ -193,4 +193,5 @@ export const routeItem = (routeItem, areaId, index) =>
           ${routeItem.descriptions.map(d => d.markdown).join('<br/>')}
         </div>
       </div>
-    </div>`;
+    </div>
+    <div class="route route--blank"></div>`;
