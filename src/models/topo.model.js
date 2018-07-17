@@ -1,7 +1,7 @@
-import path from '../assets/mountain.jpg';
 import { COL_WIDTH } from './image-styles';
 import { LANDSCAPE, PORTRAIT } from './orientation';
-// import { buildImageUrl } from '../services/api.service';
+import { buildImageUrl } from '../services/api.service';
+// import path from '../assets/mountain.jpg';
 
 /**
  * The topo is a image of an area which shows their subareas or routes.
@@ -41,8 +41,8 @@ export class Topo {
     /**
      * URL ot the image on the crag-server.
      */
-    // this.url = buildImageUrl(this);
-    this.url = path;
+    this.url = buildImageUrl(this);
+    // this.url = path;
     /**
      * This is needed to place the topo in the routeItems of the area
      * in the correct position.
