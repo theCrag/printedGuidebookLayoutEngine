@@ -93,9 +93,11 @@ export class Area {
       let routes = [];
       this.routeItems = this.routeItems.reverse().map((item) => {
         if (item.type === 'Route') {
-          routes.push(item.index);
+          routes.push(item);
         } else {
-          item.routesResponsible = routes;
+          item.routesResponsible = routes.filter((route) => {
+            return item.routesId.indexOf(route.id) >= 0;
+          }).map(route => route.index);
           routes = [];
         }
         return item;
