@@ -173,7 +173,7 @@ export class Booklet {
    * @param {Function} done
    */
   addRoutesContainer(area, done) {
-    this.addContent(areaView.routesContainer(area.id, this.routeContainerCounter, 2), done);
+    this.addContent(areaView.routesContainer(area.id, this.routeContainerCounter, process.env.APP_COLUMNS), done);
     this.routeContainerCounter = this.routeContainerCounter + 1;
   }
 
