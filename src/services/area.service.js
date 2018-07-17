@@ -1,7 +1,5 @@
-import * as jsonData from '../data/umbrio.json';
-// import * as jsonData from '../data/central-park.json';
-// import * as jsonData from '../data/central-park-longDesc.json';
 import { Area } from '../models/area.model';
+import { getArea } from '../services/api.service';
 
 /**
  * @name rootArea
@@ -24,10 +22,12 @@ export const getRootArea = () => rootArea;
  * @param {Function} done Callback function witch returns the mapped Area.
  */
 export const fetchArea = (done) => {
-  rootArea = new Area(jsonData.data);
+  getArea(window.location.pathname, (jsonData) => {
+    rootArea = new Area(jsonData.data);
 
-  doFetchAreaDescription(rootArea, () => {
-    done(getRootArea());
+    doFetchAreaDescription(rootArea, () => {
+      done(getRootArea());
+    });
   });
 };
 

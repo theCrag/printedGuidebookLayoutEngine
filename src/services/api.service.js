@@ -1,9 +1,28 @@
 import $ from 'jquery';
 import { createLogger } from '../utils/logger';
-import * as jsonData from '../data/description.json';
+// import * as jsonData from '../data/description.json';
 import * as adJsonData from '../data/ads.json';
+// import * as jsonData from '../data/umbrio.json';
+// import * as jsonData from '../data/central-park.json';
+// import * as jsonData from '../data/central-park-longDesc.json';
 
 const log = createLogger('api');
+
+/**
+ * Fetches the all the information of the given area.
+ *
+ * @param {String} areaPath
+ * @param {Function} done
+ */
+export const getArea = (areaPath, done) => {
+  $.getJSON(`${process.env.API_BASE_URL}/climbing${areaPath}/guide/json?key=${process.env.API_KEY}`,
+    (jsonData) => {
+      done(jsonData);
+    })
+    .fail(() => {
+      log.error('could not get area', areaPath);
+    });
+};
 
 /**
  * Builds the URL for a given image. With this URL we can display crag images
@@ -43,15 +62,11 @@ export const getPhotos = (areaId, done) => {
  * @param {Function} done Callback function.
  */
 export const getDescriptionHtml = (area, done) => {
-  if (process.env.APP_TEST) {
-    done(jsonData.data);
-  } else {
-    $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
-      (jsonData) => done(jsonData.data))
-      .fail(() => {
-        log.error('could not get photos for area', area.id);
-      });
-  }
+  $.getJSON(`${process.env.API_BASE_URL}/api/area/id/${area.id}/beta?markupType=html&key=${process.env.API_KEY}`,
+    (jsonData) => done(jsonData.data))
+    .fail(() => {
+      log.error('could not get photos for area', area.id);
+    });
 };
 
 /**
