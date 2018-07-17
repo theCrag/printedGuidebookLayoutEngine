@@ -349,10 +349,9 @@ export class AreaDescriptionTask extends Task {
       }
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       $(html).html(destination.join(delimiter));
-
-      if ($(html).prop('innerText').length < process.env.APP_WIDOW_BOUNDARY) {
+      if (last(html).innerText.length < process.env.APP_WIDOW_BOUNDARY) {
         // TODO: widows not tested!
-        this.eliminateWidow(html, lastElement, areaId, index, origLastElement, page, done);
+        this.eliminateWidow(lastElement, areaId, index, origLastElement, page, done);
       }
 
       this.booklet.addPage();
