@@ -40,11 +40,9 @@ export class AreaDescriptionTask extends Task {
    * @param {Function} done
    */
   eliminateWidow(lastElement, areaId, index, origLastElement, done) {
-    debugger;
     if (!$(lastElement).prev().hasClass('photo')) {
       // If there is a widow, add an image
       getPhotos(areaId, (photos) => {
-        debugger;
         const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
         const photo = areaView.photo(areaId, index, photoPath);
         const maxHeight = this.booklet.getMaxHeight(lastElement);
@@ -153,7 +151,6 @@ export class AreaDescriptionTask extends Task {
 
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       $(html).html(destination.join(delimiter));
-      debugger;
       if (process.env.APP_WIDOW_AUTO_AVOID === 'true' && last(html).innerText.length < process.env.APP_WIDOW_BOUNDARY) {
         this.eliminateWidow(lastElement, areaId, index, origLastElement, (page) => this.validate(page, done));
       } else {
