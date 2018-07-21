@@ -1,6 +1,7 @@
 import { createLogger } from '../utils/logger';
 import { TaskRunner } from '../services/task-runner';
 import { Booklet } from '../services/booklet';
+import { Evaluator } from '../services/evaluator';
 import { PORTRAIT } from '../models/orientation';
 import { FULL_PAGE, FULL_WIDTH } from '../models/image-styles';
 import { AreaTitleTask } from './tasks/area-title.task';
@@ -48,6 +49,11 @@ export class Renderer {
       this.booklet.fillWhitespaceContainers(containers, () => {
         this.booklet.fillAdditionalWhitespaceContainers(containers, () => {
           this.booklet.setRootTitle(tree.name);
+
+          const evaluator = new Evaluator(tree, this.booklet);
+          evaluator.evaluate();
+          evaluator.printToConsole();
+
           done(tree);
         });
       });
