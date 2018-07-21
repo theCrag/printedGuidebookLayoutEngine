@@ -347,15 +347,6 @@ export class Booklet {
   }
 
   /**
-   * Returns an array containing all elements in columns to place advertisements.
-   *
-   * @returns {Array} containers
-   */
-  getColumnWhitespaceContainers() {
-
-  }
-
-  /**
    * Adds advertisements to columns.
    *
    * @param {Function} done
@@ -416,7 +407,7 @@ export class Booklet {
       const maxHeight = this.getMaxHeight(container);
       const element = this.generateAdvertisementElement(
         $container.attr('id'),
-        last($container.attr('id').split('-')),
+        last($container.closest('.sheet').attr('id').split('-')),
         maxHeight < 0 ? 0 : maxHeight,
         maxHeight > process.env.APP_CONTENT_WIDTH ? true : false,
         $container.hasClass('advertisement-column')
