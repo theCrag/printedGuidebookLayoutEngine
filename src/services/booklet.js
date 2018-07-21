@@ -388,18 +388,20 @@ export class Booklet {
     });
     $('.routes__columns').toArray().forEach((container) => {
       const lastBlank = last($(container).children());
-      const $lastBlank = $(lastBlank);
-      const id = `blank-${i++}`;
-      this.replaceBlankWithAdvertisement($lastBlank, id);
-      const maxHeight = this.getMaxColumnHeight(lastBlank);
-      const element = this.generateAdvertisementElement(
-        id,
-        last($lastBlank.closest('.sheet').attr('id').split('-')),
-        maxHeight,
-        maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
-        true
-      );
-      containers.push(element);
+      if (lastBlank){
+        const $lastBlank = $(lastBlank);
+        const id = `blank-${i++}`;
+        this.replaceBlankWithAdvertisement($lastBlank, id);
+        const maxHeight = this.getMaxColumnHeight(lastBlank);
+        const element = this.generateAdvertisementElement(
+          id,
+          last($lastBlank.closest('.sheet').attr('id').split('-')),
+          maxHeight,
+          maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
+          true
+        );
+        containers.push(element);
+      }
     });
     this.fillAdvertisements(containers, () => done());
   }
@@ -416,7 +418,7 @@ export class Booklet {
       const maxHeight = this.getMaxHeight(container);
       const element = this.generateAdvertisementElement(
         $container.attr('id'),
-        last($container.attr('id').split('-')),
+        last($container.closest('.sheet').attr('id').split('-')),
         maxHeight < 0 ? 0 : maxHeight,
         maxHeight > process.env.APP_CONTENT_WIDTH ? true : false,
         $container.hasClass('advertisement-column')
