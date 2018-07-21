@@ -1,0 +1,20 @@
+.photo {
+  img {
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    max-width: 340px;
+    height: auto;
+  }
+}
+
+.photo-full {
+  width: 718px;
+  height: auto;
+  text-align: center;
+
+  img {
+    max-width: 710px;
+    height: auto;
+  }
+}
