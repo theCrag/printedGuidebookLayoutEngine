@@ -121,7 +121,7 @@ export const routesContainer = (areaId, index, colAmount) => `
  * @returns {string} html
  */
 export const whitespaceContainer = (pageNumber) => `
-<div class="whitespace" id="whitespace-${pageNumber}">
+<div class="whitespace whitespace__container" id="whitespace-${pageNumber}">
 </div>`;
 
 /**
