@@ -96,6 +96,14 @@ export class RoutesItemTask extends Task {
     }
   }
 
+  /**
+   * Moves the whole given route item to the next page in a new
+   * routes container.
+   *
+   * @param {HTMLElement} lastElement
+   * @param {HTMLElement} routesContainer
+   * @param {Function} done
+   */
   moveLastRouteItemToNewPage(lastElement, routesContainer, done) {
     lastElement.remove();
     this.booklet.removePossibleRouteZombies();
