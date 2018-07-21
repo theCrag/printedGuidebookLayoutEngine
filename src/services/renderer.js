@@ -46,7 +46,7 @@ export class Renderer {
     this._doRenderArea(tree, () => {
       this.booklet.addWhitespaceContainers();
       const containers = this.booklet.getWhitespaceContainers();
-      this.booklet.fillAdvertisements(containers, () => {
+      this.booklet.fillAdvertisements(containers, 'advertisement', () => {
         this.booklet.fillAdditionalAdvertisements(containers, () => {
           this.booklet.fillColumnAdvertisements(() => {
             this.booklet.setRootTitle(tree.name);

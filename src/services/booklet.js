@@ -281,7 +281,7 @@ export class Booklet {
     if (element) {
       const parentColumnContainer = $(element.closest('.routes'));
       element = $(element);
-      if (parentColumnContainer.next().length === 0) {
+      if (parentColumnContainer.next().length === 0 || parentColumnContainer.next().children().length === 0) {
         return this.getMaxHeight(element);
       } else {
         const containerOffset = parentColumnContainer.offset();
@@ -347,15 +347,6 @@ export class Booklet {
   }
 
   /**
-   * Returns an array containing all elements in columns to place advertisements.
-   *
-   * @returns {Array} containers
-   */
-  getColumnWhitespaceContainers() {
-
-  }
-
-  /**
    * Adds advertisements to columns.
    *
    * @param {Function} done
@@ -403,7 +394,7 @@ export class Booklet {
         containers.push(element);
       }
     });
-    this.fillAdvertisements(containers, () => done());
+    this.fillAdvertisements(containers, 'column-advertisement', () => done());
   }
 
   /**
@@ -415,7 +406,7 @@ export class Booklet {
     let containers = [];
     $('.whitespace').toArray().forEach((container) => {
       const $container = $(container);
-      const maxHeight = this.getMaxHeight(container);
+      const maxHeight = $container.hasClass('advertisement-column') ? this.getMaxColumnHeight(container) : this.getMaxHeight(container);
       const element = this.generateAdvertisementElement(
         $container.attr('id'),
         last($container.closest('.sheet').attr('id').split('-')),
@@ -489,7 +480,7 @@ export class Booklet {
    * @param {Array} containers
    * @param {Function} done
    */
-  fillAdvertisements(containers, done) {
+  fillAdvertisements(containers, imgClass, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
@@ -498,7 +489,7 @@ export class Booklet {
       });
 
     // Wait for image loading
-    const images = $('.ad').find('img').not('.logo');
+    const images = $(`.${imgClass}`).find('img').not('.logo');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {
@@ -520,7 +511,7 @@ export class Booklet {
   fillAdditionalAdvertisements(containers, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-      .filter(element => $(`#${element.id}`).children().length !== 0)
+      .filter(element => $(`#advertisement-${element.id}`).children().length !== 0)
       .filter(element => element.column === false)
       .forEach((element) => {
         $(`#${element.id}`).children().toArray().forEach((e) => {
