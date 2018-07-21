@@ -96,13 +96,14 @@ h1 {
   @include modifier ('full-width') {
     img {
       width: 100%;
+      max-height: 925px;
     }
   }
 
   @include modifier ('col-width') {
     img {
       max-width: 100%;
-      max-height: 920px;
+      max-height: 925px;
     }
   }
 }
@@ -141,7 +142,7 @@ h1 {
   }
 
   @include element ('container') {
-    margin: 0 0 20px;
+    margin: 0 0 5px;
   }
 
   @include element ('description') {
@@ -264,10 +265,6 @@ h1 {
       -webkit-column-break-after: avoid;
 
     }
-  }
-
-  @include element ('body') {
-    display: inline-block;
   }
 
 }
