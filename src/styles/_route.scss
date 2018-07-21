@@ -1,0 +1,140 @@
+.route {
+  width: 100%;
+  margin-bottom: 10px;
+
+  @include modifier ('blank') {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  @include element ('container') {
+    margin: 0 0 5px;
+  }
+
+  @include element ('description') {
+    -webkit-column-break-before: avoid;
+  }
+
+  @include element ('header') {
+    display: inline-block; // Never remove this prop!!!
+    width: 100%;
+
+    @include element ('container') {
+      width: 100%;
+
+      @include modifier ('number') {
+        width: 25px;
+        vertical-align: top;
+      }
+
+      @include modifier ('name') {
+        text-align: left;
+        vertical-align: top;
+      }
+
+      @include modifier ('extras') {
+        text-align: right;
+        white-space: nowrap;
+        vertical-align: top;
+      }
+
+    }
+
+    @include element ('number') {
+      background: black;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+      padding: 2px;
+      width: 25px;
+      height: 21px;
+      line-height: 20px;
+      text-align: center;
+      color: white;
+      border-radius: 4px;
+    }
+
+    @include element ('name') {
+      color: blue;
+      font-weight: bold;
+      padding: 0 5px;
+
+      line-height: 20px;
+    }
+
+    @include element ('extras') {
+      height: 25px;
+      line-height: 25px;
+
+      div {
+        display: inline-block;
+      }
+
+      svg {
+        vertical-align: sub;
+      }
+    }
+
+    @include element ('grade') {
+      height: 21px;
+      line-height: 21px;
+      border-radius: 4px;
+      padding: 0 3px;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+
+      @include modifier ('gb0') {
+        background-color: #fff;
+        border: 1px solid #999;
+      }
+
+      @include modifier ('gb1') {
+        background-color: #53b41b;
+        border: 1px solid #3d9209;
+      }
+
+      @include modifier ('gb2') {
+        background-color: #ffe200;
+        border: 1px solid #cfae00;
+      }
+
+      @include modifier ('gb3') {
+        background-color: #f90;
+        border: 1px solid #e6842a;
+      }
+
+      @include modifier ('gb4') {
+        background-color: #db2424;
+        border: 1px solid #ca0909;
+      }
+
+      @include modifier ('gb5') {
+        background-color: #aa1c7b;
+        border: 1px solid #9b1178;
+      }
+
+    }
+
+    @include element ('style') {
+      height: 21px;
+      line-height: 21px;
+      border: 1px solid blue;
+      border-left-width: 4px;
+      border-radius: 4px;
+      padding: 0 3px;
+      margin: 0 2px;
+    }
+
+    @include element ('distance') {
+      // height: 21px;
+      // line-height: 21px;
+    }
+
+    @include element ('container') {
+      margin: 5px 0;
+      -webkit-column-break-after: avoid;
+
+    }
+  }
+
+}

@@ -1,0 +1,18 @@
+.geometry {
+  @include modifier ('right') {
+    img {
+      float: right;
+      margin-left: 15px;
+      margin-bottom: 10px;
+      width: 340px;
+      height: auto;
+    }
+  }
+
+  @include modifier ('wide') {
+    img {
+      width: 100%;
+      height: 340px;
+    }
+  }
+}

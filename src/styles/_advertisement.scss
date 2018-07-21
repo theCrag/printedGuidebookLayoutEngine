@@ -1,0 +1,17 @@
+.advertisement {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+
+  img {
+    max-width: 710px;
+    height: auto;
+  }
+}
+
+.advertisement-two {
+  img {
+    max-width: 355px;
+  }
+}
