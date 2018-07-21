@@ -419,7 +419,7 @@ export class Booklet {
         last($container.attr('id').split('-')),
         maxHeight < 0 ? 0 : maxHeight,
         maxHeight > process.env.APP_CONTENT_WIDTH ? true : false,
-        false
+        $container.hasClass('advertisement-column')
       );
       containers.push(element);
     });
