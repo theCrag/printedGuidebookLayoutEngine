@@ -250,7 +250,8 @@ export class Booklet {
   }
 
   /**
-   * Takes a jQuery element and returns the max available height for this element.
+   * Takes a jQuery element and returns the max available height for this element,
+   * until it reaches the end of the page.
    *
    * @param {Object} element
    * @returns {number} maxHeight
@@ -272,7 +273,9 @@ export class Booklet {
   }
 
   /**
-   * Takes a jQuery element and returns the max available height for this element.
+   * Takes a jQuery element and returns the max available height for this element in a column.
+   * If there is no content after the columns, the height is calculated till the end of the page,
+   * otherwise the height is calculated till the end of the column-container.
    *
    * @param {Object} element
    * @returns {number} maxHeight
@@ -298,7 +301,8 @@ export class Booklet {
   }
 
   /**
-   * Replaces a blank div with an advertisement div and inserts a new blank div below.
+   * Replaces a blank DIV with an advertisement DIV and inserts a new blank DIV below.
+   * The blank DIVs are mandatory to solve some issues with images and CSS-columns.
    *
    * @param {Object} element
    * @param {string} id
@@ -312,7 +316,7 @@ export class Booklet {
   }
 
   /**
-   * Generates an element containing necessary information to add an advertisement.
+   * Generates an element containing necessary information regarding advertisements.
    *
    * @param {string} id
    * @param {number} page
@@ -332,7 +336,7 @@ export class Booklet {
   }
 
   /**
-   * Adds whitespaceContainers to the end of each page.
+   * Adds whitespaceContainers to the end of each page except the first page (cover).
    */
   addWhitespaceContainers() {
     let sheets = $('.sheet').toArray();
@@ -354,6 +358,7 @@ export class Booklet {
   fillColumnAdvertisements(done) {
     let containers = [];
     let i = 0;
+    // get all DIV-elements with possible whitespace in columns which are at the end of a column (excluding last column)
     $('.route--blank').toArray().forEach((blank) => {
       const $blank = $(blank);
       const $next = $($blank.next());
@@ -377,6 +382,7 @@ export class Booklet {
         }
       }
     });
+    // get all DIV-elements in columns which are in the last column and have possible whitespace
     $('.routes__columns').toArray().forEach((container) => {
       const lastBlank = last($(container).children());
       if (lastBlank){
@@ -394,6 +400,7 @@ export class Booklet {
         containers.push(element);
       }
     });
+    // fill advertisements in these DIV-elements
     this.fillAdvertisements(containers, 'column-advertisement', () => done());
   }
 
@@ -503,7 +510,8 @@ export class Booklet {
   }
 
   /**
-   * Appends a second advertisement to a whitespace-container.
+   * Appends a second advertisement to a whitespace-container if the first
+   * advertisement does not use more than half page-width.
    *
    * @param {Array} containers
    * @param {Function} done
@@ -538,6 +546,4 @@ export class Booklet {
       done();
     }
   }
-
-
 }
