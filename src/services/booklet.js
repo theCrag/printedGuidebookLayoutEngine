@@ -279,9 +279,8 @@ export class Booklet {
    */
   getMaxColumnHeight(element) {
     if (element) {
-      const parentColumnContainer = $(element.closest('.routes__columns'));
+      const parentColumnContainer = $(element.closest('.routes'));
       element = $(element);
-
       if (parentColumnContainer.next().length === 0) {
         return this.getMaxHeight(element);
       } else {
@@ -296,6 +295,39 @@ export class Booklet {
 
     }
     return 0;
+  }
+
+  /**
+   * Replaces a blank div with an advertisement div and inserts a new blank div below.
+   *
+   * @param {Object} element
+   * @param {string} id
+   */
+  replaceBlankWithAdvertisement(element, id){
+    element.attr('id', id);
+    element.addClass('advertisement-column');
+    element.removeClass('route--blank');
+    element.after('<div class="route route--blank"></div>');
+  }
+
+  /**
+   * Generates an element containing necessary information to add an advertisement.
+   *
+   * @param {string} id
+   * @param {number} page
+   * @param {number} maxHeight
+   * @param {boolean} portrait
+   * @param {boolean} column
+   */
+  generateAdvertisementElement(id, page, maxHeight, portrait, column){
+    const element = {};
+    element.id = id;
+    element.page = page;
+    element.filled = $(`#advertisement-${id}`).children().length !== 0;
+    element.maxHeight = maxHeight;
+    element.portrait = portrait;
+    element.column = column;
+    return element;
   }
 
   /**
@@ -314,24 +346,12 @@ export class Booklet {
   }
 
   /**
-   * Returns an array containing all elements with class ".whitespace".
+   * Adds advertisements to columns.
    *
-   * @returns {Array} containers
+   * @param {Function} done
    */
-  getWhitespaceContainers() {
+  fillColumnAdvertisements(done) {
     let containers = [];
-    $('.whitespace').toArray().forEach((container) => {
-      const $container = $(container);
-      const element = {};
-      element.id = $container.attr('id');
-      element.page = $container.attr('id').split('-')[1];
-      element.filled = false;
-      const maxH = this.getMaxHeight(container);
-      element.maxHeight = maxH < 0 ? 0 : maxH;
-      element.portrait = element.maxHeight > process.env.APP_CONTENT_WIDTH ? true : false;
-      element.column = false;
-      containers.push(element);
-    });
     let i = 0;
     $('.route--blank').toArray().forEach((blank) => {
       const $blank = $(blank);
@@ -342,21 +362,56 @@ export class Booklet {
         const blankLeft = blankOffset.left;
         const nextLeft = nextOffset.left;
         if (nextLeft > blankLeft) {
-          const id = `blank-${i}`;
-          $blank.attr('id', id);
-          $blank.addClass('advertisement-column');
-          $blank.removeClass('route--blank');
-          $blank.after('<div class="route route--blank"></div>');
-          const element = {};
-          element.id = id;
-          element.page = $blank.closest('.sheet').attr('id').split('-')[1];
-          element.filled = false;
-          element.maxHeight = this.getMaxColumnHeight(blank);
-          element.portrait = element.maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false;
-          element.column = true;
+          const id = `blank-${i++}`;
+          this.replaceBlankWithAdvertisement($blank, id);
+          const maxHeight = this.getMaxColumnHeight(blank);
+          const element = this.generateAdvertisementElement(
+            id,
+            last($blank.closest('.sheet').attr('id').split('-')),
+            maxHeight,
+            maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
+            true
+          );
           containers.push(element);
         }
       }
+    });
+    $('.routes__columns').toArray().forEach((container) => {
+      const lastBlank = last($(container).children());
+      const $lastBlank = $(lastBlank);
+      const id = `blank-${i++}`;
+      this.replaceBlankWithAdvertisement($lastBlank, id);
+      const maxHeight = this.getMaxColumnHeight(lastBlank);
+      const element = this.generateAdvertisementElement(
+        id,
+        last($lastBlank.closest('.sheet').attr('id').split('-')),
+        maxHeight,
+        maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
+        true
+      );
+      containers.push(element);
+    });
+    this.fillAdvertisements(containers, () => done());
+  }
+
+  /**
+   * Returns an array containing all elements with class ".whitespace".
+   *
+   * @returns {Array} containers
+   */
+  getWhitespaceContainers() {
+    let containers = [];
+    $('.whitespace').toArray().forEach((container) => {
+      const $container = $(container);
+      const maxHeight = this.getMaxHeight(container);
+      const element = this.generateAdvertisementElement(
+        $container.attr('id'),
+        last($container.attr('id').split('-')),
+        maxHeight < 0 ? 0 : maxHeight,
+        maxHeight > process.env.APP_CONTENT_WIDTH ? true : false,
+        false
+      );
+      containers.push(element);
     });
     return containers;
   }
@@ -398,7 +453,11 @@ export class Booklet {
                   .filter(element => element.filled !== true)
                   .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
               );
-              ad = areaView.advertisement(element.id, photoPath, lastElement.maxHeight, img.hashID);
+              if (element.column) {
+                ad = areaView.advertisementColumn(element.id, photoPath, lastElement.maxHeight, img.hashID);
+              } else {
+                ad = areaView.advertisement(element.id, photoPath, lastElement.maxHeight, img.hashID);
+              }
               $(`#${lastElement.id}`).append(ad);
               lastElement.filled = true;
               this.addAdvertisement(element, containers, float, hashID);
@@ -418,7 +477,7 @@ export class Booklet {
    * @param {Array} containers
    * @param {Function} done
    */
-  fillWhitespaceContainers(containers, done) {
+  fillAdvertisements(containers, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
@@ -427,7 +486,7 @@ export class Booklet {
       });
 
     // Wait for image loading
-    const images = $('.advertisement').find('img').not('.logo');
+    const images = $('.ad').find('img').not('.logo');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {
@@ -446,7 +505,7 @@ export class Booklet {
    * @param {Array} containers
    * @param {Function} done
    */
-  fillAdditionalWhitespaceContainers(containers, done) {
+  fillAdditionalAdvertisements(containers, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .filter(element => $(`#${element.id}`).children().length !== 0)
@@ -455,7 +514,7 @@ export class Booklet {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
-              const hashID = $(img).parent().attr('hashID');
+              const hashID = $(img).parent().attr('hashid');
               this.addAdvertisement(element, containers, true, hashID);
               $(img).parent().addClass('advertisement-two');
             }
