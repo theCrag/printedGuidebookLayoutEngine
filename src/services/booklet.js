@@ -306,6 +306,7 @@ export class Booklet {
   replaceBlankWithAdvertisement(element, id){
     element.attr('id', id);
     element.addClass('advertisement-column');
+    element.addClass('whitespace');
     element.removeClass('route--blank');
     element.after('<div class="route route--blank"></div>');
   }
@@ -343,6 +344,15 @@ export class Booklet {
       $sheet.append(whitespaceContainer);
       i++;
     });
+  }
+
+  /**
+   * Returns an array containing all elements in columns to place advertisements.
+   *
+   * @returns {Array} containers
+   */
+  getColumnWhitespaceContainers() {
+
   }
 
   /**
@@ -409,7 +419,7 @@ export class Booklet {
         last($container.attr('id').split('-')),
         maxHeight < 0 ? 0 : maxHeight,
         maxHeight > process.env.APP_CONTENT_WIDTH ? true : false,
-        false
+        $container.hasClass('advertisement-column')
       );
       containers.push(element);
     });

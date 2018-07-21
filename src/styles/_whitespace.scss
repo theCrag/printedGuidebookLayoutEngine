@@ -1,6 +1,8 @@
 .whitespace {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  @include element ('container') {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 }
