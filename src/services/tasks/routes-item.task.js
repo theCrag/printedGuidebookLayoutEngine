@@ -61,50 +61,62 @@ export class RoutesItemTask extends Task {
         const delimiter = process.env.APP_SPLIT_DESCRIPTIONS_BY.substr(1).slice(0, -1);
         let newText = [];
 
+        let moveWholeItem = false;
+
         do {
           const html = lastElement.find('.route__body').html();
-          const parts = html.split(delimiter).filter(h => h.length > 0);
-          newText.unshift(last(parts));
-          parts.pop();
-          lastElement.find('.route__body').html(parts.join(delimiter));
+          if (html.length !== 0) {
+            const parts = html.split(delimiter).filter(h => h.length > 0);
+            newText.unshift(last(parts));
+            parts.pop();
+            lastElement.find('.route__body').html(parts.join(delimiter));
+          } else {
+            moveWholeItem = true;
+            lastElement.find('.route__body').html(newText.join(delimiter));
+            this.moveLastRouteItemToNewPage(lastElement, routesContainer, done);
+          }
 
         } while (this.areSomeRoutesOutsideTheSheet(routesContainer));
 
-        // TODO: If only the header is on the old page then move it to the new page
-
-        this.booklet.addPage();
-        this.booklet.addRoutesContainer(this.area, () => {
-          const task = new RoutesItemTask(this.booklet, this.area, this.index, newText.join(delimiter));
-          task.run(done);
-        });
+        if (!moveWholeItem) {
+          this.booklet.addPage();
+          this.booklet.addRoutesContainer(this.area, () => {
+            const task = new RoutesItemTask(this.booklet, this.area, this.index, newText.join(delimiter));
+            task.run(done);
+          });
+        }
 
       } else {
-        lastElement.remove();
-        this.booklet.removePossibleRouteZombies();
-        this.booklet.addPage();
-
-        this.booklet.addRoutesContainer(this.area, () => {
-          const secondLastElement = routesContainer.find('.route').not('.route--blank').last();
-          const $secondLastElement = $(secondLastElement);
-
-          // Check if the second last element is a topo image.
-          if ($secondLastElement.hasClass('route--topo')) {
-            $secondLastElement.remove();
-            this.booklet.addRouteItem(this.area, $secondLastElement.html(), () => {
-              this.run(done);
-            });
-
-          } else {
-            this.run(done);
-          }
-
-        });
+        this.moveLastRouteItemToNewPage(lastElement, routesContainer, done);
       }
 
     } else {
       done();
 
     }
+  }
+
+  moveLastRouteItemToNewPage(lastElement, routesContainer, done) {
+    lastElement.remove();
+    this.booklet.removePossibleRouteZombies();
+    this.booklet.addPage();
+
+    this.booklet.addRoutesContainer(this.area, () => {
+      const secondLastElement = routesContainer.find('.route').not('.route--blank').last();
+      const $secondLastElement = $(secondLastElement);
+
+      // Check if the second last element is a topo image.
+      if ($secondLastElement.hasClass('route--topo')) {
+        $secondLastElement.remove();
+        this.booklet.addRouteItem(this.area, $secondLastElement.html(), () => {
+          this.run(done);
+        });
+
+      } else {
+        this.run(done);
+      }
+
+    });
   }
 
 }

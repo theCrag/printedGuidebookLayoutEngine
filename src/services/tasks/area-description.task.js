@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { last, cloneDeep, first } from 'lodash';
+import { last, cloneDeep } from 'lodash';
 
 import * as areaView from '../../views/area.view';
 import { Task } from './task';
@@ -278,20 +278,20 @@ export class AreaDescriptionTask extends Task {
 
       // Remove the last element until the text fits in page
       while (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
-        if ($(lastElement).children().length === 0){
+        if ($(lastElement).children().length === 0) {
           $(lastElement).remove();
           lastElement = last(page.children());
         }
         const lastChild = last($(lastElement).children());
         const $lastChild = $(lastChild);
         const htmlTag = $lastChild.prop('tagName');
-        if ($lastChild.children().length === 0 && $lastChild.html().trim() === ''){
-          if (tagStarted){
+        if ($lastChild.children().length === 0 && $lastChild.html().trim() === '') {
+          if (tagStarted) {
             tagStarted = false;
           }
           $lastChild.remove();
         } else {
-          if (!tagStarted){
+          if (!tagStarted) {
             tagStarted = true;
             destination.unshift(`</${htmlTag}>`);
           } else {
@@ -303,11 +303,9 @@ export class AreaDescriptionTask extends Task {
               let current = $lastChild.html().split(delimiter);
               let texts = [];
               texts.unshift(current.pop().trim());
-              // if ($lastChild.html().includes('Hitman')){
-              //   debugger;
-              // }
-              if (last(texts).includes('</')){
-                if ((last(texts).match(/</g) || []).length < 2){
+
+              if (last(texts).includes('</')) {
+                if ((last(texts).match(/</g) || []).length < 2) {
                   do {
                     texts.unshift(current.pop().trim());
                   } while ((texts.join(delimiter).match(/</g) || []).length < 2);
@@ -322,8 +320,8 @@ export class AreaDescriptionTask extends Task {
               // Removes single <li></li> elements until it fits on page.
               const li = last($(lastChild).children());
               const $li = $(li);
-              if (li){
-                if (htmlTag === 'OL'){
+              if (li) {
+                if (htmlTag === 'OL') {
                   destination.unshift(`<li value="${$(lastChild).children().length}">${$li.prop('innerHTML')}</li>`);
                 } else {
                   destination.unshift($li.prop('outerHTML'));

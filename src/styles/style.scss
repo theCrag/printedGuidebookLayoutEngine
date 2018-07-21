@@ -141,8 +141,6 @@ h1 {
   }
 
   @include element ('container') {
-    display: flex;
-    flex-direction: column;
     margin: 0 0 20px;
   }
 
@@ -151,24 +149,42 @@ h1 {
   }
 
   @include element ('header') {
-    display: flex;
-    flex-direction: row;
-    margin: 5px 0;
-    -webkit-column-break-after: avoid;
+    display: inline-block; // Never remove this prop!!!
+    width: 100%;
+
+    @include element ('container') {
+      width: 100%;
+
+      @include modifier ('number') {
+        width: 25px;
+        vertical-align: top;
+      }
+
+      @include modifier ('name') {
+        text-align: left;
+        vertical-align: top;
+      }
+
+      @include modifier ('extras') {
+        text-align: right;
+        white-space: nowrap;
+        // vertical-align: text-bottom;
+        vertical-align: top;
+      }
+
+    }
 
     @include element ('number') {
       background: black;
       print-color-adjust: exact;
       -webkit-print-color-adjust: exact;
       padding: 2px;
-      width: 20px;
-      height: 21px;
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
       text-align: center;
       color: white;
       border-radius: 4px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     @include element ('name') {
@@ -176,25 +192,21 @@ h1 {
       font-weight: bold;
       padding: 0 5px;
 
-      height: 25px;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex: 1;
+      line-height: 20px;
     }
 
     @include element ('extras') {
-      height: 25px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+      height: 20px;
+      line-height: 20px;
+
+      div {
+        display: inline-block;
+      }
     }
 
     @include element ('grade') {
-      height: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      height: 20px;
+      line-height: 20px;
       border-radius: 4px;
       padding: 0 4px;
       print-color-adjust: exact;
@@ -233,10 +245,8 @@ h1 {
     }
 
     @include element ('style') {
-      height: 25px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
+      height: 20px;
+      line-height: 20px;
       border: 1px solid blue;
       border-left-width: 4px;
       border-radius: 4px;
@@ -245,20 +255,19 @@ h1 {
     }
 
     @include element ('distance') {
-      height: 25px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      flex: 1;
+      height: 20px;
+      line-height: 20px;
+    }
 
-      .clip {
-        margin-right: 2px;
-      }
+    @include element ('container') {
+      margin: 5px 0;
+      -webkit-column-break-after: avoid;
+
     }
   }
 
   @include element ('body') {
-    display: flex;
+    display: inline-block;
   }
 
 }

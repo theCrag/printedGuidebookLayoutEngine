@@ -164,30 +164,40 @@ export const routeItem = (routeItem, areaId, index) =>
     : `<div id="route-${areaId}-${routeItem.index}" class="route route__description">
       <div class="route__container">
         <div class="route__header">
-          <div class="route__header__number">
-            ${routeItem.index}
-          </div>
-          <div class="route__header__name">
-            ${routeItem.name}
-          </div>
-          <div class="route__header__extras">
-            ${routeItem.grade ? `
-            <div class="route__header__grade route__header__grade--${parseInt(routeItem.grade) < 7 ? 'gb2' : parseInt(routeItem.grade) > 7 ? 'gb4' : 'gb3'}">
-              ${routeItem.grade}
-            </div>
-            `: ''}
-            ${routeItem.style ? `
-            <div class="route__header__style">
-              ${routeItem.style}
-            </div>
-            `: ''}
-            <div class="route__header__distance">
-            ${routeItem.bolts ? boltSvg : ''}
-              ${routeItem.bolts ? routeItem.bolts : ''}
-              ${routeItem.displayHeight && routeItem.bolts ? ',' : ''}
-              ${routeItem.displayHeight ? routeItem.displayHeight : ''}
-            </div>
-          </div>
+          <table class="route__header__container">
+            <tr>
+              <td class="route__header__container--number">
+                <div class="route__header__number">
+                  ${routeItem.index}
+                </div>
+              </td>
+              <td class="route__header__container--name">
+                <div class="route__header__name">
+                  ${routeItem.name}
+                </div>
+              </td>
+              <td class="route__header__container--extras">
+                <div class="route__header__extras">
+                  ${routeItem.grade ? `
+                  <div class="route__header__grade route__header__grade--${parseInt(routeItem.grade) < 7 ? 'gb2' : parseInt(routeItem.grade) > 7 ? 'gb4' : 'gb3'}">
+                    ${routeItem.grade}
+                  </div>
+                  `: ''}
+                  ${routeItem.style ? `
+                  <div class="route__header__style">
+                    ${routeItem.style}
+                  </div>
+                  `: ''}
+                  <div class="route__header__distance">
+                  ${routeItem.bolts ? boltSvg : ''}
+                    ${routeItem.bolts ? routeItem.bolts : ''}
+                    ${routeItem.displayHeight && routeItem.bolts ? ',' : ''}
+                    ${routeItem.displayHeight ? routeItem.displayHeight : ''}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
         </div>
         <div class="route__body">
           ${routeItem.descriptions.map(d => d.markdown).join('<br/>')}
