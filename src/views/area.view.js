@@ -137,6 +137,19 @@ export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
     <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
   </div>`;
 
+  /**
+ * Creates the html for a collected advertisement of the crag API.
+ *
+ * @param {number} whitespaceId
+ * @param {string} photoPath
+ * @param {number} maxHeight
+ * @returns {string} html
+ */
+export const advertisementColumn = (whitespaceId, photoPath, maxHeight, hashID) => `
+<div id="advertisement-${whitespaceId}" hashID="${hashID}" style="max-height: ${maxHeight}px;">
+  <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+</div>`;
+
 /**
  * Creates the html for a collected advertisement with float right of the crag API.
  *

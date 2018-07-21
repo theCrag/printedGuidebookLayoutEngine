@@ -272,6 +272,33 @@ export class Booklet {
   }
 
   /**
+   * Takes a jQuery element and returns the max available height for this element.
+   *
+   * @param {Object} element
+   * @returns {number} maxHeight
+   */
+  getMaxColumnHeight(element) {
+    if (element) {
+      const parentColumnContainer = $(element.closest('.routes__columns'));
+      element = $(element);
+
+      if (parentColumnContainer.next().length === 0) {
+        return this.getMaxHeight(element);
+      } else {
+        const containerOffset = parentColumnContainer.offset();
+        const paddingTop = parseFloat(parentColumnContainer.css('padding-top').slice(0, -2));
+        const totalContainerHeight = containerOffset.top + paddingTop + parentColumnContainer.height();
+        const elementOffset = element.offset();
+        const elementTop = elementOffset.top;
+
+        return parseInt(totalContainerHeight - elementTop);
+      }
+
+    }
+    return 0;
+  }
+
+  /**
    * Adds whitespaceContainers to the end of each page.
    */
   addWhitespaceContainers() {
@@ -299,10 +326,37 @@ export class Booklet {
       element.id = $container.attr('id');
       element.page = $container.attr('id').split('-')[1];
       element.filled = false;
-      let maxH = this.getMaxHeight(container);
+      const maxH = this.getMaxHeight(container);
       element.maxHeight = maxH < 0 ? 0 : maxH;
       element.portrait = element.maxHeight > process.env.APP_CONTENT_WIDTH ? true : false;
+      element.column = false;
       containers.push(element);
+    });
+    let i = 0;
+    $('.route--blank').toArray().forEach((blank) => {
+      const $blank = $(blank);
+      const $next = $($blank.next());
+      if ($next.length > 0) {
+        const blankOffset = $blank.offset();
+        const nextOffset = $next.offset();
+        const blankLeft = blankOffset.left;
+        const nextLeft = nextOffset.left;
+        if (nextLeft > blankLeft) {
+          const id = `blank-${i}`;
+          $blank.attr('id', id);
+          $blank.addClass('advertisement-column');
+          $blank.removeClass('route--blank');
+          $blank.after('<div class="route route--blank"></div>');
+          const element = {};
+          element.id = id;
+          element.page = $blank.closest('.sheet').attr('id').split('-')[1];
+          element.filled = false;
+          element.maxHeight = this.getMaxColumnHeight(blank);
+          element.portrait = element.maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false;
+          element.column = true;
+          containers.push(element);
+        }
+      }
     });
     return containers;
   }
@@ -331,7 +385,11 @@ export class Booklet {
           if (!element.filled) {
             // If image is to small, append it to the last element
             if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
-              ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
+              if (element.column) {
+                ad = areaView.advertisementColumn(element.id, photoPath, element.maxHeight, img.hashID);
+              } else {
+                ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
+              }
               $(`#${element.id}`).append(ad);
               element.filled = true;
             } else {
@@ -392,6 +450,7 @@ export class Booklet {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .filter(element => $(`#${element.id}`).children().length !== 0)
+      .filter(element => element.column === false)
       .forEach((element) => {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
