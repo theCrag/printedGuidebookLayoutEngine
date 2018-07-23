@@ -185,7 +185,6 @@ export class Booklet {
     if (element) {
       const parentColumnContainer = $(element.closest('.routes'));
       element = $(element);
-      this.log.info(element);
       if (parentColumnContainer.next().length === 0 || (parentColumnContainer.next().children().length === 0 && parentColumnContainer.next().html().trim() === '')) {
         return this.getMaxHeight(element);
       } else {

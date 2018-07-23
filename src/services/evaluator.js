@@ -24,6 +24,9 @@ export class Evaluator {
     this.totalRoutes = 0;
     this.totalFarOutRoutes = 0;
 
+    this.totalWidowCount = 0;
+    this.totalWidowChars = 0;
+
     this.log = createLogger('Evaluator');
   }
 
@@ -41,6 +44,9 @@ export class Evaluator {
 
     this.totalRoutes = this.countAllRoutes();
     this.totalFarOutRoutes = this.countFarOutRoutes();
+
+    this.totalWidowCount = this.countTotalWidows();
+    this.totalWidowChars = this.countTotalWidowChars();
   }
 
   /**
@@ -59,6 +65,9 @@ export class Evaluator {
     this.log.info('totalRoutes', this.totalRoutes + ' routes');
     this.log.info('totalFarOutRoutes', this.totalFarOutRoutes + ' routes');
     this.log.info('totalFarOutRoutes', (100 / this.totalRoutes * this.totalFarOutRoutes) + ' %');
+    this.log.info(' ');
+    this.log.info('totalWidowCount', this.totalWidowCount + ' widows');
+    this.log.info('totalWidowChars', this.totalWidowChars + ' characters in widows');
     this.log.info('=========================================');
   }
 
@@ -131,6 +140,28 @@ export class Evaluator {
    */
   countFarOutRoutes() {
     return this.countAllRoutes() - $('.route__description.in-sight').length;
+  }
+
+  /**
+   * Counts all the widows in the document.
+   *
+   * @returns {Number} Amount of widows.
+   */
+  countTotalWidows() {
+    return $('.is-widow').length;
+  }
+
+  /**
+   * Counts all characters of any widows in the document.
+   *
+   * @returns {Number} Amount of characters in widows.
+   */
+  countTotalWidowChars() {
+    let totalChars = 0;
+    $('.is-widow').toArray().forEach((w) => {
+      totalChars += w.innerText.length;
+    });
+    return totalChars;
   }
 
 }
