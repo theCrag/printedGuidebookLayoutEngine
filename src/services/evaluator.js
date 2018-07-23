@@ -46,7 +46,7 @@ export class Evaluator {
     this.totalFarOutRoutes = this.countFarOutRoutes();
 
     this.totalWidowCount = this.countTotalWidows();
-    this.totalWidowChars = this.countTotalWidowChars();
+    this.totalPercentWidows = this.countTotalPercentWidows();
   }
 
   /**
@@ -67,7 +67,7 @@ export class Evaluator {
     this.log.info('totalFarOutRoutes', (100 / this.totalRoutes * this.totalFarOutRoutes) + ' %');
     this.log.info(' ');
     this.log.info('totalWidowCount', this.totalWidowCount + ' widows');
-    this.log.info('totalWidowChars', this.totalWidowChars + ' characters in widows');
+    this.log.info('totalPercentWidows', this.totalPercentWidows + ' %');
     this.log.info('=========================================');
   }
 
@@ -156,12 +156,8 @@ export class Evaluator {
    *
    * @returns {Number} Amount of characters in widows.
    */
-  countTotalWidowChars() {
-    let totalChars = 0;
-    $('.is-widow').toArray().forEach((w) => {
-      totalChars += w.innerText.length;
-    });
-    return totalChars;
+  countTotalPercentWidows() {
+    return 100 / this.countTotalPages() * this.countTotalWidows();
   }
 
 }
