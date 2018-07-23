@@ -50,6 +50,7 @@ export class Renderer {
       this.booklet.advertisements.fillAdvertisements(containers, 'advertisement', () => {
         this.booklet.advertisements.fillAdditionalAdvertisements(containers, () => {
           this.booklet.advertisements.fillColumnAdvertisements(() => {
+            this.booklet.advertisements.calculateAdvertisementFulfillment();
             this.booklet.setRootTitle(tree.name);
 
             const evaluator = new Evaluator(tree, this.booklet);

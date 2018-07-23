@@ -127,40 +127,40 @@ export const whitespaceContainer = (pageNumber) => `
 /**
  * Creates the html for a collected advertisement of the crag API.
  *
- * @param {number} whitespaceId
+ * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
  * @returns {string} html
  */
-export const advertisement = (whitespaceId, photoPath, maxHeight, hashID) => `
-  <div id="advertisement-${whitespaceId}" class="advertisement" hashID="${hashID}" style="height: ${maxHeight}px;">
-    <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+export const advertisement = (element, photoPath, maxHeight, hashID) => `
+  <div id="advertisement-${element.id}" page="${element.page}" class="advertisement" hashID="${hashID}" style="height: ${maxHeight}px;">
+    <img src="${photoPath}" id="advertisement-img-${element.id}" style="max-height: ${maxHeight}px;" />
   </div>`;
 
   /**
  * Creates the html for a collected advertisement of the crag API.
  *
- * @param {number} whitespaceId
+ * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
  * @returns {string} html
  */
-export const advertisementColumn = (whitespaceId, photoPath, maxHeight, hashID) => `
-<div id="advertisement-${whitespaceId}" class="column-advertisement" hashID="${hashID}" style="max-height: ${maxHeight}px;">
-  <img src="${photoPath}" id="advertisement-img-${whitespaceId}" style="max-height: ${maxHeight}px;" />
+export const advertisementColumn = (element, photoPath, maxHeight, hashID) => `
+<div id="advertisement-${element.id}" page="${element.page}" class="column-advertisement" hashID="${hashID}" style="max-height: ${maxHeight}px;">
+  <img src="${photoPath}" id="advertisement-img-${element.id}" style="max-height: ${maxHeight}px;" />
 </div>`;
 
 /**
  * Creates the html for a collected advertisement with float right of the crag API.
  *
- * @param {number} whitespaceId
+ * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
  * @returns {string} html
  */
-export const advertisementRight = (whitespaceId, photoPath, maxHeight, hashID) => `
-<div id="advertisement-${whitespaceId}-right" class="advertisement advertisement-two advertisement-right" hashID="${hashID}" style="height: ${maxHeight}px;">
-  <img src="${photoPath}" id="advertisement-img-${whitespaceId}-right" style="max-height: ${maxHeight}px;" />
+export const advertisementRight = (element, photoPath, maxHeight, hashID) => `
+<div id="advertisement-${element.id}-right" page="${element.page}" class="advertisement advertisement-two advertisement-right" hashID="${hashID}" style="height: ${maxHeight}px;">
+  <img src="${photoPath}" id="advertisement-img-${element.id}-right" style="max-height: ${maxHeight}px;" />
 </div>`;
 
 /**

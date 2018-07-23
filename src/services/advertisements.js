@@ -167,32 +167,32 @@ export class Advertisements {
         if (!float) {
           if (!element.filled) {
             // If image is to small, append it to the last element
-            if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
-              if (element.column) {
-                ad = areaView.advertisementColumn(element.id, photoPath, element.maxHeight, img.hashID);
-              } else {
-                ad = areaView.advertisement(element.id, photoPath, element.maxHeight, img.hashID);
-              }
-              $(`#${element.id}`).append(ad);
-              element.filled = true;
+            // if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
+            if (element.column) {
+              ad = areaView.advertisementColumn(element, photoPath, element.maxHeight, img.hashID);
             } else {
-              let lastElement = last(
-                containers
-                  .filter(element => element.filled !== true)
-                  .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-              );
-              if (element.column) {
-                ad = areaView.advertisementColumn(element.id, photoPath, lastElement.maxHeight, img.hashID);
-              } else {
-                ad = areaView.advertisement(element.id, photoPath, lastElement.maxHeight, img.hashID);
-              }
-              $(`#${lastElement.id}`).append(ad);
-              lastElement.filled = true;
-              this.addAdvertisement(element, containers, float, hashID);
+              ad = areaView.advertisement(element, photoPath, element.maxHeight, img.hashID);
             }
+            $(`#${element.id}`).append(ad);
+            element.filled = true;
+            // } else {
+            //   let lastElement = last(
+            //     containers
+            //       .filter(element => element.filled !== true)
+            //       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
+            //   );
+            //   if (element.column) {
+            //     ad = areaView.advertisementColumn(element, photoPath, lastElement.maxHeight, img.hashID);
+            //   } else {
+            //     ad = areaView.advertisement(element, photoPath, lastElement.maxHeight, img.hashID);
+            //   }
+            //   $(`#${lastElement.id}`).append(ad);
+            //   lastElement.filled = true;
+            //   this.addAdvertisement(element, containers, float, hashID);
+            // }
           }
         } else {
-          ad = areaView.advertisementRight(element.id, photoPath, element.maxHeight, img.hashID);
+          ad = areaView.advertisementRight(element, photoPath, element.maxHeight, img.hashID);
           $(`#${element.id}`).append(ad);
         }
 
@@ -235,13 +235,16 @@ export class Advertisements {
    * @param {Function} done
    */
   fillAdditionalAdvertisements(containers, done) {
+    debugger;
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-      .filter(element => $(`#advertisement-${element.id}`).children().length !== 0)
+      .filter(element => element.filled)
       .filter(element => element.column === false)
       .forEach((element) => {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
+            this.log.info(img);
+            debugger;
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
               const hashID = $(img).parent().attr('hashid');
               this.addAdvertisement(element, containers, true, hashID);
@@ -263,6 +266,12 @@ export class Advertisements {
     } else {
       done();
     }
+  }
+
+  calculateAdvertisementFulfillment() {
+    const totalDocumentHeight = process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages();
+    const heightToFill = totalDocumentHeight * process.env.APP_AD_AD_LEVEL;
+    this.log.info('heightToFill', heightToFill);
   }
 
 }

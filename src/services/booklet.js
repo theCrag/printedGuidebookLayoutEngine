@@ -73,6 +73,15 @@ export class Booklet {
   }
 
   /**
+   * Counts the total pages of the document.
+   *
+   * @returns {Number} Amount of pages.
+   */
+  countTotalPages() {
+    return $('.sheet').length;
+  }
+
+  /**
    * Adds a new empty page.
    */
   addPage() {
