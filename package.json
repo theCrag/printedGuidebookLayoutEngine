@@ -1,6 +1,6 @@
 {
   "name": "printedGuidebookLayoutEngine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "index.js",
   "contributors": [
     {
@@ -29,6 +29,9 @@
     "autoprefixer": "^8.6.3",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "node-sass": "^4.9.0"
+    "eslint": "^5.0.1",
+    "node-sass": "^4.9.0",
+    "parcel-bundler": "^1.9.3",
+    "parcel-plugin-eslint": "^1.0.4"
   }
 }

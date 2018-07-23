@@ -1,0 +1,57 @@
+.cover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  @include element ('logo') {
+    display: flex;
+    width: 420px;
+    margin-top: 200px;
+    z-index: 100;
+  }
+
+  @include element ('title') {
+    display: flex;
+    font-size: 4em;
+    margin-top: 100px;
+    margin-bottom: 15px;
+    z-index: 100;
+    font-weight: bold;
+    text-rendering: optimizelegibility;
+    color: white;
+    -webkit-print-color-adjust: exact;
+    text-shadow: 0 .2em .5em rgba(0,0,0,.5);
+  }
+
+  @include element ('date') {
+    display: flex;
+    font-size: 2em;
+    margin-top: 0;
+    z-index: 100;
+    font-weight: bold;
+    color: white;
+    -webkit-print-color-adjust: exact;
+    text-rendering: optimizelegibility;
+    text-shadow: 0 .2em .5em rgba(0,0,0,.5);
+  }
+
+  @include element ('background') {
+    z-index: 1;
+    position: absolute;
+    top: 0;
+
+    background-color: #9dd3ff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    background-repeat: no-repeat;
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+
+  }
+}
