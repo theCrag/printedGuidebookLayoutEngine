@@ -17,7 +17,9 @@
 }
 
 .advertisement-column {
+  width: 100%;
+  text-align: center;
   img {
-    width: 100%;
+    max-width: 100%;
   }
 }
