@@ -9,6 +9,7 @@ export class Routes {
 
   constructor(booklet) {
     this.booklet = booklet;
+    this.routeContainerCounter = 0;
 
     this.log = createLogger('Routes');
   }

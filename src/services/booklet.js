@@ -13,8 +13,6 @@ export class Booklet {
     this.advertisements = new Advertisements(this);
     this.routes = new Routes(this);
     this.pageCounter = 0;
-    this.routeContainerCounter = 0;
-
 
     this.log = createLogger('Booklet');
   }
@@ -35,7 +33,7 @@ export class Booklet {
    * identical.
    */
   initArea() {
-    this.routeContainerCounter = 0;
+    this.routes.routeContainerCounter = 0;
   }
 
   /**
