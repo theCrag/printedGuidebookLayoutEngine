@@ -44,9 +44,23 @@ export class Evaluator {
 
     this.totalRoutes = this.countAllRoutes();
     this.totalFarOutRoutes = this.countFarOutRoutes();
+    this.totalPercentFarOutRoutes = (100 / this.totalRoutes * this.countFarOutRoutes());
 
     this.totalWidowCount = this.countTotalWidows();
     this.totalPercentWidows = this.countTotalPercentWidows();
+
+  }
+
+  /**
+   * TODO:
+   *
+   * @return {Number} Document score
+   */
+  getScore() {
+    return parseInt((this.totalPercentAdvertisementFulfillment
+      + this.totalPercentFarOutRoutes
+      + this.totalPercentWidows)
+      / 3, 10);
   }
 
   /**
@@ -64,10 +78,12 @@ export class Evaluator {
     this.log.info(' ');
     this.log.info('totalRoutes', this.totalRoutes + ' routes');
     this.log.info('totalFarOutRoutes', this.totalFarOutRoutes + ' routes');
-    this.log.info('totalFarOutRoutes', (100 / this.totalRoutes * this.totalFarOutRoutes) + ' %');
+    this.log.info('totalPercentFarOutRoutes', this.totalPercentFarOutRoutes + ' %');
     this.log.info(' ');
     this.log.info('totalWidowCount', this.totalWidowCount + ' widows');
     this.log.info('totalPercentWidows', this.totalPercentWidows + ' %');
+    this.log.info('=========================================');
+    this.log.info('Document score = ', this.getScore());
     this.log.info('=========================================');
   }
 
