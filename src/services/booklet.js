@@ -208,8 +208,7 @@ export class Booklet {
    * a left page.
    */
   addRearPage() {
-    const page = this.getCurrentPage();
-    if ($(page).hasClass('sheet--left')) {
+    if (this.isLeftPage()) {
       this.addPage();
       this.addPage();
     } else {
