@@ -44,11 +44,12 @@ export class Renderer {
     this.booklet.addPage();
 
     this._doRenderArea(tree, () => {
-      this.booklet.addWhitespaceContainers();
-      const containers = this.booklet.getWhitespaceContainers();
-      this.booklet.fillAdvertisements(containers, 'advertisement', () => {
-        this.booklet.fillAdditionalAdvertisements(containers, () => {
-          this.booklet.fillColumnAdvertisements(() => {
+      this.booklet.addRearPage();
+      this.booklet.advertisements.addWhitespaceContainers();
+      const containers = this.booklet.advertisements.getWhitespaceContainers();
+      this.booklet.advertisements.fillAdvertisements(containers, 'advertisement', () => {
+        this.booklet.advertisements.fillAdditionalAdvertisements(containers, () => {
+          this.booklet.advertisements.fillColumnAdvertisements(() => {
             this.booklet.setRootTitle(tree.name);
 
             const evaluator = new Evaluator(tree, this.booklet);
