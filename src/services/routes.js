@@ -15,11 +15,11 @@ export class Routes {
   }
 
   /**
- * Adds a full width topo image before the upcoming routes.
- *
- * @param {string} html
- * @param {Function} done
- */
+   * Adds a full width topo image before the upcoming routes.
+   *
+   * @param {string} html
+   * @param {Function} done
+   */
   addRouteMainTopo(html, done) {
     const page = this.booklet.getCurrentPage();
     const routesContainer = page.find('.routes .routes__topo').last();
@@ -35,12 +35,12 @@ export class Routes {
   }
 
   /**
- * Adds a route or a topo with width of the column.
- *
- * @param {Area} area
- * @param {string} html
- * @param {Function} done
- */
+   * Adds a route or a topo with width of the column.
+   *
+   * @param {Area} area
+   * @param {string} html
+   * @param {Function} done
+   */
   addRouteItem(area, html, done) {
     const page = this.booklet.getCurrentPage();
     let routesContainer = page.find('.routes').last();
@@ -59,14 +59,14 @@ export class Routes {
   }
 
   /**
- * Adds a route item to the container and verifies if the appended
- * element is image, so it can hold until the image is fully loaded in the DOM.
- *
- * @param {HTMLElement} page
- * @param {HTMLElement} routesContainer
- * @param {string} html
- * @param {Function} done
- */
+   * Adds a route item to the container and verifies if the appended
+   * element is image, so it can hold until the image is fully loaded in the DOM.
+   *
+   * @param {HTMLElement} page
+   * @param {HTMLElement} routesContainer
+   * @param {string} html
+   * @param {Function} done
+   */
   addRoutesToContainer(page, routesContainer, html, done) {
     const routesColumnContainer = routesContainer.find('.routes__columns').last();
     routesColumnContainer.append(html);
