@@ -27,6 +27,9 @@ export class Evaluator {
     this.log = createLogger('Evaluator');
   }
 
+  /**
+   * Evaluates the targeted tree.
+   */
   evaluate() {
     this.totalPages = this.countTotalPages();
 
@@ -40,6 +43,9 @@ export class Evaluator {
     this.totalFarOutRoutes = this.countFarOutRoutes();
   }
 
+  /**
+   * Prints the evaluation of the tree to the console.
+   */
   printToConsole() {
     this.log.info('=========================================');
     this.log.info('Evaluation of the tree');
@@ -56,32 +62,73 @@ export class Evaluator {
     this.log.info('=========================================');
   }
 
+  /**
+   * Counts the total pages of the document.
+   *
+   * @returns {Number} Amount of pages.
+   */
+  countTotalPages() {
+    return $('.sheet').length;
+  }
+
+  /**
+   * Counts all the whitespace of the document.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
   countAllWhiteSpaces(allWhitespaces) {
     return allWhitespaces.length > 0
       ? allWhitespaces.map(a => a.maxHeight).reduce((a, v) => a + v)
       : 0;
   }
 
+  /**
+   * Counts all the whitespace of the document, which could not be filled
+   * with advertisement or a image.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
   countUnFilledWhiteSpaces(allWhitespaces) {
     return this.countAllWhiteSpaces(allWhitespaces.filter(a => !a.filled));
   }
 
+  /**
+   * Counts all the whitespace of the document, which are filled
+   * with advertisement or a image.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
   countFilledWhiteSpaces(allWhitespaces) {
     return this.countAllWhiteSpaces(allWhitespaces.filter(a => a.filled));
   }
 
-  countTotalPages() {
-    return $('.sheet').length;
-  }
-
+  /**
+   * Counts the fulfillment of the advertisement over the document in percentage.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Percentage of advertisement fulfillment.
+   */
   countAdvertisementFulfillment(allWhitespaces) {
     return 100 / (929 * (this.countTotalPages() - 1)) * this.countFilledWhiteSpaces(allWhitespaces);
   }
 
+  /**
+   * Counts all the routes printed in the document.
+   *
+   * @returns {Number} Amount of routes.
+   */
   countAllRoutes() {
     return $('.route__description').length;
   }
 
+  /**
+   * Counts all the routes which are not in sight of his responsible topo image.
+   *
+   * @returns {Number} Amount of routes.
+   */
   countFarOutRoutes() {
     return this.countAllRoutes() - $('.route__description.in-sight').length;
   }

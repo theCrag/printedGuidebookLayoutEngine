@@ -19,7 +19,7 @@ export class RoutesMainTopoTask extends Task {
    * @param {Function} done
    */
   run(done) {
-    this.booklet.addRouteMainTopo(this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
+    this.booklet.routes.addRouteMainTopo(this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
   }
 
   /**
@@ -39,10 +39,10 @@ export class RoutesMainTopoTask extends Task {
 
     if (areSomeRoutesOutsideTheSheet) {
       routesContainer.remove();
-      this.booklet.removePossibleRouteZombies();
+      this.booklet.routes.removePossibleRouteZombies();
       this.booklet.addPage();
 
-      this.booklet.addRoutesContainer(this.area, () => {
+      this.booklet.routes.addRoutesContainer(this.area, () => {
         this.run(done);
       });
 

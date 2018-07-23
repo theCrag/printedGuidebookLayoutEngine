@@ -16,7 +16,7 @@ export class RoutesContainerTask extends Task {
    * @param {Function} done
    */
   run(done) {
-    this.booklet.addRoutesContainer(this.area, done);
+    this.booklet.routes.addRoutesContainer(this.area, done);
   }
 
 }

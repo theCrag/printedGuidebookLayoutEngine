@@ -25,7 +25,7 @@ export class RoutesItemTask extends Task {
    * @param {Function} done
    */
   run(done) {
-    this.booklet.addRouteItem(this.area, this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
+    this.booklet.routes.addRouteItem(this.area, this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
   }
 
   /**
@@ -80,7 +80,7 @@ export class RoutesItemTask extends Task {
 
         if (!moveWholeItem) {
           this.booklet.addPage();
-          this.booklet.addRoutesContainer(this.area, () => {
+          this.booklet.routes.addRoutesContainer(this.area, () => {
             const task = new RoutesItemTask(this.booklet, this.area, this.index, newText.join(delimiter));
             task.run(done);
           });
@@ -106,17 +106,17 @@ export class RoutesItemTask extends Task {
    */
   moveLastRouteItemToNewPage(lastElement, routesContainer, done) {
     lastElement.remove();
-    this.booklet.removePossibleRouteZombies();
+    this.booklet.routes.removePossibleRouteZombies();
     this.booklet.addPage();
 
-    this.booklet.addRoutesContainer(this.area, () => {
+    this.booklet.routes.addRoutesContainer(this.area, () => {
       const secondLastElement = routesContainer.find('.route').not('.route--blank').last();
       const $secondLastElement = $(secondLastElement);
 
       // Check if the second last element is a topo image.
       if ($secondLastElement.hasClass('route--topo')) {
         $secondLastElement.remove();
-        this.booklet.addRouteItem(this.area, $secondLastElement.html(), () => {
+        this.booklet.routes.addRouteItem(this.area, $secondLastElement.html(), () => {
           this.run(done);
         });
 

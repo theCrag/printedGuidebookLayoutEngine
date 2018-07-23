@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import { page } from '../views/page.view';
 import { createLogger } from '../utils/logger';
-import * as areaView from '../views/area.view';
 import { Advertisements } from './advertisements';
+import { Routes } from './routes';
 
 /**
  * The booklet class keeps track of the rendered pages.
@@ -11,6 +11,7 @@ export class Booklet {
 
   constructor() {
     this.advertisements = new Advertisements(this);
+    this.routes = new Routes(this);
     this.pageCounter = 0;
     this.routeContainerCounter = 0;
 
@@ -102,83 +103,6 @@ export class Booklet {
   }
 
   /**
-   * Adds a full width topo image before the upcoming routes.
-   *
-   * @param {string} html
-   * @param {Function} done
-   */
-  addRouteMainTopo(html, done) {
-    const page = this.getCurrentPage();
-    const routesContainer = page.find('.routes .routes__topo').last();
-    routesContainer.append(html);
-
-    const images = routesContainer.find('img').not('.logo');
-    if (images.length > 0) {
-      images.on('load', () => done(page, routesContainer));
-
-    } else {
-      done(page, routesContainer);
-    }
-  }
-
-  /**
-   * Adds a route or a topo with width of the column.
-   *
-   * @param {Area} area
-   * @param {string} html
-   * @param {Function} done
-   */
-  addRouteItem(area, html, done) {
-    const page = this.getCurrentPage();
-    let routesContainer = page.find('.routes').last();
-    if (routesContainer.length <= 0) {
-      this.addRoutesContainer(area, () => {
-        routesContainer = page.find('.routes').last();
-        this.addRoutesToContainer(routesContainer, html, (page, routesContainer) => {
-          done(page, routesContainer);
-        });
-      });
-    } else {
-      this.addRoutesToContainer(routesContainer, html, (page, routesContainer) => {
-        done(page, routesContainer);
-      });
-    }
-  }
-
-  /**
-   * Adds a route item to the container and verifies if the appended
-   * element is image, so it can hold until the image is fully loaded in the DOM.
-   *
-   * @param {Object} routesContainer
-   * @param {string} html
-   * @param {Function} done
-   */
-  addRoutesToContainer(routesContainer, html, done) {
-    const routesColumnContainer = routesContainer.find('.routes__columns').last();
-    routesColumnContainer.append(html);
-
-    const images = routesColumnContainer.children().not('.route--blank').last().find('img').not('.logo');
-    if (images.length > 0) {
-      images.on('load', () => done(page, routesContainer));
-
-    } else {
-      done(page, routesContainer);
-    }
-  }
-
-  /**
-   * Adds a routes container with the configured column amount.
-   * All the upcoming routes and topos will be added to this container.
-   *
-   * @param {Area} area
-   * @param {Function} done
-   */
-  addRoutesContainer(area, done) {
-    this.addContent(areaView.routesContainer(area.id, this.routeContainerCounter, process.env.APP_COLUMNS), done);
-    this.routeContainerCounter = this.routeContainerCounter + 1;
-  }
-
-  /**
    * Removes the last page.
    */
   removeLastPage() {
@@ -204,28 +128,6 @@ export class Booklet {
         return true;
       }
     });
-  }
-
-  /**
-   * Due to the optimization work in can happen that some
-   * empty route containers lay in the DOM. So this method
-   * remove those mentioned containers.
-   */
-  removePossibleRouteZombies() {
-    // Remove possible routes zombies
-    const routes = this.getCurrentPage().children('.routes');
-    if (routes.length === 0) {
-      return;
-    }
-    const $lastRouteContainer = $(routes[0]);
-    const hasTopos = $lastRouteContainer.children('.routes__topo').find('.topo').length > 0;
-    const hasRoutes = $lastRouteContainer.children('.routes__columns').find('.route').not('.route--blank').length > 0;
-
-    // Remove empty route containers
-    if (!hasTopos && !hasRoutes) {
-      this.log.warn('Remove empty routes container');
-      $lastRouteContainer.remove();
-    }
   }
 
   /**
