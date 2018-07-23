@@ -151,8 +151,14 @@ export class AreaDescriptionTask extends Task {
 
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       $(html).html(destination.join(delimiter));
-      if (process.env.APP_WIDOW_AUTO_AVOID === 'true' && last(html).innerText.length < process.env.APP_WIDOW_BOUNDARY) {
-        this.eliminateWidow(lastElement, areaId, index, origLastElement, (page) => this.validate(page, done));
+      if (last(html).innerText.length < process.env.APP_WIDOW_BOUNDARY) {
+        if (process.env.APP_WIDOW_AUTO_AVOID === 'true') {
+          this.eliminateWidow(lastElement, areaId, index, origLastElement, (page) => this.validate(page, done));
+        } else {
+          $(html).addClass('is-widow');
+          this.booklet.addPage();
+          this.booklet.addContent(html, (page) => this.validate(page, done));
+        }
       } else {
         this.booklet.addPage();
         this.booklet.addContent(html, (page) => this.validate(page, done));
