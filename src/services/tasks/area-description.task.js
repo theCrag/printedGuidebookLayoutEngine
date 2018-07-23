@@ -44,7 +44,7 @@ export class AreaDescriptionTask extends Task {
       // If there is a widow, add an image
       getPhotos(areaId, (photos) => {
         const photoPath = buildImageUrl(photos[Math.floor((Math.random() * photos.length))]);
-        const photo = areaView.photo(areaId, index, photoPath);
+        const photo = areaView.widowPhoto(areaId, index, photoPath);
         const maxHeight = this.booklet.getMaxHeight(lastElement);
         lastElement.remove();
         this.booklet.addContent(photo, () => this.booklet.addContent(origLastElement, (page) => {

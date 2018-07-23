@@ -34,12 +34,12 @@ export class Evaluator {
    * Evaluates the targeted tree.
    */
   evaluate() {
-    this.totalPages = this.countTotalPages();
+    this.totalPages = this.booklet.countTotalPages();
 
     const allWhitespaces = this.booklet.advertisements.getWhitespaceContainers();
-    this.totalPixelOfAllWhitespaces = this.countAllWhiteSpaces(allWhitespaces);
+    this.totalPixelOfAllWhitespaces = this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces);
     this.totalPixelOfUnfilledWhitespaces = this.countUnFilledWhiteSpaces(allWhitespaces);
-    this.totalPixelOfFilledWhitespaces = this.countFilledWhiteSpaces(allWhitespaces);
+    this.totalPixelOfFilledWhitespaces = this.booklet.advertisements.getHeightOfFilledWhiteSpaces(allWhitespaces);
     this.totalPercentAdvertisementFulfillment = this.countAdvertisementFulfillment(allWhitespaces);
 
     this.totalRoutes = this.countAllRoutes();
@@ -88,27 +88,6 @@ export class Evaluator {
   }
 
   /**
-   * Counts the total pages of the document.
-   *
-   * @returns {Number} Amount of pages.
-   */
-  countTotalPages() {
-    return $('.sheet').length;
-  }
-
-  /**
-   * Counts all the whitespace of the document.
-   *
-   * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
-   */
-  countAllWhiteSpaces(allWhitespaces) {
-    return allWhitespaces.length > 0
-      ? allWhitespaces.map(a => a.maxHeight).reduce((a, v) => a + v)
-      : 0;
-  }
-
-  /**
    * Counts all the whitespace of the document, which could not be filled
    * with advertisement or a image.
    *
@@ -116,18 +95,7 @@ export class Evaluator {
    * @returns {Number} Amount whitespace pixel.
    */
   countUnFilledWhiteSpaces(allWhitespaces) {
-    return this.countAllWhiteSpaces(allWhitespaces.filter(a => !a.filled));
-  }
-
-  /**
-   * Counts all the whitespace of the document, which are filled
-   * with advertisement or a image.
-   *
-   * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
-   */
-  countFilledWhiteSpaces(allWhitespaces) {
-    return this.countAllWhiteSpaces(allWhitespaces.filter(a => a.filled));
+    return this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => !a.filled));
   }
 
   /**
@@ -137,7 +105,7 @@ export class Evaluator {
    * @returns {Number} Percentage of advertisement fulfillment.
    */
   countAdvertisementFulfillment(allWhitespaces) {
-    return 100 / (929 * (this.countTotalPages() - 1)) * this.countFilledWhiteSpaces(allWhitespaces);
+    return 100 / (process.env.APP_CONTENT_HEIGHT * (this.booklet.countTotalPages() - 1)) * this.booklet.advertisements.getHeightOfFilledWhiteSpaces(allWhitespaces);
   }
 
   /**
@@ -173,7 +141,7 @@ export class Evaluator {
    * @returns {Number} Amount of characters in widows.
    */
   countTotalPercentWidows() {
-    return 100 / this.countTotalPages() * this.countTotalWidows();
+    return 100 / this.booklet.countTotalPages() * this.countTotalWidows();
   }
 
 }

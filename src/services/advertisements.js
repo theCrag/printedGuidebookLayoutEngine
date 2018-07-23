@@ -1,8 +1,8 @@
 import $ from 'jquery';
-import { last } from 'lodash';
+import { last, unionBy } from 'lodash';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
-import { getAds, buildImageUrl } from './api.service';
+import { getAds, buildImageUrl, getPhotos } from './api.service';
 
 export class Advertisements {
 
@@ -235,7 +235,6 @@ export class Advertisements {
    * @param {Function} done
    */
   fillAdditionalAdvertisements(containers, done) {
-    debugger;
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .filter(element => element.filled)
@@ -243,8 +242,6 @@ export class Advertisements {
       .forEach((element) => {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
-            this.log.info(img);
-            debugger;
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
               const hashID = $(img).parent().attr('hashid');
               this.addAdvertisement(element, containers, true, hashID);
@@ -268,10 +265,149 @@ export class Advertisements {
     }
   }
 
-  calculateAdvertisementFulfillment() {
-    const totalDocumentHeight = process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages();
-    const heightToFill = totalDocumentHeight * process.env.APP_AD_AD_LEVEL;
-    this.log.info('heightToFill', heightToFill);
+  /**
+   * Returns an Array with the filled whitespace containers
+   * including the next and previous element for each element
+   *
+   * @param {Array} containers
+   * @returns {Array} filledContainers
+   */
+  getAdvertisements(containers){
+    const filledContainers = containers.filter(e => e.filled);
+    for (let i = 0; i < filledContainers.length; i++){
+      if (filledContainers[i-1]){
+        filledContainers[i].prev = filledContainers[i-1];
+      } else {
+        filledContainers[i].prev = null;
+      }
+      if (filledContainers[i+1]){
+        filledContainers[i].next = filledContainers[i+1];
+      } else {
+        filledContainers[i].next = null;
+      }
+    }
+    return(filledContainers);
+  }
+
+  /**
+   * Replaces an advertisement with an image. Inserts more images if
+   * there is enough space.
+   *
+   * @param {string} treeID
+   * @param {number} index
+   * @param {Object} element
+   * @param {Function} done
+   */
+  insertFillImage(treeID, index, element, done) {
+    let img = `#photo-img-${treeID}-${index}`;
+    const $e = $(`#${element.id}`);
+    const nextIndex = index + 1;
+
+    getPhotos(treeID, (photos) => {
+      if (photos.length > index){
+        $(`#advertisement-${element.id}`).remove();
+        const photoPath = buildImageUrl(photos[index]);
+        const photo = areaView.photo(treeID, index, photoPath);
+        $e.append(photo);
+        const image = $(img);
+        image.css('max-height', `${element.maxHeight}px`);
+
+        // Wait for image loading
+        if (image.length > 0) {
+          image.on('load', () => {
+            if ((this.booklet.getMaxHeight(image) - image.height()) > process.env.APP_AD_MIN_HEIGHT) {
+              // TODO: add additional image, because there is enough space!
+              this.log.info('add additional image', image);
+            }
+            done(nextIndex);
+          });
+        } else {
+          done(nextIndex);
+        }
+      } else {
+        done(null);
+      }
+    });
+  }
+
+  /**
+   * Recursive function to replace advertisements with fill images
+   * until it has the correct fulfillment level
+   *
+   * @param {number} heightToFill
+   * @param {string} treeID
+   * @param {number} index
+   * @param {number} distance
+   * @param {Function} done
+   */
+  removeAdvertisement(heightToFill, treeID, index, distance, done){
+    const ads = this.getAdvertisements(this.getWhitespaceContainers());
+    let fill = null;
+    if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
+      const aNext = ads.filter(a => a.next != null).filter(a => a.next.page - a.page < distance);
+      const aPrev = ads.filter(a => a.prev != null).filter(a => a.page - a.prev.page < distance);
+      const a = unionBy(aPrev, aNext, 'id');
+      a.filter(e => e.prev !== null).some(e => {
+        fill = e;
+        return true;
+      });
+      if (fill){
+        this.insertFillImage(treeID, index, fill, (index) => {
+          if (index !== null){
+            this.removeAdvertisement(heightToFill, treeID, index, distance, done);
+          } else {
+            done();
+          }
+        });
+      } else {
+        this.removeAdvertisement(heightToFill, treeID, index, distance + 1, done);
+      }
+    } else {
+      done();
+    }
+  }
+
+  /**
+   * Checks if advertisements are fulfilled, if there are to many advertisements
+   * the advertisement get replaced by an fill image.
+   *
+   * @param {string} treeID
+   * @param {Function} done
+   */
+  checkAdvertisementFulfillment(treeID, done) {
+    const totalDocumentHeight = parseInt(process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages(),10);
+    const heightToFill = parseInt(totalDocumentHeight / 100 * process.env.APP_AD_AD_LEVEL, 10);
+    if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
+      this.removeAdvertisement(heightToFill, treeID, 0, 0, () => {
+        done();
+      });
+    } else {
+      this.log.warn('too little whitespace to fulfill advertisements');
+      done();
+    }
+  }
+
+  /**
+   * Gets the height of all the whitespace of the document.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
+  getHeightOfAllWhiteSpaces(allWhitespaces) {
+    return allWhitespaces.length > 0
+      ? allWhitespaces.map(a => a.maxHeight).reduce((a, v) => a + v)
+      : 0;
+  }
+
+  /**
+   * Gets the height of all the whitespace of the document, which are filled
+   * with advertisement or a image.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
+  getHeightOfFilledWhiteSpaces(allWhitespaces) {
+    return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.filled));
   }
 
 }

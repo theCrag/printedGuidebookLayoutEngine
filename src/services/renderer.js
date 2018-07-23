@@ -50,14 +50,15 @@ export class Renderer {
       this.booklet.advertisements.fillAdvertisements(containers, 'advertisement', () => {
         this.booklet.advertisements.fillAdditionalAdvertisements(containers, () => {
           this.booklet.advertisements.fillColumnAdvertisements(() => {
-            this.booklet.advertisements.calculateAdvertisementFulfillment();
-            this.booklet.setRootTitle(tree.name);
+            this.booklet.advertisements.checkAdvertisementFulfillment(tree.id, () => {
+              this.booklet.setRootTitle(tree.name);
 
-            const evaluator = new Evaluator(tree, this.booklet);
-            evaluator.evaluate();
-            evaluator.printToConsole();
+              const evaluator = new Evaluator(tree, this.booklet);
+              evaluator.evaluate();
+              evaluator.printToConsole();
 
-            done(tree);
+              done(tree);
+            });
           });
         });
       });

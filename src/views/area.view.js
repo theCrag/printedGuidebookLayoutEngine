@@ -47,6 +47,20 @@ export const geometry = (area) => `
     <img src="${path}" />
   </div>`;
 
+
+/**
+ * Creates the html for a collected photo of the crag API.
+ *
+ * @param {number} areaId
+ * @param {number} index
+ * @param {string} photoPath
+ * @returns {string} html
+ */
+export const widowPhoto = (areaId, index, photoPath) => `
+  <div id="photo-${areaId}-${index}" class="photo area-${areaId}">
+    <img src="${photoPath}" id="photo-img-${areaId}-${index}" />
+  </div>`;
+
 /**
  * Creates the html for a collected photo of the crag API.
  *
@@ -56,7 +70,7 @@ export const geometry = (area) => `
  * @returns {string} html
  */
 export const photo = (areaId, index, photoPath) => `
-  <div id="photo-${areaId}-${index}" class="photo area-${areaId}">
+  <div id="photo-${areaId}-${index}" class="photo-full area-${areaId}">
     <img src="${photoPath}" id="photo-img-${areaId}-${index}" />
   </div>`;
 
