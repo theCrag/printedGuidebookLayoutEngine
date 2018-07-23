@@ -89,7 +89,7 @@ export const getAds = () => {
   // Make array with priorities
   let keys = [];
   ads.forEach((ad) => {
-    for (var i = 0; i < (ad.priority * 10); i++) {
+    for (var i = 0; i < (ad.priority * 100); i++) {
       keys.push(ad);
     }
   });

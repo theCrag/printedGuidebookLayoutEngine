@@ -27,7 +27,7 @@ export class Evaluator {
   evaluate() {
     this.totalPages = this.countTotalPages();
 
-    const allWhitespaces = this.booklet.getWhitespaceContainers();
+    const allWhitespaces = this.booklet.advertisements.getWhitespaceContainers();
     this.totalPixelOfAllWhitespaces = this.countAllWhiteSpaces(allWhitespaces);
     this.totalPixelOfUnfilledWhitespaces = this.countUnFilledWhiteSpaces(allWhitespaces);
     this.totalPixelOfFilledWhitespaces = this.countFilledWhiteSpaces(allWhitespaces);
