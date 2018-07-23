@@ -250,7 +250,8 @@ export class Booklet {
   }
 
   /**
-   * Takes a jQuery element and returns the max available height for this element.
+   * Takes a jQuery element and returns the max available height for this element,
+   * until it reaches the end of the page.
    *
    * @param {Object} element
    * @returns {number} maxHeight
@@ -272,7 +273,9 @@ export class Booklet {
   }
 
   /**
-   * Takes a jQuery element and returns the max available height for this element.
+   * Takes a jQuery element and returns the max available height for this element in a column.
+   * If there is no content after the columns, the height is calculated till the end of the page,
+   * otherwise the height is calculated till the end of the column-container.
    *
    * @param {Object} element
    * @returns {number} maxHeight
@@ -281,7 +284,7 @@ export class Booklet {
     if (element) {
       const parentColumnContainer = $(element.closest('.routes'));
       element = $(element);
-      if (parentColumnContainer.next().length === 0) {
+      if (parentColumnContainer.next().length === 0 || parentColumnContainer.next().children().length === 0) {
         return this.getMaxHeight(element);
       } else {
         const containerOffset = parentColumnContainer.offset();
@@ -298,7 +301,8 @@ export class Booklet {
   }
 
   /**
-   * Replaces a blank div with an advertisement div and inserts a new blank div below.
+   * Replaces a blank DIV with an advertisement DIV and inserts a new blank DIV below.
+   * The blank DIVs are mandatory to solve some issues with images and CSS-columns.
    *
    * @param {Object} element
    * @param {string} id
@@ -312,7 +316,7 @@ export class Booklet {
   }
 
   /**
-   * Generates an element containing necessary information to add an advertisement.
+   * Generates an element containing necessary information regarding advertisements.
    *
    * @param {string} id
    * @param {number} page
@@ -332,7 +336,7 @@ export class Booklet {
   }
 
   /**
-   * Adds whitespaceContainers to the end of each page.
+   * Adds whitespaceContainers to the end of each page except the first page (cover).
    */
   addWhitespaceContainers() {
     let sheets = $('.sheet').toArray();
@@ -354,6 +358,7 @@ export class Booklet {
   fillColumnAdvertisements(done) {
     let containers = [];
     let i = 0;
+    // get all DIV-elements with possible whitespace in columns which are at the end of a column (excluding last column)
     $('.route--blank').toArray().forEach((blank) => {
       const $blank = $(blank);
       const $next = $($blank.next());
@@ -377,22 +382,26 @@ export class Booklet {
         }
       }
     });
+    // get all DIV-elements in columns which are in the last column and have possible whitespace
     $('.routes__columns').toArray().forEach((container) => {
       const lastBlank = last($(container).children());
-      const $lastBlank = $(lastBlank);
-      const id = `blank-${i++}`;
-      this.replaceBlankWithAdvertisement($lastBlank, id);
-      const maxHeight = this.getMaxColumnHeight(lastBlank);
-      const element = this.generateAdvertisementElement(
-        id,
-        last($lastBlank.closest('.sheet').attr('id').split('-')),
-        maxHeight,
-        maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
-        true
-      );
-      containers.push(element);
+      if (lastBlank){
+        const $lastBlank = $(lastBlank);
+        const id = `blank-${i++}`;
+        this.replaceBlankWithAdvertisement($lastBlank, id);
+        const maxHeight = this.getMaxColumnHeight(lastBlank);
+        const element = this.generateAdvertisementElement(
+          id,
+          last($lastBlank.closest('.sheet').attr('id').split('-')),
+          maxHeight,
+          maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
+          true
+        );
+        containers.push(element);
+      }
     });
-    this.fillAdvertisements(containers, () => done());
+    // fill advertisements in these DIV-elements
+    this.fillAdvertisements(containers, 'column-advertisement', () => done());
   }
 
   /**
@@ -404,7 +413,7 @@ export class Booklet {
     let containers = [];
     $('.whitespace').toArray().forEach((container) => {
       const $container = $(container);
-      const maxHeight = this.getMaxHeight(container);
+      const maxHeight = $container.hasClass('advertisement-column') ? this.getMaxColumnHeight(container) : this.getMaxHeight(container);
       const element = this.generateAdvertisementElement(
         $container.attr('id'),
         last($container.closest('.sheet').attr('id').split('-')),
@@ -478,7 +487,7 @@ export class Booklet {
    * @param {Array} containers
    * @param {Function} done
    */
-  fillAdvertisements(containers, done) {
+  fillAdvertisements(containers, imgClass, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
@@ -487,7 +496,7 @@ export class Booklet {
       });
 
     // Wait for image loading
-    const images = $('.ad').find('img').not('.logo');
+    const images = $(`.${imgClass}`).find('img').not('.logo');
     let totalImageCount = images.length;
     if (images.length > 0) {
       images.on('load', () => {
@@ -501,7 +510,8 @@ export class Booklet {
   }
 
   /**
-   * Appends a second advertisement to a whitespace-container.
+   * Appends a second advertisement to a whitespace-container if the first
+   * advertisement does not use more than half page-width.
    *
    * @param {Array} containers
    * @param {Function} done
@@ -509,7 +519,7 @@ export class Booklet {
   fillAdditionalAdvertisements(containers, done) {
     containers
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-      .filter(element => $(`#${element.id}`).children().length !== 0)
+      .filter(element => $(`#advertisement-${element.id}`).children().length !== 0)
       .filter(element => element.column === false)
       .forEach((element) => {
         $(`#${element.id}`).children().toArray().forEach((e) => {
@@ -536,6 +546,4 @@ export class Booklet {
       done();
     }
   }
-
-
 }
