@@ -48,7 +48,8 @@ export class AreaValidationTask extends Task {
       // left top page.
       let restartRendering = false;
       this.area.routeItems = this.area.routeItems.map(item => {
-        if (item.type === 'Topo' && !restartRendering && !item.startOnLeftPage) {
+
+        if (item.type === 'Topo') {
 
           if (item.routesResponsible.length > 0) {
             const topoElement = $(`#topo-${item.id}`);
@@ -64,6 +65,8 @@ export class AreaValidationTask extends Task {
             }
 
             const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
+            pages.find('.route__description').addClass('in-sight');
+
             const lastRouteInSight = pages.find(`#route-${this.area.id}-${first(item.routesResponsible)}`);
 
             if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {

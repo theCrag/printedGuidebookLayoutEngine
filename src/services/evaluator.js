@@ -21,6 +21,9 @@ export class Evaluator {
     this.totalPixelOfUnfilledWhitespaces = 0;
     this.totalPixelOfFilledWhitespaces = 0;
 
+    this.totalRoutes = 0;
+    this.totalFarOutRoutes = 0;
+
     this.log = createLogger('Evaluator');
   }
 
@@ -31,16 +34,25 @@ export class Evaluator {
     this.totalPixelOfAllWhitespaces = this.countAllWhiteSpaces(allWhitespaces);
     this.totalPixelOfUnfilledWhitespaces = this.countUnFilledWhiteSpaces(allWhitespaces);
     this.totalPixelOfFilledWhitespaces = this.countFilledWhiteSpaces(allWhitespaces);
+    this.totalPercentAdvertisementFulfillment = this.countAdvertisementFulfillment(allWhitespaces);
+
+    this.totalRoutes = this.countAllRoutes();
+    this.totalFarOutRoutes = this.countFarOutRoutes();
   }
 
   printToConsole() {
     this.log.info('=========================================');
     this.log.info('Evaluation of the tree');
     this.log.info('=========================================');
-    this.log.info('totalPages', this.totalPages);
-    this.log.info('totalPixelOfAllWhitespaces', this.totalPixelOfAllWhitespaces);
-    this.log.info('totalPixelOfUnfilledWhitespaces', this.totalPixelOfUnfilledWhitespaces);
-    this.log.info('totalPixelOfFilledWhitespaces', this.totalPixelOfFilledWhitespaces);
+    this.log.info('totalPages', this.totalPages + ' pages');
+    this.log.info('totalPixelOfAllWhitespaces', this.totalPixelOfAllWhitespaces + ' pixel');
+    this.log.info('totalPixelOfUnfilledWhitespaces', this.totalPixelOfUnfilledWhitespaces + ' pixel');
+    this.log.info('totalPixelOfFilledWhitespaces', this.totalPixelOfFilledWhitespaces + ' pixel');
+    this.log.info('totalPercentAdvertisementFulfillment', this.totalPercentAdvertisementFulfillment + ' %');
+    this.log.info(' ');
+    this.log.info('totalRoutes', this.totalRoutes + ' routes');
+    this.log.info('totalFarOutRoutes', this.totalFarOutRoutes + ' routes');
+    this.log.info('totalFarOutRoutes', (100 / this.totalRoutes * this.totalFarOutRoutes) + ' %');
     this.log.info('=========================================');
   }
 
@@ -60,6 +72,18 @@ export class Evaluator {
 
   countTotalPages() {
     return $('.sheet').length;
+  }
+
+  countAdvertisementFulfillment(allWhitespaces) {
+    return 100 / (929 * (this.countTotalPages() - 1)) * this.countFilledWhiteSpaces(allWhitespaces);
+  }
+
+  countAllRoutes() {
+    return $('.route__description').length;
+  }
+
+  countFarOutRoutes() {
+    return this.countAllRoutes() - $('.route__description.in-sight').length;
   }
 
 }
