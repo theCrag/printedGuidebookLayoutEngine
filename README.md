@@ -70,7 +70,7 @@ npm start
 
 ### Step 4: Disable CORS in your browser
 
-Go to the [Chrome Web Store](https://chrome.google.com/webstore/search/cors) and search for `Disable CORS`;
+Go to the [Chrome Web Store](https://chrome.google.com/webstore/search/cors) and search for `Disable CORS` and install it. As long as the app is used locally it is important that this plugin is activated.
 
 <hr>
 
