@@ -14,6 +14,7 @@ export class Booklet {
   constructor() {
     this.pageCounter = 0;
     this.routeContainerCounter = 0;
+    this.advertisements = [];
 
     this.log = createLogger('Booklet');
   }
@@ -25,6 +26,7 @@ export class Booklet {
    */
   init() {
     this.pageCounter = 0;
+    this.advertisements = getAds();
   }
 
   /**
@@ -435,10 +437,8 @@ export class Booklet {
    * @param {string} hashID
    */
   addAdvertisement(element, containers, float, hashID = null) {
-    const advertisements = getAds();
-
     // Filter advertisements to avoid having the same advertisements next to each other
-    const ads = advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
+    const ads = this.advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
 
     // Take random advertisement from array with advertisement priorities
     ads[Math.floor((Math.random() * ads.length))].images
@@ -546,4 +546,20 @@ export class Booklet {
       done();
     }
   }
+
+  /**
+   * Adds a rear page and optionally a fill page to ensure rear page is
+   * a left page.
+   *
+   */
+  addRearPage() {
+    const page = this.getCurrentPage();
+    if ($(page).hasClass('sheet--left')) {
+      this.addPage();
+      this.addPage();
+    } else {
+      this.addPage();
+    }
+  }
 }
+

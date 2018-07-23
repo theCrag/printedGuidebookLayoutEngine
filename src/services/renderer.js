@@ -44,6 +44,7 @@ export class Renderer {
     this.booklet.addPage();
 
     this._doRenderArea(tree, () => {
+      this.booklet.addRearPage();
       this.booklet.addWhitespaceContainers();
       const containers = this.booklet.getWhitespaceContainers();
       this.booklet.fillAdvertisements(containers, 'advertisement', () => {
