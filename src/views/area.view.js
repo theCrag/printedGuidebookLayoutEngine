@@ -75,6 +75,19 @@ export const photo = (areaId, index, photoPath) => `
   </div>`;
 
 /**
+ * Creates the html for a collected photo of the crag API.
+ *
+ * @param {number} areaId
+ * @param {number} index
+ * @param {string} photoPath
+ * @returns {string} html
+ */
+export const photoTwo = (areaId, index, photoPath) => `
+<div id="photo-${areaId}-${index}" class="photo-two area-${areaId}">
+  <img src="${photoPath}" id="photo-img-${areaId}-${index}" />
+</div>`;
+
+/**
  * Creates the html for the area description.
  *
  * @param {Area} area

@@ -18,3 +18,15 @@
     height: auto;
   }
 }
+
+.photo-two {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+
+  img {
+    max-width: 355px;
+  }
+}
+

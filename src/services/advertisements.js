@@ -298,12 +298,22 @@ export class Advertisements {
     let img = `#photo-img-${treeID}-${index}`;
     const $e = $(`#${element.id}`);
     const nextIndex = index + 1;
+    let two = false;
 
     getPhotos(treeID, (photos) => {
       if (photos.length > index) {
-        $(`#advertisement-${element.id}`).remove();
+        const ad = $(`#advertisement-${element.id}`);
+        if (ad.hasClass('advertisement-two')) {
+          two = true;
+        }
+        ad.remove();
         const photoPath = buildImageUrl(photos[index]);
-        const photo = areaView.photo(treeID, index, photoPath);
+        let photo;
+        if (two) {
+          photo = areaView.photoTwo(treeID, index, photoPath);
+        } else {
+          photo = areaView.photo(treeID, index, photoPath);
+        }
         $e.append(photo);
         const image = $(img);
         image.css('max-height', `${element.maxHeight}px`);
@@ -312,15 +322,20 @@ export class Advertisements {
         if (image.length > 0) {
           image.on('load', () => {
             const whitespace = image.closest('.whitespace');
-            const maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
+            let maxHeight = 0;
+            if (element.column){
+              maxHeight = this.booklet.getMaxColumnHeight(whitespace) - whitespace.height();
+            } else {
+              maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
+            }
             // if image is loaded, check if there is enough space for an additional image
             if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
-              if (whitespace.hasClass('whitespace__container')){
+              if (whitespace.hasClass('whitespace__container')) {
                 whitespace.removeClass('whitespace__container');
                 whitespace.addClass('whitespace__col');
               }
               element.maxHeight = maxHeight;
-              this.insertFillImage(treeID, nextIndex, element, () => done());
+              this.insertFillImage(treeID, nextIndex, element, (i) => done(i));
             } else {
               done(nextIndex);
             }
