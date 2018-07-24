@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { last, unionBy } from 'lodash';
+import { last } from 'lodash';
 import { createLogger } from '../utils/logger';
 import * as areaView from '../views/area.view';
 import { getAds, buildImageUrl, getPhotos } from './api.service';
@@ -27,7 +27,7 @@ export class Advertisements {
    * @param {Object} element
    * @param {string} id
    */
-  replaceBlankWithAdvertisement(element, id){
+  replaceBlankWithAdvertisement(element, id) {
     element.attr('id', id);
     element.addClass('advertisement-column');
     element.addClass('whitespace');
@@ -44,7 +44,7 @@ export class Advertisements {
    * @param {boolean} portrait
    * @param {boolean} column
    */
-  generateAdvertisementElement(id, page, maxHeight, portrait, column){
+  generateAdvertisementElement(id, page, maxHeight, portrait, column) {
     const element = {};
     element.id = id;
     element.page = page;
@@ -105,7 +105,7 @@ export class Advertisements {
     // get all DIV-elements in columns which are in the last column and have possible whitespace
     $('.routes__columns').toArray().forEach((container) => {
       const lastBlank = last($(container).children());
-      if (lastBlank){
+      if (lastBlank) {
         const $lastBlank = $(lastBlank);
         const id = `blank-${i++}`;
         this.replaceBlankWithAdvertisement($lastBlank, id);
@@ -154,9 +154,22 @@ export class Advertisements {
    * @param {boolean} float
    * @param {string} hashID
    */
-  addAdvertisement(element, containers, float, hashID = null) {
+  addAdvertisement(element, containers, float) {
+    const hasHashes = $(`#page-${element.page}`).find('div[hashid]').toArray();
+    const hashIds = hasHashes.map(img => $(img).attr('hashid'));
+
     // Filter advertisements to avoid having the same advertisements next to each other
-    const ads = this.advertisements.filter((ad) => ad.images.every((image) => float ? image.hashID !== hashID : true));
+    let ads = this.advertisements;
+    if (hashIds.length > 0) {
+      for (let i = 0; i < hashIds.length; i++) {
+        ads = ads.filter((ad) => ad.images.every((image) => image.hashID !== hashIds[i]));
+      }
+    }
+
+    // if all advertisements are filtered out, it is not possible to not have duplicate advertisements
+    if (ads.length === 0){
+      ads = this.advertisements;
+    }
 
     // Take random advertisement from array with advertisement priorities
     ads[Math.floor((Math.random() * ads.length))].images
@@ -166,8 +179,6 @@ export class Advertisements {
         let ad;
         if (!float) {
           if (!element.filled) {
-            // If image is to small, append it to the last element
-            // if (parseInt(img.origHeight) + parseInt(process.env.APP_AD_MIN_HEIGHT) >= element.maxHeight) {
             if (element.column) {
               ad = areaView.advertisementColumn(element, photoPath, element.maxHeight, img.hashID);
             } else {
@@ -175,21 +186,6 @@ export class Advertisements {
             }
             $(`#${element.id}`).append(ad);
             element.filled = true;
-            // } else {
-            //   let lastElement = last(
-            //     containers
-            //       .filter(element => element.filled !== true)
-            //       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
-            //   );
-            //   if (element.column) {
-            //     ad = areaView.advertisementColumn(element, photoPath, lastElement.maxHeight, img.hashID);
-            //   } else {
-            //     ad = areaView.advertisement(element, photoPath, lastElement.maxHeight, img.hashID);
-            //   }
-            //   $(`#${lastElement.id}`).append(ad);
-            //   lastElement.filled = true;
-            //   this.addAdvertisement(element, containers, float, hashID);
-            // }
           }
         } else {
           ad = areaView.advertisementRight(element, photoPath, element.maxHeight, img.hashID);
@@ -243,8 +239,7 @@ export class Advertisements {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
-              const hashID = $(img).parent().attr('hashid');
-              this.addAdvertisement(element, containers, true, hashID);
+              this.addAdvertisement(element, containers, true);
               $(img).parent().addClass('advertisement-two');
             }
           });
@@ -272,21 +267,22 @@ export class Advertisements {
    * @param {Array} containers
    * @returns {Array} filledContainers
    */
-  getAdvertisements(containers){
+  getAdvertisements(containers) {
     const filledContainers = containers.filter(e => e.filled);
-    for (let i = 0; i < filledContainers.length; i++){
-      if (filledContainers[i-1]){
-        filledContainers[i].prev = filledContainers[i-1];
+    for (let i = 0; i < filledContainers.length; i++) {
+      if (filledContainers[i - 1]) {
+        filledContainers[i].prev = filledContainers[i - 1];
       } else {
         filledContainers[i].prev = null;
       }
-      if (filledContainers[i+1]){
-        filledContainers[i].next = filledContainers[i+1];
+      if (filledContainers[i + 1]) {
+        filledContainers[i].next = filledContainers[i + 1];
       } else {
         filledContainers[i].next = null;
       }
+      filledContainers[i].distance = null;
     }
-    return(filledContainers);
+    return (filledContainers);
   }
 
   /**
@@ -304,7 +300,7 @@ export class Advertisements {
     const nextIndex = index + 1;
 
     getPhotos(treeID, (photos) => {
-      if (photos.length > index){
+      if (photos.length > index) {
         $(`#advertisement-${element.id}`).remove();
         const photoPath = buildImageUrl(photos[index]);
         const photo = areaView.photo(treeID, index, photoPath);
@@ -315,11 +311,19 @@ export class Advertisements {
         // Wait for image loading
         if (image.length > 0) {
           image.on('load', () => {
-            if ((this.booklet.getMaxHeight(image) - image.height()) > process.env.APP_AD_MIN_HEIGHT) {
-              // TODO: add additional image, because there is enough space!
-              this.log.info('add additional image', image);
+            const whitespace = image.closest('.whitespace');
+            const maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
+            // if image is loaded, check if there is enough space for an additional image
+            if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
+              if (whitespace.hasClass('whitespace__container')){
+                whitespace.removeClass('whitespace__container');
+                whitespace.addClass('whitespace__col');
+              }
+              element.maxHeight = maxHeight;
+              this.insertFillImage(treeID, nextIndex, element, () => done());
+            } else {
+              done(nextIndex);
             }
-            done(nextIndex);
           });
         } else {
           done(nextIndex);
@@ -340,29 +344,34 @@ export class Advertisements {
    * @param {number} distance
    * @param {Function} done
    */
-  removeAdvertisement(heightToFill, treeID, index, distance, done){
+  removeAdvertisement(heightToFill, treeID, index, distance, done) {
     const ads = this.getAdvertisements(this.getWhitespaceContainers());
     let fill = null;
     if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
-      const aNext = ads.filter(a => a.next != null).filter(a => a.next.page - a.page < distance);
-      const aPrev = ads.filter(a => a.prev != null).filter(a => a.page - a.prev.page < distance);
-      const a = unionBy(aPrev, aNext, 'id');
-      a.filter(e => e.prev !== null).some(e => {
-        fill = e;
-        return true;
-      });
-      if (fill){
-        this.insertFillImage(treeID, index, fill, (index) => {
-          if (index !== null){
-            this.removeAdvertisement(heightToFill, treeID, index, distance, done);
-          } else {
-            done();
-          }
-        });
+      const as = ads
+        .filter(a => a.next != null)
+        .filter(a => a.prev != null);
+      as.forEach(a => a.distance = parseInt(a.next.page - a.page, 10) + parseInt(a.page - a.prev.page, 10));
+      as.sort((a, b) => { return a.distance - b.distance; });
+      if (as.length > 0) {
+        fill = as[0];
+        if (fill) {
+          this.insertFillImage(treeID, index, fill, (index) => {
+            if (index !== null) {
+              this.removeAdvertisement(heightToFill, treeID, index, distance, done);
+            } else {
+              done();
+            }
+          });
+        } else {
+          this.removeAdvertisement(heightToFill, treeID, index, distance + 1, done);
+        }
       } else {
-        this.removeAdvertisement(heightToFill, treeID, index, distance + 1, done);
+        this.log.info('advertisements', ads);
+        done();
       }
     } else {
+      this.log.info('advertisements', ads);
       done();
     }
   }
@@ -375,7 +384,7 @@ export class Advertisements {
    * @param {Function} done
    */
   checkAdvertisementFulfillment(treeID, done) {
-    const totalDocumentHeight = parseInt(process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages(),10);
+    const totalDocumentHeight = parseInt(process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages(), 10);
     const heightToFill = parseInt(totalDocumentHeight / 100 * process.env.APP_AD_AD_LEVEL, 10);
     if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
       this.removeAdvertisement(heightToFill, treeID, 0, 0, () => {
@@ -409,5 +418,4 @@ export class Advertisements {
   getHeightOfFilledWhiteSpaces(allWhitespaces) {
     return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.filled));
   }
-
 }
