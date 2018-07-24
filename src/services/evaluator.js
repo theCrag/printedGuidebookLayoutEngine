@@ -49,6 +49,8 @@ export class Evaluator {
     this.totalWidowCount = this.countTotalWidows();
     this.totalPercentWidows = this.countTotalPercentWidows();
 
+    // TODO: advertisement Verteilung berechnen
+    // eventuell mit Durchschnittlichem Abstand, wieviele tanzen aus der Reihe?
   }
 
   /**
