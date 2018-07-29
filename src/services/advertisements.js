@@ -49,9 +49,11 @@ export class Advertisements {
     element.id = id;
     element.page = page;
     element.filled = $(`#advertisement-${id}`).children().length !== 0;
+    element.hasContent = $(`#${id}`).children().length !== 0;
     element.maxHeight = maxHeight;
     element.portrait = portrait;
     element.column = column;
+    element.hasTwo = $(`#advertisement-${id}`).hasClass('advertisement-two');
     return element;
   }
 
@@ -150,11 +152,9 @@ export class Advertisements {
    * Physically appends an advertisement to the element.
    *
    * @param {Object} element
-   * @param {Array} containers
    * @param {boolean} float
-   * @param {string} hashID
    */
-  addAdvertisement(element, containers, float) {
+  addAdvertisement(element, float) {
     const hasHashes = $(`#page-${element.page}`).find('div[hashid]').toArray();
     const hashIds = hasHashes.map(img => $(img).attr('hashid'));
 
@@ -206,7 +206,7 @@ export class Advertisements {
       .filter(element => element.maxHeight >= process.env.APP_AD_MIN_HEIGHT)
       .sort((a, b) => { return b.maxHeight - a.maxHeight; })
       .forEach((element) => {
-        this.addAdvertisement(element, containers, false);
+        this.addAdvertisement(element, false);
       });
 
     // Wait for image loading
@@ -239,7 +239,7 @@ export class Advertisements {
         $(`#${element.id}`).children().toArray().forEach((e) => {
           $(e).children().toArray().forEach((img) => {
             if (img.clientWidth < process.env.APP_CONTENT_WIDTH / 2) {
-              this.addAdvertisement(element, containers, true);
+              this.addAdvertisement(element, true);
               $(img).parent().addClass('advertisement-two');
             }
           });
@@ -281,6 +281,7 @@ export class Advertisements {
         filledContainers[i].next = null;
       }
       filledContainers[i].distance = null;
+      filledContainers[i].skipped = $(`#${filledContainers[i].id}`).hasClass('keep');
     }
     return (filledContainers);
   }
@@ -293,24 +294,28 @@ export class Advertisements {
    * @param {number} index
    * @param {Object} element
    * @param {Function} done
+   * @param {boolean} float
    */
-  insertFillImage(treeID, index, element, done) {
+  insertFillImage(treeID, index, element, done, float = null) {
     let img = `#photo-img-${treeID}-${index}`;
     const $e = $(`#${element.id}`);
     const nextIndex = index + 1;
-    let two = false;
 
     getPhotos(treeID, (photos) => {
       if (photos.length > index) {
-        const ad = $(`#advertisement-${element.id}`);
-        if (ad.hasClass('advertisement-two')) {
-          two = true;
-        }
-        ad.remove();
         const photoPath = buildImageUrl(photos[index]);
         let photo;
-        if (two) {
-          photo = areaView.photoTwo(treeID, index, photoPath);
+        // if there are two advertisements, remove the right one as well
+        if (element.hasTwo) {
+          $(`#advertisement-${element.id}-right`).remove();
+        }
+        $(`#advertisement-${element.id}`).remove();
+        if (float) {
+          $e.children().toArray().forEach(img => {
+            $(img).removeClass('photo-full');
+            $(img).addClass('photo-two');
+            photo = areaView.photoTwo(treeID, index, photoPath);
+          });
         } else {
           photo = areaView.photo(treeID, index, photoPath);
         }
@@ -328,6 +333,7 @@ export class Advertisements {
             } else {
               maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
             }
+            const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a,v) => a + v);
             // if image is loaded, check if there is enough space for an additional image
             if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
               if (whitespace.hasClass('whitespace__container')) {
@@ -336,6 +342,8 @@ export class Advertisements {
               }
               element.maxHeight = maxHeight;
               this.insertFillImage(treeID, nextIndex, element, (i) => done(i));
+            } else if (totalImagesWidth < process.env.APP_CONTENT_WIDTH / 2 && whitespace.children().length < process.env.APP_COLUMNS) {
+              this.insertFillImage(treeID, nextIndex, element, (i) => done(i), true);
             } else {
               done(nextIndex);
             }
@@ -359,27 +367,34 @@ export class Advertisements {
    * @param {number} distance
    * @param {Function} done
    */
-  removeAdvertisement(heightToFill, treeID, index, distance, done) {
+  replaceAdvertisement(heightToFill, treeID, index, distance, done) {
     const ads = this.getAdvertisements(this.getWhitespaceContainers());
     let fill = null;
-    if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
+    if (this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) > heightToFill) {
       const as = ads
         .filter(a => a.next != null)
-        .filter(a => a.prev != null);
+        .filter(a => a.prev != null)
+        .filter(a => a.skipped !== true);
       as.forEach(a => a.distance = parseInt(a.next.page - a.page, 10) + parseInt(a.page - a.prev.page, 10));
       as.sort((a, b) => { return a.distance - b.distance; });
       if (as.length > 0) {
         fill = as[0];
-        if (fill) {
-          this.insertFillImage(treeID, index, fill, (index) => {
-            if (index !== null) {
-              this.removeAdvertisement(heightToFill, treeID, index, distance, done);
-            } else {
-              done();
-            }
-          });
+        if (this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill){
+          if (fill) {
+            this.insertFillImage(treeID, index, fill, (index) => {
+              if (index !== null) {
+                this.replaceAdvertisement(heightToFill, treeID, index, distance, done);
+              } else {
+                done();
+              }
+            });
+          } else {
+            this.replaceAdvertisement(heightToFill, treeID, index, distance + 1, done);
+          }
         } else {
-          this.removeAdvertisement(heightToFill, treeID, index, distance + 1, done);
+          fill.skipped = true;
+          $(`#${fill.id}`).addClass('keep');
+          this.replaceAdvertisement(heightToFill, treeID, index, distance, done);
         }
       } else {
         this.log.info('advertisements', ads);
@@ -402,7 +417,7 @@ export class Advertisements {
     const totalDocumentHeight = parseInt(process.env.APP_CONTENT_HEIGHT * this.booklet.countTotalPages(), 10);
     const heightToFill = parseInt(totalDocumentHeight / 100 * process.env.APP_AD_AD_LEVEL, 10);
     if (this.getHeightOfFilledWhiteSpaces(this.getWhitespaceContainers()) > heightToFill) {
-      this.removeAdvertisement(heightToFill, treeID, 0, 0, () => {
+      this.replaceAdvertisement(heightToFill, treeID, 0, 0, () => {
         done();
       });
     } else {
@@ -431,6 +446,17 @@ export class Advertisements {
    * @returns {Number} Amount whitespace pixel.
    */
   getHeightOfFilledWhiteSpaces(allWhitespaces) {
+    return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.hasContent));
+  }
+
+  /**
+   * Gets the height of all the whitespace of the document, which are filled
+   * with advertisement.
+   *
+   * @param {Array<Object>} allWhitespaces
+   * @returns {Number} Amount whitespace pixel.
+   */
+  getHeightOfAdsFilledWhitespaces(allWhitespaces) {
     return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.filled));
   }
 }
