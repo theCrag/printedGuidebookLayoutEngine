@@ -283,6 +283,9 @@ export class Advertisements {
       filledContainers[i].distance = null;
       filledContainers[i].skipped = $(`#${filledContainers[i].id}`).hasClass('keep');
     }
+    filledContainers.forEach(a => a.distance
+       = (a.next ? parseInt(a.next.page - a.page, 10) : parseInt(this.booklet.countTotalPages() - a.page, 10))
+       + (a.prev ? parseInt(a.page - a.prev.page, 10) : parseInt(a.page, 10)));
     return (filledContainers);
   }
 
@@ -375,22 +378,23 @@ export class Advertisements {
         .filter(a => a.next != null)
         .filter(a => a.prev != null)
         .filter(a => a.skipped !== true);
-      as.forEach(a => a.distance = parseInt(a.next.page - a.page, 10) + parseInt(a.page - a.prev.page, 10));
       as.sort((a, b) => { return a.distance - b.distance; });
       if (as.length > 0) {
         fill = as[0];
-        if (this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill){
-          if (fill) {
-            this.insertFillImage(treeID, index, fill, (index) => {
-              if (index !== null) {
-                this.replaceAdvertisement(heightToFill, treeID, index, distance, done);
-              } else {
-                done();
-              }
-            });
-          } else {
-            this.replaceAdvertisement(heightToFill, treeID, index, distance + 1, done);
-          }
+        let adDistributionOptimization;
+        if (process.env.EVALUATION_AD_DISTRIBUTION > process.env.EVALUATION_AD_FULFILLMENT) {
+          adDistributionOptimization = true;
+        } else {
+          adDistributionOptimization = false;
+        }
+        if (adDistributionOptimization || this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill){
+          this.insertFillImage(treeID, index, fill, (index) => {
+            if (index !== null) {
+              this.replaceAdvertisement(heightToFill, treeID, index, distance, done);
+            } else {
+              done();
+            }
+          });
         } else {
           fill.skipped = true;
           $(`#${fill.id}`).addClass('keep');

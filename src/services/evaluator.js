@@ -40,17 +40,20 @@ export class Evaluator {
     this.totalPixelOfAllWhitespaces = this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces);
     this.totalPixelOfUnfilledWhitespaces = this.countUnFilledWhiteSpaces(allWhitespaces);
     this.totalPixelOfFilledWhitespaces = this.booklet.advertisements.getHeightOfFilledWhiteSpaces(allWhitespaces);
-    this.totalPercentAdvertisementFulfillment = this.countAdvertisementFulfillment(allWhitespaces);
+    this.totalPixelOfAdsFilledWhitespaces = this.booklet.advertisements.getHeightOfAdsFilledWhitespaces(allWhitespaces);
+    this.totalPercentAdvertisementFulfillment = this.countTotalPercentAdvertisementFulfillment(allWhitespaces);
 
     this.totalRoutes = this.countAllRoutes();
     this.totalFarOutRoutes = this.countFarOutRoutes();
-    this.totalPercentFarOutRoutes = (100 / this.totalRoutes * this.countFarOutRoutes());
+    this.totalPercentFarOutRoutes = (100 / this.totalRoutes * this.totalFarOutRoutes);
 
     this.totalWidowCount = this.countTotalWidows();
     this.totalPercentWidows = this.countTotalPercentWidows();
 
-    // TODO: advertisement Verteilung berechnen
-    // eventuell mit Durchschnittlichem Abstand, wieviele tanzen aus der Reihe?
+    const advertisements = this.booklet.advertisements.getAdvertisements(allWhitespaces);
+    this.totalAdsCount = advertisements.length;
+    this.averageAdsDistance = Math.round((this.totalPages - 1) / (this.totalAdsCount - 1));
+    this.totalPercentAdsDistribution = this.countTotalPercentAdsDistribution(advertisements);
   }
 
   /**
@@ -59,10 +62,20 @@ export class Evaluator {
    * @return {Number} Document score
    */
   getScore() {
-    return parseInt((this.totalPercentAdvertisementFulfillment
-      + this.totalPercentFarOutRoutes
-      + this.totalPercentWidows)
-      / 3, 10);
+    const evaluationAdFulfillment = process.env.EVALUATION_AD_FULFILLMENT ? parseInt(process.env.EVALUATION_AD_FULFILLMENT, 10) : 1;
+    const evaluationAdDistribution = process.env.EVALUATION_AD_DISTRIBUTION ? parseInt(process.env.EVALUATION_AD_DISTRIBUTION, 10) : 1;
+    const evaluationFarOutRoutes = process.env.EVALUATION_FAR_OUT_ROUTES ? parseInt(process.env.EVALUATION_FAR_OUT_ROUTES, 10) : 1;
+    const evaluationWidows = process.env.EVALUATION_WIDOWS ? parseInt(process.env.EVALUATION_WIDOWS, 10) : 1;
+
+    const divisor = evaluationAdFulfillment
+      + evaluationAdDistribution
+      + evaluationFarOutRoutes
+      + evaluationWidows;
+    return parseInt((this.totalPercentAdvertisementFulfillment * evaluationAdFulfillment
+      + this.totalPercentAdsDistribution * evaluationAdDistribution
+      + this.totalPercentFarOutRoutes * evaluationFarOutRoutes
+      + this.totalPercentWidows * evaluationWidows)
+      / divisor, 10);
   }
 
   /**
@@ -73,9 +86,14 @@ export class Evaluator {
     this.log.info('Evaluation of the tree');
     this.log.info('=========================================');
     this.log.info('totalPages', this.totalPages + ' pages');
+    this.log.info('totalAdsCount', this.totalAdsCount + ' advertisements');
+    this.log.info('averageAdsDistance', this.averageAdsDistance + ' pages');
+    this.log.info('totalPercentAdsDistribution', this.totalPercentAdsDistribution + ' %');
+    this.log.info(' ');
     this.log.info('totalPixelOfAllWhitespaces', this.totalPixelOfAllWhitespaces + ' pixel');
     this.log.info('totalPixelOfUnfilledWhitespaces', this.totalPixelOfUnfilledWhitespaces + ' pixel');
     this.log.info('totalPixelOfFilledWhitespaces', this.totalPixelOfFilledWhitespaces + ' pixel');
+    this.log.info('totalPixelOfAdsFilledWhitespaces', this.totalPixelOfAdsFilledWhitespaces + ' pixel');
     this.log.info('totalPercentAdvertisementFulfillment', this.totalPercentAdvertisementFulfillment + ' %');
     this.log.info(' ');
     this.log.info('totalRoutes', this.totalRoutes + ' routes');
@@ -97,7 +115,7 @@ export class Evaluator {
    * @returns {Number} Amount whitespace pixel.
    */
   countUnFilledWhiteSpaces(allWhitespaces) {
-    return this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => !a.filled));
+    return this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => !a.hasContent));
   }
 
   /**
@@ -106,8 +124,27 @@ export class Evaluator {
    * @param {Array<Object>} allWhitespaces
    * @returns {Number} Percentage of advertisement fulfillment.
    */
-  countAdvertisementFulfillment(allWhitespaces) {
-    return 100 / (process.env.APP_CONTENT_HEIGHT * (this.booklet.countTotalPages() - 1)) * this.booklet.advertisements.getHeightOfFilledWhiteSpaces(allWhitespaces);
+  countTotalPercentAdvertisementFulfillment(allWhitespaces) {
+    const totalDocHeight = (process.env.APP_CONTENT_HEIGHT * (this.booklet.countTotalPages() - 1));
+    const totalAdsHeight = this.booklet.advertisements.getHeightOfAdsFilledWhitespaces(allWhitespaces);
+    const percentAdsFulfilled = 100 / totalDocHeight * totalAdsHeight;
+    return Math.abs(100 - (100 / process.env.APP_AD_AD_LEVEL * percentAdsFulfilled));
+  }
+
+  /**
+   * Returns percentage of distribution of all advertisements.
+   *
+   * @param {Array} advertisements
+   * @returns {Number} Percentage of advertisement distribution
+   */
+  countTotalPercentAdsDistribution(advertisements) {
+    const distances = advertisements.filter(ad => ad.next !== null)
+      .map(ad => parseInt(ad.next.page - ad.page));
+    let totalDeviation = 0;
+    for (let i = 0; i < distances.length; ++i) {
+      totalDeviation += Math.abs((distances[i] - this.averageAdsDistance));
+    }
+    return (totalDeviation / distances.length) / this.averageAdsDistance * 100;
   }
 
   /**
@@ -138,9 +175,9 @@ export class Evaluator {
   }
 
   /**
-   * Counts all characters of any widows in the document.
+   * Returns the percentage of how many pages have widows.
    *
-   * @returns {Number} Amount of characters in widows.
+   * @returns {Number} Percentage of pages have widows
    */
   countTotalPercentWidows() {
     return 100 / this.booklet.countTotalPages() * this.countTotalWidows();
