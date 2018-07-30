@@ -11,6 +11,6 @@ window.localStorage.debug = 'app:*';
  * Creates a new logdown instance and defines a prefixed scoped.
  *
  * @param {string} scope
- * @returns {Object} Logdonw instance
+ * @returns {Object} Logdown instance
  */
 export const createLogger = (scope) => logdown(`app:${scope}`);

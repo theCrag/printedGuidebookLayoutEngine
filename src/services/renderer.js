@@ -30,9 +30,9 @@ export class Renderer {
   }
 
   /**
-   * Renders a tree with is subareas. Moreover it initialized
+   * Renders a tree with its subareas. Moreover it initialized
    * the booklet instance. After that it starts rendering
-   * area for area.
+   * one area after the other.
    *
    * @param {Area} tree
    * @param {Function} done

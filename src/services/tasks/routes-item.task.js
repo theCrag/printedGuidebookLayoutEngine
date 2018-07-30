@@ -6,10 +6,16 @@ import * as areaView from '../../views/area.view';
 
 /**
  * Adds a route item, which could be a route or a topo image, to
- * routes container of the current page in the booklet.
+ * the routes container of the current page in the booklet.
  */
 export class RoutesItemTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {number} index
+   * @param {string} body
+   */
   constructor(booklet, area, index, body) {
     if (body === undefined) {
       super(booklet, area, areaView.routeItem(area.routeItems[index], area.id, index));
@@ -25,18 +31,18 @@ export class RoutesItemTask extends Task {
    * @param {Function} done
    */
   run(done) {
-    this.booklet.routes.addRouteItem(this.area, this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
+    this.booklet.routes.addRouteItem(this.area, this.html, (page, routesContainer) => this.validate(routesContainer, done));
   }
 
   /**
    * Checks the DOM if some routes are outside of the defined
-   * page border.
+   * page borders.
    *
    * @param {HTMLElement} routesContainer
-   * @returns {boolean} Are routes over the page border.
+   * @returns {boolean} Are routes over the page borders.
    */
   areSomeRoutesOutsideTheSheet(routesContainer) {
-    return routesContainer //.find('.topo, .route')
+    return routesContainer
       .children()
       .toArray()
       .some(c => !this.booklet.isElementInsideCurrentSheet(c));
@@ -47,13 +53,12 @@ export class RoutesItemTask extends Task {
    * outside of the page. If this is the case, then it will remove
    * the last route element and add it to a new page with a new routes
    * container. However, if the second last element is a topo image it
-   * will also be placed on the new page.
+   * will be placed on the new page as well.
    *
-   * @param {HTMLElement} page
    * @param {HTMLElement} routesContainer
    * @param {Function} done
    */
-  validate(page, routesContainer, done) {
+  validate(routesContainer, done) {
     if (this.areSomeRoutesOutsideTheSheet(routesContainer)) {
 
       const lastElement = routesContainer.find('.route').not('.route--blank').last();

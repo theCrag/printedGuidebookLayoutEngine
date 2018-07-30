@@ -16,7 +16,9 @@
 
 ## Why
 
-TODO: Add vision of the "Bericht"
+**Users of the Crag currently have the possibility to open an HTML guide which shows the information about the selected area. The printed version of such an area is not optimized for A4 pages, it is just a normal webpage. The HTML guide should be extended with a PDF print option, which automatically generates a PDF booklet with a nice-looking layout and some variable content.**
+
+A micro-service should create a PDF from a given area while it observes predefined constraints. An algorithm traverses the given area and places all the elements within A4 pages. Assuming that an element does not fit in the current page, the algorithm automatically creates a new sheet and adds the content there. One ability of the algorithm is to determine if the element has enough space on a page and even guarantees that content, which belongs together, are in sight. This implies that the user needs as less scrolling as possible to read the placed content. Whenever there is a free spot in the document it should be filled up with a picture from the current area or an advertisement. Moreover, the mentioned advertisements should be evenly spread over the document. There are some topology images of the climbing routes, these images should automatically have a suitable width and height. This is necessary to show all details on a big topology but to avoid having a big image if there are only a few routes on it. At the end, the PDF also haves a table of content and a cover page to gain a nice-looking guide.
 
 <hr>
 

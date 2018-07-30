@@ -1,5 +1,5 @@
 /**
- * Image styles are the possible format a image could have in
+ * Image styles are the possible formats an image could have in
  * the booklet.
  */
 export const FULL_PAGE = 0;

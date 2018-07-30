@@ -1,7 +1,7 @@
 
 /**
  * Task is the base class for all render tasks.
- * One Task modifies the DOM until it is done.
+ * One task modifies the DOM until it is done.
  */
 export class Task {
 

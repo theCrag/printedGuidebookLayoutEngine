@@ -6,6 +6,10 @@ import { Task } from './task';
  */
 export class RoutesContainerTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area);
   }

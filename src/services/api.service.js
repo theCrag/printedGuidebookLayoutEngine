@@ -1,17 +1,13 @@
 import $ from 'jquery';
 import { createLogger } from '../utils/logger';
-// import * as jsonData from '../data/description.json';
 import * as adJsonData from '../data/ads.json';
-// import * as jsonData from '../data/umbrio.json';
-// import * as jsonData from '../data/central-park.json';
-// import * as jsonData from '../data/central-park-longDesc.json';
 
 const log = createLogger('api');
 
 /**
- * Fetches the all the information of the given area.
+ * Fetches all the information of the given area.
  *
- * @param {String} areaPath
+ * @param {string} areaPath
  * @param {Function} done
  */
 export const getArea = (areaPath, done) => {
@@ -62,7 +58,7 @@ export const getPhotos = (areaId, done) => {
 };
 
 /**
- * Fetches all the html of the areas descriptions.
+ * Fetches the html of the areas descriptions.
  *
  * @param {Area} area
  * @param {Function} done Callback function.
@@ -76,7 +72,8 @@ export const getDescriptionHtml = (area, done) => {
 };
 
 /**
- * Fetches the advertisements information.
+ * Fetches the advertisements information and returns
+ * an array with priorities included.
  *
  * @returns {Array} ads
  */

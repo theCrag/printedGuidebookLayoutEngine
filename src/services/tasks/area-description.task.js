@@ -11,6 +11,11 @@ import { getPhotos, buildImageUrl } from '../api.service';
  */
 export class AreaDescriptionTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {number} index
+   */
   constructor(booklet, area, index) {
     super(booklet, area, areaView.description(cloneDeep(area), index));
 
@@ -31,7 +36,8 @@ export class AreaDescriptionTask extends Task {
    * Adds a description block or part of a description block to the page.
    * Recognized widows and tries to eliminate them by adding an image
    * before the current description block. If image is already inserted,
-   * but widow still exists, it makes the image wider.
+   * but widow still exists, it simply makes the image wider (if possible)
+   * and puts the whole element to the next page.
    *
    * @param {HTMLElement} lastElement
    * @param {number} areaId
@@ -63,11 +69,10 @@ export class AreaDescriptionTask extends Task {
   }
 
   /**
-   * Validates if the descriptions matches on the current page if not, it does
-   * split the description blocks. Split is done by a predefined delimiter for
-   * P-elements. For UL-elements it splits by the LI-elements. The function
-   * validates as well if there are a widow on the new page, if so it inserts
-   * an image before.
+   * Validates if the descriptions matches on the current page. If not, it does
+   * split the description blocks. Split is done by a predefined delimiter (for
+   * P-elements only). For UL-elements it splits by the LI-elements. The function
+   * validates as well if there are a widow on the new page.
    *
    * @param {HTMLElement} page
    * @param {Function} done
@@ -85,6 +90,7 @@ export class AreaDescriptionTask extends Task {
 
       // Remove the last element until the text fits in page
       while (!this.booklet.isElementInsideCurrentSheet(lastElement)) {
+        // If lastElement is empty, remove it and set the variable to the next last element
         if ($(lastElement).children().length === 0) {
           $(lastElement).remove();
           lastElement = last(page.children());
@@ -140,7 +146,7 @@ export class AreaDescriptionTask extends Task {
               break;
 
             default:
-              // Move the whole element on new page
+              // Move the whole element to a new page
               destination.unshift($lastChild.html());
               $lastChild.remove();
               break;
@@ -149,6 +155,7 @@ export class AreaDescriptionTask extends Task {
         }
       }
 
+      // Add left over content to a new page
       let html = $.parseHTML(areaView.emptyDescription(areaId, index));
       $(html).html(destination.join(delimiter));
       if (last(html).innerText.length < process.env.APP_WIDOW_BOUNDARY) {

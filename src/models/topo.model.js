@@ -1,10 +1,9 @@
 import { COL_WIDTH } from './image-styles';
 import { LANDSCAPE, PORTRAIT } from './orientation';
 import { buildImageUrl } from '../services/api.service';
-// import path from '../assets/mountain.jpg';
 
 /**
- * The topo is a image of an area which shows their subareas or routes.
+ * The topo is an image of an area which shows their subareas or routes.
  */
 export class Topo {
 
@@ -19,7 +18,7 @@ export class Topo {
     this.id = jsonTopo.id;
     /**
      * HashId of the topo. This can be used to fetch the
-     * image form the crag-api.
+     * image-url form the crag-api.
      */
     this.hashID = jsonTopo.hashID;
     /**
@@ -35,21 +34,20 @@ export class Topo {
      */
     this.height = jsonTopo.height;
     /**
-     * Type is used for the routeItems.
+     * Type is used for the routeItems collection.
      */
     this.type = 'Topo';
     /**
-     * URL ot the image on the crag-server.
+     * URL of the image on the crag-server.
      */
     this.url = buildImageUrl(this);
-    // this.url = path;
     /**
-     * This is needed to place the topo in the routeItems of the area
-     * in the correct position.
+     * This is needed to place the topo in the routeItems collection of the area
+     * at the correct position.
      */
     this.routesId = (jsonTopo.objects) ? jsonTopo.objects.filter(r => r.objectType === 'Route').map(r => r.objectID) : [];
     /**
-     * All the route ids within in the topo image.
+     * All the route ids which are shown in the topo image.
      */
     this.routesResponsible = [];
     /**

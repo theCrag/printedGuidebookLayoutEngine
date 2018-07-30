@@ -5,6 +5,11 @@ import { Task } from './task';
  */
 export class RoutesFullPageTopoTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {number} index
+   */
   constructor(booklet, area, index) {
     super(booklet, area);
 

@@ -4,11 +4,16 @@ import * as areaView from '../../views/area.view';
 import { Task } from './task';
 
 /**
- * Adds a area topo image of an area to the DOM.
+ * Adds an area topo image of an area to the DOM.
  * This image shows the subareas of an area.
  */
 export class AreaTopoTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {number} index
+   */
   constructor(booklet, area, index) {
     super(booklet, area, areaView.topo(area.topos[index], area.id));
 

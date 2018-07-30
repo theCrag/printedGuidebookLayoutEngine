@@ -9,7 +9,7 @@ import { getArea } from '../services/api.service';
 let rootArea;
 
 /**
- * Fetches the information about an area.
+ * Returns the stored rootArea.
  *
  * @returns {Area} Returns the stored rootArea.
  */

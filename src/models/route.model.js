@@ -20,7 +20,7 @@ export class Route {
      */
     this.name = jsonRoute.name;
     /**
-     * Type which is used for the areas routeItems.
+     * Type which is used for the areas routeItems collection.
      */
     this.type = 'Route';
     /**
@@ -28,7 +28,7 @@ export class Route {
      */
     this.index = index;
     /**
-     * Area in within is the route.
+     * Area which the route belongs to.
      */
     this.parent = parent;
     /**

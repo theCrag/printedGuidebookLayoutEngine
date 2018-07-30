@@ -7,10 +7,14 @@ import { getPhotos } from '../api.service';
 
 
 /**
- * TODO:
+ * Creates a cover page at the top of the document.
  */
 export class CoverPageTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area, '');
 

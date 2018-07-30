@@ -8,8 +8,9 @@ import { FULL_WIDTH } from './image-styles';
 import { getDescriptionHtml } from '../services/api.service';
 
 /**
- * There are 2 types of areas. One that has no routes, but subareas and area-topo images
- * and the other area has routes.
+ * There are two types of areas.
+ * One type has no routes, but subareas and area-topo images
+ * and the other type has routes and route-topo images.
  */
 export class Area {
 
@@ -27,13 +28,13 @@ export class Area {
      */
     this.name = jsonArea.name;
     /**
-     * Parent area in the tree. If this is
+     * Parent area in the tree. If this variable is
      * undefined then it is the root area.
      */
     this.parent = parent;
     /**
      * This flag indicates if this area has been
-     * added to the dom.
+     * added to the dom or not.
      */
     this.rendered = false;
     /**
@@ -42,8 +43,9 @@ export class Area {
     this.fetched = false;
     /**
      * During the render process this flag will be read. This could be
-     * true if the routes of a topo are not in sight. So the routes
-     * should start on a left page to optimise the rendering process.
+     * true if the routes of a topo are not in sight. So the topo
+     * should start on a left page to optimise the rendering process
+     * and have as lot of routes as possible in sight.
      */
     this.routesNeedToStartOnALeftPage = false;
     /**
@@ -55,7 +57,7 @@ export class Area {
      */
     this.geometry = (jsonArea.geometry) ? new Geometry(jsonArea.geometry) : undefined;
     /**
-     * Topo are images of routes or subareas.
+     * Topos are images of routes or subareas.
      */
     this.topos = (jsonArea.topos) ? jsonArea.topos.map(t => new Topo(t)) : [];
     /**
@@ -64,13 +66,12 @@ export class Area {
     this.routes = (jsonArea.children) ? jsonArea.children.filter(c => c.type === 'route').map((route, index) => new Route(route, index + 1, this)) : [];
     /**
      * Route items are a collection of the routes and the topos. This
-     * is needed for the rendering process due to the correct order of
+     * is needed for the rendering process to ensure correct order of
      * the elements.
      */
     this.routeItems = cloneDeep(this.routes);
     if (this.routeItems.length > 0) {
-      // Place the topo image at correct place, so that is before
-      // his upcoming routes.
+      // Place the topo image at correct place (before his upcoming routes).
       this.topos
         .filter(topo => topo.linked === undefined)
         .forEach(topo => {
@@ -130,7 +131,7 @@ export class Area {
   /**
    * FetchNext returns the next area of the tree to fetch the html description.
    * An area has several description, which normally is in the markdown
-   * format thats why we had to fetch the html format.
+   * format that is the reason why we had to fetch the html format.
    */
   fetchNext() {
     if (this.subAreas && this.subAreas.length > 0) {

@@ -5,10 +5,15 @@ import { createLogger } from '../../utils/logger';
 import { Task } from './task';
 
 /**
- * Here the rendered area will validated and optimized.
+ * The rendered area will be validated and optimized.
  */
 export class AreaValidationTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {Function} reset
+   */
   constructor(booklet, area, reset) {
     super(booklet, area);
 
@@ -18,8 +23,8 @@ export class AreaValidationTask extends Task {
 
   /**
    * Verifies if all the mentioned routes in a topo are
-   * in sight of it. This means that the routes do not need
-   * the minimum of scrolling pages.
+   * in sight. This implies that the user needs as less
+   * scrolling as possible to read the placed content.
    *
    * @param {Function} done
    */
@@ -44,8 +49,8 @@ export class AreaValidationTask extends Task {
         }
       }
 
-      // Validate if the last route of a topo is in sight, otherwise start with the topo on
-      // left top page.
+      // Validate if the last route of a topo is in sight,
+      // otherwise start with the topo on left top page.
       let restartRendering = false;
       this.area.routeItems = this.area.routeItems.map(item => {
 
@@ -91,6 +96,12 @@ export class AreaValidationTask extends Task {
     }
   }
 
+  /**
+   * Counts the number of items in a routes container
+   *
+   * @param {HTMLElement} routesContainer
+   * @returns {number} number of routes
+   */
   countRouteItems(routesContainer) {
     const amountTopo = $(routesContainer).find('.topo').not('.route--blank').length;
     const amountRoutes = $(routesContainer).find('.route').not('.route--blank').length;

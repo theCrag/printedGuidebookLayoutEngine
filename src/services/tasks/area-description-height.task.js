@@ -5,10 +5,15 @@ import { Task } from './task';
 import { createLogger } from '../../utils/logger';
 
 /**
- * Adds a description of an area to the DOM.
+ * Ensures that description block are at least as height as
+ * the geometry component is.
  */
 export class AreaDescriptionHeightTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area);
 

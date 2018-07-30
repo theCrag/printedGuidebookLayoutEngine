@@ -2,10 +2,14 @@ import { Task } from './task';
 import { createLogger } from '../../utils/logger';
 
 /**
- * Here a left page will be forced.
+ * Force a left page.
  */
 export class PrepareLeftPageTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area);
 
@@ -13,8 +17,8 @@ export class PrepareLeftPageTask extends Task {
   }
 
   /**
-   * This adds pages to the booklet until it the current page
-   * is on the left site.
+   * This adds pages to the booklet until the current page
+   * is a left page.
    * @param {Function} done
    */
   run(done) {

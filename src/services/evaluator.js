@@ -2,7 +2,11 @@ import $ from 'jquery';
 import { createLogger } from '../utils/logger';
 
 /**
- * To identify the best outcome of an area we need to calculate multiple measure values. These measure values show us a grade of the outcome and we can take the best result for printing a PDF. To get the best result we sum up all the measure values with a weighting. As lower as the value is as higher is the grade. For measure values with an answer of yes or no, a value can be defined in the configuration file.
+ * To identify the best outcome of an area we need to calculate multiple measure values.
+ * These measure values show us a grade of the outcome and we can take the best result
+ * for printing a PDF. To get the best result we sum up all the measure values with a weighting.
+ * As lower as the value is as higher is the grade. For measure values with an answer of
+ * yes or no, a value can be defined in the configuration file.
  * Following measure values are defined:
  * •	Total number of pages
  * •	Total pixel height of all whitespaces
@@ -12,6 +16,10 @@ import { createLogger } from '../utils/logger';
  */
 export class Evaluator {
 
+  /**
+   * @param {Area} tree
+   * @param {Booklet} booklet
+   */
   constructor(tree, booklet) {
     this.tree = tree;
     this.booklet = booklet;
@@ -57,9 +65,9 @@ export class Evaluator {
   }
 
   /**
-   * TODO:
+   * Evaluates the score of the rendered document. A lower score means a better result.
    *
-   * @return {Number} Document score
+   * @return {number} Document score
    */
   getScore() {
     const evaluationAdFulfillment = process.env.EVALUATION_AD_FULFILLMENT ? parseInt(process.env.EVALUATION_AD_FULFILLMENT, 10) : 1;
@@ -109,20 +117,20 @@ export class Evaluator {
 
   /**
    * Counts all the whitespace of the document, which could not be filled
-   * with advertisement or a image.
+   * with an advertisement or an image.
    *
    * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
+   * @returns {number} Amount whitespace pixel.
    */
   countUnFilledWhiteSpaces(allWhitespaces) {
     return this.booklet.advertisements.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => !a.hasContent));
   }
 
   /**
-   * Counts the fulfillment of the advertisement over the document in percentage.
+   * Counts the fulfillment of advertisements over the document in percentage.
    *
    * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Percentage of advertisement fulfillment.
+   * @returns {number} Percentage of advertisement fulfillment.
    */
   countTotalPercentAdvertisementFulfillment(allWhitespaces) {
     const totalDocHeight = (process.env.APP_CONTENT_HEIGHT * (this.booklet.countTotalPages() - 1));
@@ -135,7 +143,7 @@ export class Evaluator {
    * Returns percentage of distribution of all advertisements.
    *
    * @param {Array} advertisements
-   * @returns {Number} Percentage of advertisement distribution
+   * @returns {number} Percentage of advertisement distribution
    */
   countTotalPercentAdsDistribution(advertisements) {
     const distances = advertisements.filter(ad => ad.next !== null)
@@ -150,7 +158,7 @@ export class Evaluator {
   /**
    * Counts all the routes printed in the document.
    *
-   * @returns {Number} Amount of routes.
+   * @returns {number} Amount of routes.
    */
   countAllRoutes() {
     return $('.route__description').length;
@@ -159,7 +167,7 @@ export class Evaluator {
   /**
    * Counts all the routes which are not in sight of his responsible topo image.
    *
-   * @returns {Number} Amount of routes.
+   * @returns {number} Amount of routes.
    */
   countFarOutRoutes() {
     return this.countAllRoutes() - $('.route__description.in-sight').length;
@@ -168,7 +176,7 @@ export class Evaluator {
   /**
    * Counts all the widows in the document.
    *
-   * @returns {Number} Amount of widows.
+   * @returns {number} Amount of widows.
    */
   countTotalWidows() {
     return $('.is-widow').length;
@@ -177,7 +185,7 @@ export class Evaluator {
   /**
    * Returns the percentage of how many pages have widows.
    *
-   * @returns {Number} Percentage of pages have widows
+   * @returns {number} Percentage of pages have widows
    */
   countTotalPercentWidows() {
     return 100 / this.booklet.countTotalPages() * this.countTotalWidows();

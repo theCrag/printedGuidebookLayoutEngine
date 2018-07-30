@@ -14,7 +14,7 @@ export class Description {
     this.name = jsonDescription.name;
     /**
      * At first this is real markdown, but it will
-     * be replace with html.
+     * be replace with html later.
      */
     this.markdown = jsonDescription.markdown;
   }

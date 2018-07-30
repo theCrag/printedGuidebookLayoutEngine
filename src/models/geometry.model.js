@@ -1,6 +1,5 @@
 /**
- * The geometry object is used to generate a google maps
- * component.
+ * The geometry object is used to generate a google maps component.
  */
 export class Geometry {
 

@@ -9,6 +9,10 @@ import { Task } from './task';
  */
 export class AreaGeometryTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area, areaView.geometry(cloneDeep(area)));
   }

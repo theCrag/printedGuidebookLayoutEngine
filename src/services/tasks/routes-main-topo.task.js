@@ -2,13 +2,18 @@ import { Task } from './task';
 import * as areaView from '../../views/area.view';
 
 /**
- * A main topo image is full page with image, but not a
+ * A main topo image is full page width, but not a
  * full-page image. In the most cases it is the first topo
  * image of the routes section or at the start of a page. It
- * also depends on the amount of routes in a image.
+ * also depends on the amount of routes in an image.
  */
 export class RoutesMainTopoTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   * @param {number} index
+   */
   constructor(booklet, area, index) {
     super(booklet, area, areaView.topo(area.routeItems[index], area.id));
   }
@@ -19,7 +24,7 @@ export class RoutesMainTopoTask extends Task {
    * @param {Function} done
    */
   run(done) {
-    this.booklet.routes.addRouteMainTopo(this.html, (page, routesContainer) => this.validate(page, routesContainer, done));
+    this.booklet.routes.addRouteMainTopo(this.html, (page, routesContainer) => this.validate(routesContainer, done));
   }
 
   /**
@@ -27,11 +32,10 @@ export class RoutesMainTopoTask extends Task {
    * image has no space in the current page it will be added ot the
    * next page.
    *
-   * @param {HTMLElement} page
    * @param {HTMLElement} routesContainer
    * @param {Function} done
    */
-  validate(page, routesContainer, done) {
+  validate(routesContainer, done) {
     const areSomeRoutesOutsideTheSheet = routesContainer.find('.topo, .route')
       .children()
       .toArray()

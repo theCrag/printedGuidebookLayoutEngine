@@ -6,6 +6,9 @@ import { getAds, buildImageUrl, getPhotos } from './api.service';
 
 export class Advertisements {
 
+  /**
+   * @param {Booklet} booklet
+   */
   constructor(booklet) {
     this.booklet = booklet;
     this.advertisements = [];
@@ -14,7 +17,7 @@ export class Advertisements {
   }
 
   /**
-   * Gets a prioritised array with all advertisements
+   * Gets a prioritized array with all advertisements
    */
   init() {
     this.advertisements = getAds();
@@ -22,7 +25,7 @@ export class Advertisements {
 
   /**
    * Replaces a blank DIV with an advertisement DIV and inserts a new blank DIV below.
-   * The blank DIVs are mandatory to solve some issues with images and CSS-columns.
+   * Hint: The blank DIVs are mandatory to solve some issues with images and CSS-columns.
    *
    * @param {Object} element
    * @param {string} id
@@ -36,7 +39,7 @@ export class Advertisements {
   }
 
   /**
-   * Generates an element containing necessary information regarding advertisements.
+   * Generates a whitespace-element containing necessary information regarding advertisements.
    *
    * @param {string} id
    * @param {number} page
@@ -58,7 +61,8 @@ export class Advertisements {
   }
 
   /**
-   * Adds whitespaceContainers to the end of each page except the first page (cover).
+   * Adds whitespace containers to the end of each page except the first page.
+   * (cover page does not need an advertisement)
    */
   addWhitespaceContainers() {
     let sheets = $('.sheet').toArray();
@@ -80,7 +84,8 @@ export class Advertisements {
   fillColumnAdvertisements(done) {
     let containers = [];
     let i = 0;
-    // get all DIV-elements with possible whitespace in columns which are at the end of a column (excluding last column)
+    // Get all DIV-elements with possible whitespace in columns
+    // which are at the end of a column (excluding last column)
     $('.route--blank').toArray().forEach((blank) => {
       const $blank = $(blank);
       const $next = $($blank.next());
@@ -104,7 +109,8 @@ export class Advertisements {
         }
       }
     });
-    // get all DIV-elements in columns which are in the last column and have possible whitespace
+    // Get all DIV-elements in columns which are in the last column
+    // and have possible whitespace
     $('.routes__columns').toArray().forEach((container) => {
       const lastBlank = last($(container).children());
       if (lastBlank) {
@@ -122,14 +128,14 @@ export class Advertisements {
         containers.push(element);
       }
     });
-    // fill advertisements in these DIV-elements
+    // Fill advertisements into these DIV-elements
     this.fillAdvertisements(containers, 'column-advertisement', () => done());
   }
 
   /**
    * Returns an array containing all elements with class ".whitespace".
    *
-   * @returns {Array} containers
+   * @returns {Array<Object>} containers
    */
   getWhitespaceContainers() {
     let containers = [];
@@ -166,12 +172,12 @@ export class Advertisements {
       }
     }
 
-    // if all advertisements are filtered out, it is not possible to not have duplicate advertisements
+    // If all advertisements are filtered out, it is not possible to not have duplicate advertisements
     if (ads.length === 0){
       ads = this.advertisements;
     }
 
-    // Take random advertisement from array with advertisement priorities
+    // Take random advertisement from array with advertisement priorities included
     ads[Math.floor((Math.random() * ads.length))].images
       .filter((image) => element.portrait ? image.origWidth < image.origHeight : image.origWidth > image.origHeight)
       .forEach((img) => {
@@ -191,14 +197,14 @@ export class Advertisements {
           ad = areaView.advertisementRight(element, photoPath, element.maxHeight, img.hashID);
           $(`#${element.id}`).append(ad);
         }
-
       });
   }
 
   /**
-   * Appends an advertisement to a whitespace-container.
+   * Appends advertisements into whitespace-containers.
    *
-   * @param {Array} containers
+   * @param {Array<Object>} containers
+   * @param {string} imgClass
    * @param {Function} done
    */
   fillAdvertisements(containers, imgClass, done) {
@@ -224,10 +230,10 @@ export class Advertisements {
   }
 
   /**
-   * Appends a second advertisement to a whitespace-container if the first
+   * Appends a second advertisement to each whitespace-container if the first
    * advertisement does not use more than half page-width.
    *
-   * @param {Array} containers
+   * @param {Array<Object>} containers
    * @param {Function} done
    */
   fillAdditionalAdvertisements(containers, done) {
@@ -262,10 +268,10 @@ export class Advertisements {
 
   /**
    * Returns an Array with the filled whitespace containers
-   * including the next and previous element for each element
+   * including the next and previous element for each element.
    *
-   * @param {Array} containers
-   * @returns {Array} filledContainers
+   * @param {Array<Object>} containers
+   * @returns {Array<Object>} filledContainers
    */
   getAdvertisements(containers) {
     const filledContainers = containers.filter(e => e.filled);
@@ -308,7 +314,7 @@ export class Advertisements {
       if (photos.length > index) {
         const photoPath = buildImageUrl(photos[index]);
         let photo;
-        // if there are two advertisements, remove the right one as well
+        // If there are two advertisements, remove the right one as well
         if (element.hasTwo) {
           $(`#advertisement-${element.id}-right`).remove();
         }
@@ -337,7 +343,7 @@ export class Advertisements {
               maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
             }
             const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a,v) => a + v);
-            // if image is loaded, check if there is enough space for an additional image
+            // If image is loaded, check if there is enough space for an additional image
             if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
               if (whitespace.hasClass('whitespace__container')) {
                 whitespace.removeClass('whitespace__container');
@@ -362,7 +368,7 @@ export class Advertisements {
 
   /**
    * Recursive function to replace advertisements with fill images
-   * until it has the correct fulfillment level
+   * until it has the best fulfillment or the best distribution level.
    *
    * @param {number} heightToFill
    * @param {string} treeID
@@ -434,7 +440,7 @@ export class Advertisements {
    * Gets the height of all the whitespace of the document.
    *
    * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
+   * @returns {number} Amount whitespace pixel.
    */
   getHeightOfAllWhiteSpaces(allWhitespaces) {
     return allWhitespaces.length > 0
@@ -444,10 +450,10 @@ export class Advertisements {
 
   /**
    * Gets the height of all the whitespace of the document, which are filled
-   * with advertisement or a image.
+   * with an advertisement or an image.
    *
    * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
+   * @returns {number} Amount whitespace pixel.
    */
   getHeightOfFilledWhiteSpaces(allWhitespaces) {
     return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.hasContent));
@@ -455,10 +461,10 @@ export class Advertisements {
 
   /**
    * Gets the height of all the whitespace of the document, which are filled
-   * with advertisement.
+   * with an advertisement.
    *
    * @param {Array<Object>} allWhitespaces
-   * @returns {Number} Amount whitespace pixel.
+   * @returns {number} Amount whitespace pixel.
    */
   getHeightOfAdsFilledWhitespaces(allWhitespaces) {
     return this.getHeightOfAllWhiteSpaces(allWhitespaces.filter(a => a.filled));

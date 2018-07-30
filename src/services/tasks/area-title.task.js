@@ -4,10 +4,14 @@ import * as areaView from '../../views/area.view';
 import { Task } from './task';
 
 /**
- * Adds a description of an area to the DOM.
+ * Adds the area title to the DOM.
  */
 export class AreaTitleTask extends Task {
 
+  /**
+   * @param {Booklet} booklet
+   * @param {Area} area
+   */
   constructor(booklet, area) {
     super(booklet, area, areaView.title(cloneDeep(area)));
   }

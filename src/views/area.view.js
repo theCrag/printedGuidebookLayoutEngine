@@ -4,12 +4,12 @@ import { buildImageUrl } from '../services/api.service';
 
 
 /**
- * HTML for the bolt image with is used in the routes
+ * HTML for the bolt image which is used in the routes
  */
 const boltSvg = '<span class="clip"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11 18" width="11" height="18"><path d="m8,17 0,-2 c1,0 2,-1 2,-2 l0,-9 c0,-2 -2,-3 -4,-3 -4,0 -5,3 -5,5 0,1 1,1.5 1.5,1.5 0.5,1.5 0.5,2.5 1,4 C2,13.4 5,15.4 6,15.4 l0,2 z M3,6.4 c0,0 0,-3 3,-3 1,0 2,0 2,2 l0,7 c0,1 -1,1 -2,1 -1,0 -2,-2 -2,-2 l -1,-5" style="fill:currentColor"></path></svg></span>';
 
 /**
- * Creates the html for a area title
+ * Creates the html for an area cover page
  *
  * @param {Area} area
  * @returns {string} html
@@ -27,7 +27,7 @@ export const cover = (area, photo) => {
 };
 
 /**
- * Creates the html for a area title
+ * Creates the html for an area title
  *
  * @param {Area} area
  * @returns {string} html
@@ -38,6 +38,7 @@ export const title = (area) => `
 /**
  * Creates the html for the geometry element. On the current webpage this element
  * is a google map integration.
+ * TODO: Insert real google maps element, currently a default image is used.
  *
  * @param {Area} area
  * @returns {string} html
@@ -49,7 +50,8 @@ export const geometry = (area) => `
 
 
 /**
- * Creates the html for a collected photo of the crag API.
+ * Creates the html for a collected photo of the crag API
+ * to eliminate a widow.
  *
  * @param {number} areaId
  * @param {number} index
@@ -62,7 +64,8 @@ export const widowPhoto = (areaId, index, photoPath) => `
   </div>`;
 
 /**
- * Creates the html for a collected photo of the crag API.
+ * Creates the html for a collected photo of the crag API
+ * which can have full page width.
  *
  * @param {number} areaId
  * @param {number} index
@@ -75,7 +78,8 @@ export const photo = (areaId, index, photoPath) => `
   </div>`;
 
 /**
- * Creates the html for a collected photo of the crag API.
+ * Creates the html for a collected photo of the crag API
+ * which can have half page width.
  *
  * @param {number} areaId
  * @param {number} index
@@ -102,7 +106,7 @@ export const description = (area, index) => `
 
 /**
  * Creates the html for the area description without any content.
- * This is used to split description's content.
+ * This is used to split the content of a description.
  *
  * @param {string} areaId
  * @param {number} index
@@ -117,7 +121,6 @@ export const emptyDescription = (areaId, index) => `
  *
  * @param {Topo} topo
  * @param {string} areaId
- * @param {number} index
  * @returns {string} html
  */
 export const topo = (topo, areaId) => `
@@ -157,6 +160,7 @@ export const whitespaceContainer = (pageNumber) => `
  * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
+ * @param {string} hashID
  * @returns {string} html
  */
 export const advertisement = (element, photoPath, maxHeight, hashID) => `
@@ -164,12 +168,14 @@ export const advertisement = (element, photoPath, maxHeight, hashID) => `
     <img src="${photoPath}" id="advertisement-img-${element.id}" style="max-height: ${maxHeight}px;" />
   </div>`;
 
-  /**
- * Creates the html for a collected advertisement of the crag API.
+/**
+ * Creates the html for a collected advertisement of the crag API
+ * which can be used in columns.
  *
  * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
+ * @param {string} hashID
  * @returns {string} html
  */
 export const advertisementColumn = (element, photoPath, maxHeight, hashID) => `
@@ -183,6 +189,7 @@ export const advertisementColumn = (element, photoPath, maxHeight, hashID) => `
  * @param {Object} element
  * @param {string} photoPath
  * @param {number} maxHeight
+ * @param {string} hashID
  * @returns {string} html
  */
 export const advertisementRight = (element, photoPath, maxHeight, hashID) => `
@@ -247,7 +254,7 @@ export const routeItem = (routeItem, areaId, index) =>
     <div class="route route--blank"></div>`;
 
 /**
- * Creates a empty route html. This template is used for the
+ * Creates an empty route html. This template is used for the
  * route text breaking.
  *
  * @param {Object{Route or Topo}} routeItem

@@ -64,7 +64,7 @@ export class Booklet {
   }
 
   /**
-   * Sets the root title in header on every page
+   * Sets the root title in header on each page
    *
    * @param {string} title
    */
@@ -140,7 +140,7 @@ export class Booklet {
   /**
    * Takes a jQuery element and checks if the element fits in the current page.
    *
-   * @param {Object} element
+   * @param {HTMLElement} element
    * @returns {boolean} fits
    */
   isElementInsideCurrentSheet(element) {
@@ -161,9 +161,9 @@ export class Booklet {
 
   /**
    * Takes a jQuery element and returns the max available height for this element,
-   * until it reaches the end of the page.
+   * until it reaches the end of the page content.
    *
-   * @param {Object} element
+   * @param {HTMLElement} element
    * @returns {number} maxHeight
    */
   getMaxHeight(element) {
@@ -187,7 +187,7 @@ export class Booklet {
    * If there is no content after the columns, the height is calculated till the end of the page,
    * otherwise the height is calculated till the end of the column-container.
    *
-   * @param {Object} element
+   * @param {HTMLElement} element
    * @returns {number} maxHeight
    */
   getMaxColumnHeight(element) {

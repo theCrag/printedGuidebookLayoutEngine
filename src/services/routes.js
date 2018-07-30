@@ -7,6 +7,9 @@ import * as areaView from '../views/area.view';
  */
 export class Routes {
 
+  /**
+   * @param {Booklet} booklet
+   */
   constructor(booklet) {
     this.booklet = booklet;
     this.routeContainerCounter = 0;
@@ -60,7 +63,8 @@ export class Routes {
 
   /**
    * Adds a route item to the container and verifies if the appended
-   * element is image, so it can hold until the image is fully loaded in the DOM.
+   * element is an image. If it is an image, it can hold until the
+   * image is fully loaded in the DOM.
    *
    * @param {HTMLElement} page
    * @param {HTMLElement} routesContainer
@@ -93,7 +97,7 @@ export class Routes {
   }
 
   /**
-   * Due to the optimization work in can happen that some
+   * Due to the optimization work it can happen that some
    * empty route containers lay in the DOM. So this method
    * remove those mentioned containers.
    */
