@@ -40,7 +40,6 @@ export class Route {
      */
     this.grade = jsonRoute.gradeInContext;
     this.style = jsonRoute.style;
-    this.stars = jsonRoute.stars;
     this.bolts = jsonRoute.bolts;
     this.displayHeight = (jsonRoute.displayHeight) ? jsonRoute.displayHeight.join('') : '';
 

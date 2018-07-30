@@ -41,7 +41,7 @@ export class TaskRunner {
       const task = this.tasks.shift();
       setTimeout(() => {
         return task.run(() => this.start(this.area, this.tasks, this.done));
-      }, (process.env.APP_TEST === 'true') ? 20 : 0);
+      }, 0);
 
     } else {
       // If all tasks are done the task-runner is finished as well.

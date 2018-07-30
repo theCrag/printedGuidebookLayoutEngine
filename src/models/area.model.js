@@ -82,10 +82,8 @@ export class Area {
 
       // Set the default image style for large topos.
       this.routeItems = this.routeItems.map((item) => {
-        if (item.type === 'Topo') {
-          if (item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
-            item.imageStyle = FULL_WIDTH;
-          }
+        if (item.type === 'Topo' && item.routesId.length >= process.env.APP_TOPO_LARGE_SCALE) {
+          item.imageStyle = FULL_WIDTH;
         }
         return item;
       });

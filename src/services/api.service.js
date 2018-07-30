@@ -28,10 +28,8 @@ export const getArea = (areaPath, done) => {
  * @returns {string} URL to the crag image.
  */
 export const buildImageUrl = (img) => {
-  if (img) {
-    return (img.hashID)
-      ? `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`
-      : '';
+  if (img && img.hashID) {
+    return `${process.env.API_IMAGE_BASE_URL}/original-image/${img.hashID.substring(0, 2)}/${img.hashID.substring(2, 4)}/${img.hashID}`;
   } else {
     return '';
   }

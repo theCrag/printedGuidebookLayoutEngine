@@ -2,20 +2,6 @@ import { Area } from '../models/area.model';
 import { getArea } from '../services/api.service';
 
 /**
- * @name rootArea
- * @description
- * The root area is the last fetched area.
- */
-let rootArea;
-
-/**
- * Returns the stored rootArea.
- *
- * @returns {Area} Returns the stored rootArea.
- */
-export const getRootArea = () => rootArea;
-
-/**
  * Fetches the information about an area from the guide page of the crag
  * webpage. Moreover it fetches further information like the html description.
  *
@@ -23,10 +9,10 @@ export const getRootArea = () => rootArea;
  */
 export const fetchArea = (done) => {
   getArea(window.location.pathname, (jsonData) => {
-    rootArea = new Area(jsonData.data);
+    const rootArea = new Area(jsonData.data);
 
     doFetchAreaDescription(rootArea, () => {
-      done(getRootArea());
+      done(rootArea);
     });
   });
 };
