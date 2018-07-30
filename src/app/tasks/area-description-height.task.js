@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { last } from 'lodash';
 
 import { Task } from './task';
-import { createLogger } from '../../utils/logger';
+import { createLogger } from '../utils/logger';
 
 /**
  * Ensures that description block are at least as height as
@@ -32,12 +32,12 @@ export class AreaDescriptionHeightTask extends Task {
     let geometryOnCurrentPage = false;
     let $geometry;
     children.toArray().forEach(element => {
-      if ($(element).hasClass('geometry')){
+      if ($(element).hasClass('geometry')) {
         geometryOnCurrentPage = true;
         $geometry = $($(element).children()[0]);
       }
     });
-    if (geometryOnCurrentPage){
+    if (geometryOnCurrentPage) {
       const $lastElement = $(lastElement);
 
       const geometryOffset = $geometry.offset();
@@ -45,7 +45,7 @@ export class AreaDescriptionHeightTask extends Task {
       const elementOffset = $lastElement.offset();
       const elementBottom = elementOffset.top + $lastElement.height();
 
-      if (totalGeometryHeight > elementBottom){
+      if (totalGeometryHeight > elementBottom) {
         const diff = totalGeometryHeight - elementBottom;
         $lastElement.height($lastElement.height() + diff);
       }

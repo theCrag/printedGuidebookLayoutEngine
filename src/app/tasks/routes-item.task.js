@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { last } from 'lodash';
 
 import { Task } from './task';
-import * as areaView from '../../views/area.view';
+import * as areaView from '../views/area.view';
 
 /**
  * Adds a route item, which could be a route or a topo image, to

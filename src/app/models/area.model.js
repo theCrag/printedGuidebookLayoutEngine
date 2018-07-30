@@ -4,7 +4,7 @@ import { Topo } from './topo.model';
 import { Route } from './route.model';
 import { Geometry } from './geometry.model';
 import { Description } from './description.model';
-import { FULL_WIDTH } from './image-styles';
+import { FULL_WIDTH } from '../constants/image-styles';
 import { getDescriptionHtml } from '../services/api.service';
 
 /**

@@ -1,5 +1,5 @@
-import { COL_WIDTH } from './image-styles';
-import { LANDSCAPE, PORTRAIT } from './orientation';
+import { COL_WIDTH } from '../constants/image-styles';
+import { LANDSCAPE, PORTRAIT } from '../constants/orientation';
 import { buildImageUrl } from '../services/api.service';
 
 /**

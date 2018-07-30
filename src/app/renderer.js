@@ -1,9 +1,9 @@
-import { createLogger } from '../utils/logger';
-import { TaskRunner } from '../services/task-runner';
-import { Booklet } from '../services/booklet';
-import { Evaluator } from '../services/evaluator';
-import { PORTRAIT } from '../models/orientation';
-import { FULL_PAGE, FULL_WIDTH } from '../models/image-styles';
+import { createLogger } from './utils/logger';
+import { TaskRunner } from './task-runner';
+import { Booklet } from './booklet';
+import { Evaluator } from './evaluator';
+import { PORTRAIT } from './constants/orientation';
+import { FULL_PAGE, FULL_WIDTH } from './constants/image-styles';
 import { AreaTitleTask } from './tasks/area-title.task';
 import { CoverPageTask } from './tasks/cover.page.task';
 import { AreaGeometryTask } from './tasks/area-geometry.task';

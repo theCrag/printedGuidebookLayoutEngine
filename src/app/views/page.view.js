@@ -1,4 +1,4 @@
-import logo from '../assets/logo-light.svg';
+import logo from '../../assets/logo-light.svg';
 
 /**
  * Creates the html for a page.

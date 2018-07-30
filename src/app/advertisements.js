@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import { last } from 'lodash';
-import { createLogger } from '../utils/logger';
-import * as areaView from '../views/area.view';
-import { getAds, buildImageUrl, getPhotos } from './api.service';
+import { createLogger } from './utils/logger';
+import * as areaView from './views/area.view';
+import { getAds, buildImageUrl, getPhotos } from './services/api.service';
 
 export class Advertisements {
 
@@ -173,7 +173,7 @@ export class Advertisements {
     }
 
     // If all advertisements are filtered out, it is not possible to not have duplicate advertisements
-    if (ads.length === 0){
+    if (ads.length === 0) {
       ads = this.advertisements;
     }
 
@@ -290,8 +290,8 @@ export class Advertisements {
       filledContainers[i].skipped = $(`#${filledContainers[i].id}`).hasClass('keep');
     }
     filledContainers.forEach(a => a.distance
-       = (a.next ? parseInt(a.next.page - a.page, 10) : parseInt(this.booklet.countTotalPages() - a.page, 10))
-       + (a.prev ? parseInt(a.page - a.prev.page, 10) : parseInt(a.page, 10)));
+      = (a.next ? parseInt(a.next.page - a.page, 10) : parseInt(this.booklet.countTotalPages() - a.page, 10))
+      + (a.prev ? parseInt(a.page - a.prev.page, 10) : parseInt(a.page, 10)));
     return (filledContainers);
   }
 
@@ -337,12 +337,12 @@ export class Advertisements {
           image.on('load', () => {
             const whitespace = image.closest('.whitespace');
             let maxHeight = 0;
-            if (element.column){
+            if (element.column) {
               maxHeight = this.booklet.getMaxColumnHeight(whitespace) - whitespace.height();
             } else {
               maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
             }
-            const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a,v) => a + v);
+            const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a, v) => a + v);
             // If image is loaded, check if there is enough space for an additional image
             if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
               if (whitespace.hasClass('whitespace__container')) {
@@ -393,7 +393,7 @@ export class Advertisements {
         } else {
           adDistributionOptimization = false;
         }
-        if (adDistributionOptimization || this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill){
+        if (adDistributionOptimization || this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill) {
           this.insertFillImage(treeID, index, fill, (index) => {
             if (index !== null) {
               this.replaceAdvertisement(heightToFill, treeID, index, distance, done);

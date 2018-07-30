@@ -1,9 +1,9 @@
 import { cloneDeep } from 'lodash';
 
 import { Task } from './task';
-import { createLogger } from '../../utils/logger';
-import * as areaView from '../../views/area.view';
-import { getPhotos } from '../api.service';
+import { createLogger } from '../utils/logger';
+import * as areaView from '../views/area.view';
+import { getPhotos } from '../services/api.service';
 
 
 /**

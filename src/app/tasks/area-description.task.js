@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import { last, cloneDeep } from 'lodash';
 
-import * as areaView from '../../views/area.view';
+import * as areaView from '../views/area.view';
 import { Task } from './task';
-import { createLogger } from '../../utils/logger';
-import { getPhotos, buildImageUrl } from '../api.service';
+import { createLogger } from '../utils/logger';
+import { getPhotos, buildImageUrl } from '../services/api.service';
 
 /**
  * Adds a description of an area to the DOM.

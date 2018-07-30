@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { last, first } from 'lodash';
 
-import { createLogger } from '../../utils/logger';
+import { createLogger } from '../utils/logger';
 import { Task } from './task';
 
 /**

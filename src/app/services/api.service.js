@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { createLogger } from '../utils/logger';
-import * as adJsonData from '../data/ads.json';
+import * as adJsonData from '../../data/ads.json';
 
 const log = createLogger('api');
 

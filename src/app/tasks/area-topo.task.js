@@ -1,6 +1,6 @@
 import { last } from 'lodash';
 
-import * as areaView from '../../views/area.view';
+import * as areaView from '../views/area.view';
 import { Task } from './task';
 
 /**

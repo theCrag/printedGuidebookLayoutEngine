@@ -1,5 +1,5 @@
 import { Task } from './task';
-import * as areaView from '../../views/area.view';
+import * as areaView from '../views/area.view';
 
 /**
  * A main topo image is full page width, but not a

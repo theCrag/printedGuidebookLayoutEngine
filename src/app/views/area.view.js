@@ -1,5 +1,5 @@
-import path from '../assets/google-maps.png';
-import logoDark from '../assets/logo-dark.svg';
+import path from '../../assets/google-maps.png';
+import logoDark from '../../assets/logo-dark.svg';
 import { buildImageUrl } from '../services/api.service';
 
 

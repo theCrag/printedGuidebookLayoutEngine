@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { createLogger } from '../utils/logger';
+import { createLogger } from './utils/logger';
 
 /**
  * To identify the best outcome of an area we need to calculate multiple measure values.

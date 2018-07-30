@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import { createLogger } from '../utils/logger';
-import * as areaView from '../views/area.view';
+import { createLogger } from './utils/logger';
+import * as areaView from './views/area.view';
 
 /**
  * All the routes related DOM manipulation are defined here.

@@ -1,5 +1,5 @@
 import { Task } from './task';
-import { createLogger } from '../../utils/logger';
+import { createLogger } from '../utils/logger';
 
 /**
  * Force a left page.

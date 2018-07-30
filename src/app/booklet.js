@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import { page } from '../views/page.view';
-import { createLogger } from '../utils/logger';
+import { page } from './views/page.view';
+import { createLogger } from './utils/logger';
 import { Advertisements } from './advertisements';
 import { Routes } from './routes';
 
