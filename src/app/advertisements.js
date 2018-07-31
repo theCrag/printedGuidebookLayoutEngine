@@ -85,7 +85,6 @@ export class Advertisements {
     let containers = [];
     let i = 0;
     // Get all DIV-elements with possible whitespace in columns
-    // which are at the end of a column (excluding last column)
     $('.route--blank').toArray().forEach((blank) => {
       const $blank = $(blank);
       const $next = $($blank.next());
@@ -107,27 +106,25 @@ export class Advertisements {
           );
           containers.push(element);
         }
+      } else {
+        // Last element in last column
+        if (blank) {
+          const $lastBlank = $(blank);
+          const id = `blank-${i++}`;
+          this.replaceBlankWithAdvertisement($lastBlank, id);
+          const maxHeight = this.booklet.getMaxColumnHeight(blank);
+          const element = this.generateAdvertisementElement(
+            id,
+            last($lastBlank.closest('.sheet').attr('id').split('-')),
+            maxHeight,
+            maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
+            true
+          );
+          containers.push(element);
+        }
       }
     });
-    // Get all DIV-elements in columns which are in the last column
-    // and have possible whitespace
-    $('.routes__columns').toArray().forEach((container) => {
-      const lastBlank = last($(container).children());
-      if (lastBlank) {
-        const $lastBlank = $(lastBlank);
-        const id = `blank-${i++}`;
-        this.replaceBlankWithAdvertisement($lastBlank, id);
-        const maxHeight = this.booklet.getMaxColumnHeight(lastBlank);
-        const element = this.generateAdvertisementElement(
-          id,
-          last($lastBlank.closest('.sheet').attr('id').split('-')),
-          maxHeight,
-          maxHeight > (process.env.APP_CONTENT_WIDTH / process.env.APP_COLUMNS) ? true : false,
-          true
-        );
-        containers.push(element);
-      }
-    });
+
     // Fill advertisements into these DIV-elements
     this.fillAdvertisements(containers, 'column-advertisement', () => done());
   }
