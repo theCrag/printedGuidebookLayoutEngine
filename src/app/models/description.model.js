@@ -16,7 +16,7 @@ export class Description {
      * At first this is real markdown, but it will
      * be replace with html later.
      */
-    this.markdown = jsonDescription.markdown;
+    this.markdown = jsonDescription.inheritedForm === undefined ? jsonDescription.markdown : '';
   }
 
 }
