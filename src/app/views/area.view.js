@@ -246,12 +246,27 @@ export const routeItem = (routeItem, areaId, index) =>
             </tr>
           </table>
         </div>
-        <div class="route__body">
-          ${routeItem.descriptions.map(d => d.markdown).join('<br/>')}
-        </div>
+        ${routeDescription(routeItem)}
       </div>
     </div>
     <div class="route route--blank"></div>`;
+
+/**
+ * Builds the HTML for the routes body
+ *
+ * @param {Object{Route or Topo}} routeItem
+ * @returns {String} html
+ */
+export const routeDescription = (routeItem) => {
+  let descriptionsTemplate = '';
+
+  if (routeItem.descriptions.length > 0) {
+    const descriptions = routeItem.descriptions.filter(d => !d.isInherited);
+    descriptionsTemplate = descriptions.map(d => d.markdown).join('<br/>');
+  }
+
+  return `<div class="route__body">${descriptionsTemplate}</div>`;
+};
 
 /**
  * Creates an empty route html. This template is used for the

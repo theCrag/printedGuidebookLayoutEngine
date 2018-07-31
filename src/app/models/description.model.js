@@ -13,10 +13,14 @@ export class Description {
      */
     this.name = jsonDescription.name;
     /**
+     * Tells if the description is a clone of a previous one.
+     */
+    this.isInherited = !!jsonDescription.inheritedFrom;
+    /**
      * At first this is real markdown, but it will
      * be replace with html later.
      */
-    this.markdown = jsonDescription.inheritedFrom === undefined ? jsonDescription.markdown : '';
+    this.markdown = jsonDescription.markdown;
   }
 
 }
