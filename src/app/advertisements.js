@@ -365,7 +365,7 @@ export class Advertisements {
 
   /**
    * Recursive function to replace advertisements with fill images
-   * until it has the best fulfillment or the best distribution level.
+   * until it has the best fulfillment or the best spread level.
    *
    * @param {number} heightToFill
    * @param {string} treeID
@@ -384,13 +384,13 @@ export class Advertisements {
       as.sort((a, b) => { return a.distance - b.distance; });
       if (as.length > 0) {
         fill = as[0];
-        let adDistributionOptimization;
-        if (process.env.EVALUATION_AD_DISTRIBUTION > process.env.EVALUATION_AD_FULFILLMENT) {
-          adDistributionOptimization = true;
+        let adSpreadOptimization;
+        if (process.env.EVALUATION_AD_SPREAD > process.env.EVALUATION_AD_FULFILLMENT) {
+          adSpreadOptimization = true;
         } else {
-          adDistributionOptimization = false;
+          adSpreadOptimization = false;
         }
-        if (adDistributionOptimization || this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill) {
+        if (adSpreadOptimization || this.getHeightOfAdsFilledWhitespaces(this.getWhitespaceContainers()) - ($(`#advertisement-${fill.id}`).height() / 2) >= heightToFill) {
           this.insertFillImage(treeID, index, fill, (index) => {
             if (index !== null) {
               this.replaceAdvertisement(heightToFill, treeID, index, distance, done);

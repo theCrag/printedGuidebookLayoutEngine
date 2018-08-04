@@ -61,7 +61,7 @@ export class Evaluator {
     const advertisements = this.booklet.advertisements.getAdvertisements(allWhitespaces);
     this.totalAdsCount = advertisements.length;
     this.averageAdsDistance = Math.round((this.totalPages - 1) / (this.totalAdsCount - 1));
-    this.totalPercentAdsDistribution = this.countTotalPercentAdsDistribution(advertisements);
+    this.totalPercentAdsSpread = this.countTotalPercentAdsSpread(advertisements);
   }
 
   /**
@@ -71,16 +71,16 @@ export class Evaluator {
    */
   getScore() {
     const evaluationAdFulfillment = process.env.EVALUATION_AD_FULFILLMENT ? parseInt(process.env.EVALUATION_AD_FULFILLMENT, 10) : 1;
-    const evaluationAdDistribution = process.env.EVALUATION_AD_DISTRIBUTION ? parseInt(process.env.EVALUATION_AD_DISTRIBUTION, 10) : 1;
+    const evaluationAdSpread = process.env.EVALUATION_AD_SPREAD ? parseInt(process.env.EVALUATION_AD_SPREAD, 10) : 1;
     const evaluationFarOutRoutes = process.env.EVALUATION_FAR_OUT_ROUTES ? parseInt(process.env.EVALUATION_FAR_OUT_ROUTES, 10) : 1;
     const evaluationWidows = process.env.EVALUATION_WIDOWS ? parseInt(process.env.EVALUATION_WIDOWS, 10) : 1;
 
     const divisor = evaluationAdFulfillment
-      + evaluationAdDistribution
+      + evaluationAdSpread
       + evaluationFarOutRoutes
       + evaluationWidows;
     return parseInt((this.totalPercentAdvertisementFulfillment * evaluationAdFulfillment
-      + this.totalPercentAdsDistribution * evaluationAdDistribution
+      + this.totalPercentAdsSpread * evaluationAdSpread
       + this.totalPercentFarOutRoutes * evaluationFarOutRoutes
       + this.totalPercentWidows * evaluationWidows)
       / divisor, 10);
@@ -96,7 +96,7 @@ export class Evaluator {
     this.log.info('totalPages', this.totalPages + ' pages');
     this.log.info('totalAdsCount', this.totalAdsCount + ' advertisements');
     this.log.info('averageAdsDistance', this.averageAdsDistance + ' pages');
-    this.log.info('totalPercentAdsDistribution', this.totalPercentAdsDistribution + ' %');
+    this.log.info('totalPercentAdsSpread', this.totalPercentAdsSpread + ' %');
     this.log.info(' ');
     this.log.info('totalPixelOfAllWhitespaces', this.totalPixelOfAllWhitespaces + ' pixel');
     this.log.info('totalPixelOfUnfilledWhitespaces', this.totalPixelOfUnfilledWhitespaces + ' pixel');
@@ -140,12 +140,12 @@ export class Evaluator {
   }
 
   /**
-   * Returns percentage of distribution of all advertisements.
+   * Returns percentage of spread of all advertisements.
    *
    * @param {Array} advertisements
-   * @returns {number} Percentage of advertisement distribution
+   * @returns {number} Percentage of advertisement spread
    */
-  countTotalPercentAdsDistribution(advertisements) {
+  countTotalPercentAdsSpread(advertisements) {
     const distances = advertisements.filter(ad => ad.next !== null)
       .map(ad => parseInt(ad.next.page - ad.page));
     let totalDeviation = 0;
