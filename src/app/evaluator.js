@@ -152,7 +152,8 @@ export class Evaluator {
     for (let i = 0; i < distances.length; ++i) {
       totalDeviation += Math.abs((distances[i] - this.averageAdsDistance));
     }
-    return (totalDeviation / distances.length) / this.averageAdsDistance * 100;
+    const percentAdsSpread = (totalDeviation / distances.length) / this.averageAdsDistance * 100;
+    return isNaN(percentAdsSpread) ? 0 : percentAdsSpread;
   }
 
   /**
