@@ -170,7 +170,7 @@ export class Evaluator {
    * @returns {number} Amount of routes.
    */
   countFarOutRoutes() {
-    return this.countAllRoutes() - $('.route__description.in-sight').length;
+    return $('.route__description.out-sight').length;
   }
 
   /**

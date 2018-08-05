@@ -70,9 +70,13 @@ export class AreaValidationTask extends Task {
             }
 
             const pages = $(pageElements.map(e => `#${e.attr('id')}`).join(', '));
-            pages.find('.route__description').addClass('in-sight');
-
             const lastRouteInSight = pages.find(`#route-${this.area.id}-${first(item.routesResponsible)}`);
+
+            item.routesResponsible.forEach(index => {
+              if (pages.find(`#route-${this.area.id}-${index}`).length === 0) {
+                $(`#route-${this.area.id}-${index}`).addClass('out-sight');
+              }
+            });
 
             if (lastRouteInSight.length === 0 && !item.startOnLeftPage && !restartRendering) {
               item.startOnLeftPage = true;
