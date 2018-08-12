@@ -332,24 +332,23 @@ export class Advertisements {
         // Wait for image loading
         if (image.length > 0) {
           image.on('load', () => {
-            const whitespace = image.closest('.whitespace');
-            let maxHeight = 0;
-            if (element.column) {
-              maxHeight = this.booklet.getMaxColumnHeight(whitespace) - whitespace.height();
-            } else {
-              maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
-            }
-            const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a, v) => a + v);
-            // If image is loaded, check if there is enough space for an additional image
-            if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
-              if (whitespace.hasClass('whitespace__container')) {
-                whitespace.removeClass('whitespace__container');
-                whitespace.addClass('whitespace__col');
+            if (!element.column) {
+              const whitespace = image.closest('.whitespace');
+              const maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();;
+              const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a, v) => a + v);
+              // If image is loaded, check if there is enough space for an additional image
+              if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
+                if (whitespace.hasClass('whitespace__container')) {
+                  whitespace.removeClass('whitespace__container');
+                  whitespace.addClass('whitespace__col');
+                }
+                element.maxHeight = maxHeight;
+                this.insertFillImage(treeID, nextIndex, element, (i) => done(i));
+              } else if (totalImagesWidth < process.env.APP_CONTENT_WIDTH / 2 && whitespace.children().length < process.env.APP_COLUMNS) {
+                this.insertFillImage(treeID, nextIndex, element, (i) => done(i), true);
+              } else {
+                done(nextIndex);
               }
-              element.maxHeight = maxHeight;
-              this.insertFillImage(treeID, nextIndex, element, (i) => done(i));
-            } else if (totalImagesWidth < process.env.APP_CONTENT_WIDTH / 2 && whitespace.children().length < process.env.APP_COLUMNS) {
-              this.insertFillImage(treeID, nextIndex, element, (i) => done(i), true);
             } else {
               done(nextIndex);
             }
