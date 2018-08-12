@@ -334,7 +334,7 @@ export class Advertisements {
           image.on('load', () => {
             if (!element.column) {
               const whitespace = image.closest('.whitespace');
-              const maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();;
+              const maxHeight = this.booklet.getMaxHeight(whitespace) - whitespace.height();
               const totalImagesWidth = whitespace.children().toArray().map(e => $(e).children().toArray()).map(img => $(img).width()).reduce((a, v) => a + v);
               // If image is loaded, check if there is enough space for an additional image
               if (maxHeight > process.env.APP_AD_MIN_HEIGHT) {
