@@ -9,12 +9,24 @@
 }
 
 .photo-full {
-  width: 718px;
+  width: 100%;
   height: auto;
   text-align: center;
 
   img {
-    max-width: 710px;
+    max-width: 100%;
     height: auto;
   }
 }
+
+.photo-two {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+
+  img {
+    max-width: 355px;
+  }
+}
+
